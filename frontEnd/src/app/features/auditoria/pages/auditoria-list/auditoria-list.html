@@ -41,10 +41,11 @@
       <button
         type="button"
         class="btn-stitch btn-stitch--secondary"
+        [disabled]="isExporting()"
         (click)="descargarPDF()"
         id="btn-descargar-pdf">
         <svg lucideDownload class="btn-stitch__icon"></svg>
-        <span>Exportar</span>
+        <span>{{ isExporting() ? 'Exportando...' : 'Exportar' }}</span>
       </button>
     </div>
   </div>
@@ -140,7 +141,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (log of logsPaginados; track log.id) {
+            @for (log of logs(); track log.id) {
               <tr>
                 <!-- FECHA -->
                 <td class="col-fecha">
@@ -212,15 +213,15 @@
       <!-- FOOTER CON INFO Y PAGINACIÓN -->
       <div class="table-card__footer">
         <span class="pagination-info">
-          Mostrando {{ logsPaginados.length }} de {{ logs().length }} registros
+          Mostrando {{ logs().length }} de {{ totalElementos() }} registros
         </span>
 
-        @if (totalPages > 1) {
+        @if (totalPaginas() > 1) {
           <div class="pagination-controls">
             <button
               type="button"
               class="pagination-btn"
-              [disabled]="currentPage() === 1"
+              [disabled]="primera() || isLoading()"
               (click)="prevPage()">
               Anterior
             </button>
@@ -230,7 +231,8 @@
                 <button
                   type="button"
                   class="page-num"
-                  [class.page-num--active]="page === currentPage()"
+                  [class.page-num--active]="page === displayCurrentPage"
+                  [disabled]="isLoading()"
                   (click)="goToPage(page)">
                   {{ page }}
                 </button>
@@ -240,7 +242,7 @@
             <button
               type="button"
               class="pagination-btn"
-              [disabled]="currentPage() === totalPages"
+              [disabled]="ultima() || isLoading()"
               (click)="nextPage()">
               Siguiente
             </button>

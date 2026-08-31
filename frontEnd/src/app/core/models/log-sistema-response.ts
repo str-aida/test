@@ -1,4 +1,5 @@
 import { TipoOperacion } from './enums/tipo-operacion.enum';
+import { UserRole } from './enums/user-role.enum';
 
 export interface LogSistemaResponse {
   id: number;
@@ -10,7 +11,9 @@ export interface LogSistemaResponse {
   valorAnterior: string;
   valorNuevo: string;
   usuario: string;
+  rol?: UserRole;
   fecha: string;
   descripcion: string;
   tipoOperacion: TipoOperacion;
 }
+

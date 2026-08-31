@@ -45,6 +45,7 @@ export class AuditoriaListComponent implements OnInit {
   // Estado
   logs = signal<LogSistemaResponse[]>([]);
   isLoading = signal<boolean>(false);
+  isExporting = signal<boolean>(false);
   hasError = signal<boolean>(false);
   mostrarFiltros = false;
 
@@ -53,9 +54,13 @@ export class AuditoriaListComponent implements OnInit {
   filtroRol: UserRole | '' = '';
   filtroUsuario = '';
 
-  // Paginación
-  readonly PAGE_SIZE = 10;
-  currentPage = signal<number>(1);
+  // Paginación desde Backend (0-indexed en API)
+  currentPage = signal<number>(0);
+  pageSize = signal<number>(20);
+  totalElementos = signal<number>(0);
+  totalPaginas = signal<number>(0);
+  primera = signal<boolean>(true);
+  ultima = signal<boolean>(true);
 
   ngOnInit(): void {
     this.cargarLogs();
@@ -70,10 +75,15 @@ export class AuditoriaListComponent implements OnInit {
     if (this.filtroRol) filter.rol = this.filtroRol as UserRole;
     if (this.filtroUsuario.trim()) filter.usuario = this.filtroUsuario.trim();
 
-    this.auditService.listarLogs(filter).subscribe({
-      next: (data) => {
-        this.logs.set(data);
-        this.currentPage.set(1);
+    this.auditService.listarLogs(this.currentPage(), this.pageSize(), filter).subscribe({
+      next: (response) => {
+        this.logs.set(response.content || []);
+        this.currentPage.set(response.pagina);
+        this.pageSize.set(response.size);
+        this.totalElementos.set(response.totalElementos);
+        this.totalPaginas.set(response.totalPaginas);
+        this.primera.set(response.primera);
+        this.ultima.set(response.ultima);
         this.isLoading.set(false);
       },
       error: () => {
@@ -88,6 +98,7 @@ export class AuditoriaListComponent implements OnInit {
   }
 
   buscar(): void {
+    this.currentPage.set(0);
     this.cargarLogs();
   }
 
@@ -95,22 +106,18 @@ export class AuditoriaListComponent implements OnInit {
     this.filtroAccion = '';
     this.filtroRol = '';
     this.filtroUsuario = '';
+    this.currentPage.set(0);
     this.cargarLogs();
   }
 
-  // Paginación
-  get totalPages(): number {
-    return Math.ceil(this.logs().length / this.PAGE_SIZE) || 1;
-  }
-
-  get logsPaginados(): LogSistemaResponse[] {
-    const inicio = (this.currentPage() - 1) * this.PAGE_SIZE;
-    return this.logs().slice(inicio, inicio + this.PAGE_SIZE);
+  // Paginación (1-based para la UI)
+  get displayCurrentPage(): number {
+    return this.currentPage() + 1;
   }
 
   get pageNumbers(): number[] {
-    const total = this.totalPages;
-    const current = this.currentPage();
+    const total = this.totalPaginas();
+    const current = this.displayCurrentPage;
     const pages: number[] = [];
     const maxVisible = 5;
 
@@ -125,18 +132,23 @@ export class AuditoriaListComponent implements OnInit {
     return pages;
   }
 
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage.set(page);
+  goToPage(pageOneBased: number): void {
+    if (pageOneBased >= 1 && pageOneBased <= this.totalPaginas()) {
+      this.currentPage.set(pageOneBased - 1);
+      this.cargarLogs();
     }
   }
 
   prevPage(): void {
-    this.goToPage(this.currentPage() - 1);
+    if (!this.primera()) {
+      this.goToPage(this.displayCurrentPage - 1);
+    }
   }
 
   nextPage(): void {
-    this.goToPage(this.currentPage() + 1);
+    if (!this.ultima()) {
+      this.goToPage(this.displayCurrentPage + 1);
+    }
   }
 
   // Formatters & Label Helpers para Stitch
@@ -180,9 +192,35 @@ export class AuditoriaListComponent implements OnInit {
   }
 
   descargarPDF(): void {
-    this.notificationService.error(
-      'La descarga de PDF no está disponible actualmente. El backend no proporciona este endpoint.'
-    );
+    if (this.isExporting()) return;
+
+    this.isExporting.set(true);
+
+    const filter: LogSistemaFilter = {};
+    if (this.filtroAccion.trim()) filter.accion = this.filtroAccion.trim();
+    if (this.filtroRol) filter.rol = this.filtroRol as UserRole;
+    if (this.filtroUsuario.trim()) filter.usuario = this.filtroUsuario.trim();
+
+    this.auditService.exportarPdf(filter).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'auditoria.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.isExporting.set(false);
+        this.notificationService.success('Archivo auditoria.pdf descargado correctamente.');
+      },
+      error: (err) => {
+        this.isExporting.set(false);
+        const mensaje = err?.error?.message || 'Error al exportar los logs de auditoría a PDF.';
+        this.notificationService.error(mensaje);
+      }
+    });
   }
 
 }
+
