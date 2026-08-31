@@ -1,0 +1,143 @@
+<section class="category-list">
+
+    <header class="category-list__header">
+
+        <div class="category-list__header-title">
+
+            <div class="category-list__icon-wrapper">
+                <svg lucideShapes class="category-list__icon"></svg>
+            </div>
+            <div>
+                <h1 class="category-list__title">
+                    Gestión de categorías
+                </h1>
+                <p class="category-list__subtitle">
+                    Administrá las categorías de productos de tu establecimiento.
+                </p>
+            </div>
+
+        </div>
+
+        <button
+            type="button"
+            class="btn btn--primary category-list__add-btn"
+            (click)="openCreateModal()">
+
+            <svg lucidePlus class="btn__icon"></svg>
+            <span>Nueva categoría</span>
+
+        </button>
+    </header>
+
+    <app-categories-table 
+        (editCategory)="openEditModal($event)"
+        (deleteCategory)="openDeleteModal($event)">
+    </app-categories-table>
+
+    <!-- MODAL DE NUEVA CATEGORÍA -->
+    @if (showCreateModal) {
+        <div
+            class="modal-overlay"
+            (click)="closeCreateModal()">
+
+            <div
+                class="modal-card"
+                (click)="$event.stopPropagation()">
+
+                <!-- HEADER DEL MODAL -->
+                <header class="modal-card__header">
+
+                    <div class="modal-card__header-info">
+
+                        <div class="modal-card__header-icon">
+                            <svg lucideShapes></svg>
+                        </div>
+
+                        <div>
+                            <h2 class="modal-card__title">
+                                Nueva categoría
+                            </h2>
+                            <p class="modal-card__subtitle">
+                                Completá los datos para registrar una nueva categoría.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="modal-card__close"
+                        aria-label="Cerrar modal"
+                        (click)="closeCreateModal()">
+
+                        <svg lucideX></svg>
+
+                    </button>
+
+                </header>
+
+                <!-- FORMULARIO -->
+                <div class="modal-card__body">
+
+                    <app-category-form
+                        (categoryCreated)="onCategoryCreate()"
+                        (cancel)="closeCreateModal()">
+                    </app-category-form>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+    <!-- MODAL DE ELIMINAR CATEGORÍA -->
+    @if (showDeleteModal && selectedCategory) {
+        <div
+            class="modal-overlay"
+            (click)="closeDeleteModal()">
+
+            <div
+                class="modal-card modal-card--danger"
+                (click)="$event.stopPropagation()">
+
+                <div class="modal-card__alert-icon">
+                    <svg lucideAlertTriangle></svg>
+                </div>
+
+                <div class="modal-card__confirm-content">
+                    <h3>¿Desactivar categoría?</h3>
+                    <p>
+                        Vas a cambiar el estado de la categoría
+                        <strong> "{{ selectedCategory.nombre }}" </strong>
+                        a <strong>INACTIVA</strong>.
+                    </p>
+                </div>
+
+                <footer class="modal-card__footer">
+
+                    <button
+                        type="button"
+                        class="btn btn--outline"
+                        (click)="closeDeleteModal()">
+                        
+                        Cancelar
+
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn--primary"
+                        (click)="confirmDelete()">
+                        
+                        Sí, desactivar
+
+                    </button>
+
+                </footer>
+
+            </div>
+
+        </div>
+    }
+
+</section>

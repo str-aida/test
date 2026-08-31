@@ -1,0 +1,117 @@
+<section class="mis-cupones-page">
+
+  <!-- HEADER -->
+  <header class="mis-cupones-page__header">
+    <div>
+      <h1 class="mis-cupones-page__title">
+        <svg lucideTicket class="mis-cupones-page__title-icon"></svg>
+        Mis Cupones
+      </h1>
+      <p class="mis-cupones-page__subtitle">
+        Consultá tus cupones disponibles y sus condiciones.
+      </p>
+    </div>
+  </header>
+
+  <!-- CONTENIDO -->
+  <div class="mis-cupones-page__content">
+
+    <!-- CARGA -->
+    @if (isLoading) {
+      <div class="state-container">
+        <div class="spinner"></div>
+        <p>Cargando tus cupones asignados...</p>
+      </div>
+    }
+
+    <!-- ERROR -->
+    @else if (hasError) {
+      <div class="state-container state-container--error">
+        <svg lucideAlertTriangle class="state-icon"></svg>
+        <h3>Error al cargar los cupones</h3>
+        <p>Ocurrió un problema al obtener tus cupones desde el servidor.</p>
+        <button type="button" class="btn-retry" (click)="loadMisCupones()">
+          <svg lucideRefreshCw class="btn__icon"></svg>
+          Reintentar
+        </button>
+      </div>
+    }
+
+    <!-- ESTADO VACÍO -->
+    @else if (cuponesUsuario.length === 0) {
+      <div class="state-container state-container--empty">
+        <svg lucideTag class="state-icon"></svg>
+        <h3>No tenés cupones disponibles</h3>
+        <p>En este momento no tenés cupones de descuento activos o sin utilizar.</p>
+      </div>
+    }
+
+    <!-- GRILLA DE CARDS DE CUPONES (DISEÑO STITCH) -->
+    @else {
+      <div class="cupones-grid">
+        @for (cuponUser of cuponesUsuario; track cuponUser.id) {
+          <div class="cupon-card" [class.cupon-card--used]="cuponUser.usado">
+            
+            <!-- HEADER DE LA CARD -->
+            <div class="cupon-card__header">
+              <div class="cupon-card__header-top">
+                <span class="cupon-card__code-label">CÓDIGO</span>
+                <span
+                  class="cupon-card__badge"
+                  [class.cupon-card__badge--available]="!cuponUser.usado"
+                  [class.cupon-card__badge--used]="cuponUser.usado">
+                  {{ cuponUser.usado ? 'UTILIZADO' : 'DISPONIBLE' }}
+                </span>
+              </div>
+              <div class="cupon-card__code-text">
+                {{ cuponUser.cupon.codigo }}
+              </div>
+            </div>
+
+            <!-- CUERPO DE LA CARD -->
+            <div class="cupon-card__body">
+              <span class="cupon-card__discount-label">Descuento</span>
+              <div class="cupon-card__discount-value">
+                {{ formatValor(cuponUser.cupon.tipoDescuento, cuponUser.cupon.valor) }}
+              </div>
+
+              <!-- BOX DE FECHAS / ASIGNACIÓN -->
+              <div class="cupon-card__dates-box">
+                <div class="date-col">
+                  <span class="date-label">Asignado</span>
+                  <span class="date-value">
+                    {{ (cuponUser.fechaAsignacion || cuponUser.cupon.fechaInicio) | date:'dd MMM yyyy' }}
+                  </span>
+                </div>
+                <div class="date-col">
+                  <span class="date-label">Vencimiento</span>
+                  <span class="date-value" [class.date-value--vencimiento]="!cuponUser.usado">
+                    {{ cuponUser.cupon.fechaFin | date:'dd MMM yyyy' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- FOOTER DE LA CARD -->
+            <div class="cupon-card__footer">
+              @if (cuponUser.usado) {
+                <div class="footer-status footer-status--used">
+                  <svg lucideCheckCircle class="footer-icon"></svg>
+                  <span>Utilizado {{ cuponUser.fechaUso ? ('el ' + (cuponUser.fechaUso | date:'dd MMM')) : '' }}</span>
+                </div>
+              } @else {
+                <div class="footer-status">
+                  <svg lucideInfo class="footer-icon"></svg>
+                  <span>No utilizado</span>
+                </div>
+              }
+            </div>
+
+          </div>
+        }
+      </div>
+    }
+
+  </div>
+
+</section>

@@ -1,0 +1,232 @@
+<div class="carrito-page">
+
+  <!-- Header con navegación y acciones -->
+  <header class="carrito-header">
+    <div class="carrito-header__nav">
+      <a routerLink="/cliente/catalogo" class="carrito-back-link">
+        <svg lucideArrowLeft class="carrito-back-link__icon"></svg>
+        <span>Volver al catálogo</span>
+      </a>
+    </div>
+
+    <div class="carrito-header__title-row">
+      <div class="carrito-header__info">
+        <h1 class="carrito-header__title">Mi Carrito</h1>
+        <p class="carrito-header__subtitle">
+          @if (!cartService.isEmpty()) {
+            Tenés {{ cartService.totalItems() }} {{ cartService.totalItems() === 1 ? 'producto' : 'productos' }} en tu carrito
+          } @else {
+            Tu carrito de compras está vacío
+          }
+        </p>
+      </div>
+
+      @if (!cartService.isEmpty()) {
+        <button
+          type="button"
+          class="carrito-clear-btn"
+          (click)="vaciarCarrito()"
+          title="Vaciar todos los productos del carrito">
+          <svg lucideTrash2 class="carrito-clear-btn__icon"></svg>
+          <span>Vaciar carrito</span>
+        </button>
+      }
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  @if (!cartService.isEmpty()) {
+    <div class="carrito-layout">
+
+      <!-- Columna izquierda: Lista de productos -->
+      <section class="carrito-items-section" aria-label="Productos en el carrito">
+        <div class="carrito-items-card">
+          <div class="carrito-items-header">
+            <span class="carrito-items-header__col-product">Producto</span>
+            <span class="carrito-items-header__col-qty">Cantidad</span>
+            <span class="carrito-items-header__col-price">Subtotal</span>
+            <span class="carrito-items-header__col-action"></span>
+          </div>
+
+          <div class="carrito-items-list">
+            @for (item of cartService.items(); track item.producto.id) {
+              <article class="carrito-item">
+                
+                <!-- Imagen y detalles del producto -->
+                <div class="carrito-item__product-info">
+                  <div class="carrito-item__image-box">
+                    @if (item.producto.imagenUrl) {
+                      <img
+                        [src]="getImageUrl(item.producto.imagenUrl)"
+                        [alt]="item.producto.nombre"
+                        class="carrito-item__image"
+                        loading="lazy">
+                    } @else {
+                      <div class="carrito-item__placeholder">
+                        <svg lucideImage class="carrito-item__placeholder-icon"></svg>
+                      </div>
+                    }
+                  </div>
+
+                  <div class="carrito-item__details">
+                    @if (item.producto.categoriaNombre) {
+                      <span class="carrito-item__category-badge">
+                        {{ item.producto.categoriaNombre }}
+                      </span>
+                    }
+                    <h3 class="carrito-item__name">{{ item.producto.nombre }}</h3>
+                    <p class="carrito-item__unit-price">
+                      Precio unitario: <strong>${{ item.producto.precio | number:'1.2-2' }}</strong>
+                    </p>
+                    @if (item.producto.stock <= 5 && item.producto.stock > 0) {
+                      <span class="carrito-item__stock-alert">
+                        Quedan {{ item.producto.stock }} disponibles
+                      </span>
+                    }
+                  </div>
+                </div>
+
+                <!-- Controles de Cantidad -->
+                <div class="carrito-item__quantity">
+                  <div class="stepper">
+                    <button
+                      type="button"
+                      class="stepper__btn"
+                      (click)="reducir(item.producto.id)"
+                      title="Disminuir cantidad">
+                      <svg lucideMinus class="stepper__icon"></svg>
+                    </button>
+                    <span class="stepper__value">{{ item.cantidad }}</span>
+                    <button
+                      type="button"
+                      class="stepper__btn"
+                      [disabled]="item.producto.stock <= 0 || item.cantidad >= item.producto.stock"
+                      (click)="incrementar(item)"
+                      title="Aumentar cantidad">
+                      <svg lucidePlus class="stepper__icon"></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Subtotal del ítem -->
+                <div class="carrito-item__subtotal">
+                  <span class="carrito-item__subtotal-label">Subtotal:</span>
+                  <span class="carrito-item__subtotal-value">
+                    ${{ (item.producto.precio * item.cantidad) | number:'1.2-2' }}
+                  </span>
+                </div>
+
+                <!-- Botón de eliminar -->
+                <div class="carrito-item__actions">
+                  <button
+                    type="button"
+                    class="carrito-item__delete-btn"
+                    (click)="eliminar(item)"
+                    title="Eliminar producto">
+                    <svg lucideTrash2 class="carrito-item__delete-icon"></svg>
+                  </button>
+                </div>
+
+              </article>
+            }
+          </div>
+
+          <!-- Pie de la lista de ítems -->
+          <div class="carrito-items-footer">
+            <a routerLink="/cliente/catalogo" class="carrito-continue-link">
+              <svg lucidePlus class="carrito-continue-link__icon"></svg>
+              <span>Agregar más productos</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Columna derecha: Resumen de compra -->
+      <aside class="carrito-summary-section" aria-label="Resumen de la compra">
+        <div class="carrito-summary-card">
+          <h2 class="carrito-summary-card__title">Resumen del pedido</h2>
+
+          <div class="carrito-summary-rows">
+            <div class="carrito-summary-row">
+              <span class="carrito-summary-row__label">
+                Productos ({{ cartService.totalItems() }})
+              </span>
+              <span class="carrito-summary-row__value">
+                ${{ cartService.subtotal() | number:'1.2-2' }}
+              </span>
+            </div>
+
+            <div class="carrito-summary-row">
+              <span class="carrito-summary-row__label">Entrega</span>
+              <span class="carrito-summary-row__value carrito-summary-row__value--muted">
+                Se calcula en checkout
+              </span>
+            </div>
+
+            <div class="carrito-summary-row">
+              <span class="carrito-summary-row__label">Cupón de descuento</span>
+              <span class="carrito-summary-row__value carrito-summary-row__value--muted">
+                Aplica en checkout
+              </span>
+            </div>
+          </div>
+
+          <div class="carrito-summary-divider"></div>
+
+          <div class="carrito-summary-total">
+            <div class="carrito-summary-total__info">
+              <span class="carrito-summary-total__label">Subtotal estimado</span>
+              <span class="carrito-summary-total__subtext">Sin impuestos ni envío adicional</span>
+            </div>
+            <span class="carrito-summary-total__amount">
+              ${{ cartService.subtotal() | number:'1.2-2' }}
+            </span>
+          </div>
+
+          <!-- Botón principal de checkout -->
+          <button
+            type="button"
+            class="carrito-checkout-btn"
+            (click)="continuarAlCheckout()">
+            <span>Continuar al Checkout</span>
+            <svg lucideArrowRight class="carrito-checkout-btn__icon"></svg>
+          </button>
+
+          <!-- Beneficios / Garantías de confianza -->
+          <div class="carrito-trust-badges">
+            <div class="carrito-trust-item">
+              <svg lucideTruck class="carrito-trust-item__icon"></svg>
+              <span>Envío a domicilio o retiro en local</span>
+            </div>
+            <div class="carrito-trust-item">
+              <svg lucideShieldCheck class="carrito-trust-item__icon"></svg>
+              <span>Pago seguro garantizado</span>
+            </div>
+          </div>
+
+        </div>
+      </aside>
+
+    </div>
+  }
+
+  <!-- Estado vacío -->
+  @else {
+    <div class="carrito-empty">
+      <div class="carrito-empty__card">
+        <div class="carrito-empty__icon-wrapper">
+          <svg lucideShoppingBag class="carrito-empty__icon"></svg>
+        </div>
+        <h2 class="carrito-empty__title">Tu carrito está vacío</h2>
+        <p class="carrito-empty__description">
+          ¡Aún no tenés productos en tu carrito! Explorá nuestro catálogo y descubrí todas las opciones disponibles.
+        </p>
+        <a routerLink="/cliente/catalogo" class="carrito-empty__btn">
+          <svg lucideStore class="carrito-empty__btn-icon"></svg>
+          <span>Explorar Catálogo</span>
+        </a>
+      </div>
+    </div>
+  }
+
+</div>

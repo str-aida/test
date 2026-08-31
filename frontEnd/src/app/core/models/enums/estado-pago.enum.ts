@@ -1,0 +1,6 @@
+export enum EstadoPago {
+    PENDIENTE = 'PENDIENTE',
+    REEMBOLSADO = 'REEMBOLSADO',
+    APROBADO = 'APROBADO',
+    ANULADO = 'ANULADO'
+}

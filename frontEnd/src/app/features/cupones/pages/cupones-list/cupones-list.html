@@ -1,0 +1,304 @@
+<section class="cupones-page">
+
+  <!-- HEADER DE PÁGINA -->
+  <header class="cupones-page__header">
+    <div class="cupones-page__header-title">
+      <div class="cupones-page__icon-wrapper">
+        <svg lucideTicket class="cupones-page__icon"></svg>
+      </div>
+      <div>
+        <h1 class="cupones-page__title">Cupones</h1>
+        <p class="cupones-page__subtitle">
+          Gestioná las promociones y descuentos disponibles para los clientes.
+        </p>
+      </div>
+    </div>
+
+    <div class="cupones-page__header-actions">
+      <button
+        type="button"
+        class="btn-stitch-outline"
+        (click)="openAssignModal()">
+        <svg lucideUserPlus class="btn-icon"></svg>
+        <span>Asignar Cupón</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn-stitch-primary"
+        (click)="openCreateModal()">
+        <svg lucidePlus class="btn-icon"></svg>
+        <span>Crear Cupón</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTENEDOR DE FILTROS Y BÚSQUEDA (ESTILO STITCH) -->
+  <div class="cupones-filter-card">
+    <div class="cupones-filter__search">
+      <svg lucideSearch class="cupones-filter__search-icon"></svg>
+      <input
+        type="text"
+        class="cupones-filter__search-input"
+        placeholder="Buscar por código..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="applyFilter()">
+    </div>
+
+    <div class="cupones-filter__status">
+      <div class="cupones-filter__select-wrapper">
+        <select
+          class="cupones-filter__select"
+          [(ngModel)]="statusFilter"
+          (ngModelChange)="applyFilter()">
+          <option value="TODOS">Filtros</option>
+          <option value="ACTIVO">Activos</option>
+          <option value="INACTIVO">Inactivos</option>
+        </select>
+        <svg lucideFilter class="cupones-filter__filter-icon"></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="cupones-page__content">
+
+    <!-- ESTADO DE CARGA -->
+    @if (isLoading) {
+      <div class="state-container">
+        <div class="spinner"></div>
+        <p>Cargando cupones...</p>
+      </div>
+    }
+
+    <!-- ESTADO DE ERROR -->
+    @else if (hasError) {
+      <div class="state-container state-container--error">
+        <svg lucideAlertTriangle class="state-icon"></svg>
+        <h3>Error al cargar los cupones</h3>
+        <p>No se pudo obtener la lista de cupones desde el servidor.</p>
+        <button type="button" class="btn-stitch-outline" (click)="loadCupones()">
+          <svg lucideRefreshCw class="btn-icon"></svg>
+          Reintentar
+        </button>
+      </div>
+    }
+
+    <!-- ESTADO VACÍO -->
+    @else if (filteredCupones.length === 0) {
+      <div class="state-container state-container--empty">
+        <svg lucideTicket class="state-icon"></svg>
+        <h3>No se encontraron cupones</h3>
+        <p>
+          @if (searchTerm || statusFilter !== 'TODOS') {
+            No hay cupones que coincidan con los criterios de búsqueda.
+          } @else {
+            Aún no se han creado cupones en el sistema.
+          }
+        </p>
+        @if (!searchTerm && statusFilter === 'TODOS') {
+          <button type="button" class="btn-stitch-primary" (click)="openCreateModal()">
+            <svg lucidePlus class="btn-icon"></svg>
+            Crear el primer cupón
+          </button>
+        }
+      </div>
+    }
+
+    <!-- TABLA DE CUPONES EN CONTENEDOR STITCH -->
+    @else {
+      <div class="cupones-table-card">
+        <div class="table-responsive">
+          <table class="cupones-table">
+            <thead>
+              <tr>
+                <th>CÓDIGO</th>
+                <th>DESCUENTO</th>
+                <th>FECHA DE INICIO</th>
+                <th>FECHA DE FIN</th>
+                <th>USOS</th>
+                <th>ESTADO</th>
+                <th class="text-right">ACCIONES</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (cupon of filteredCupones; track cupon.id) {
+                <tr>
+                  <!-- CÓDIGO -->
+                  <td class="col-codigo">
+                    {{ cupon.codigo }}
+                  </td>
+
+                  <!-- DESCUENTO -->
+                  <td class="col-descuento">
+                    {{ formatValor(cupon) }}
+                  </td>
+
+                  <!-- FECHA DE INICIO -->
+                  <td>{{ cupon.fechaInicio | date:'dd/MM/yyyy' }}</td>
+
+                  <!-- FECHA DE FIN -->
+                  <td>{{ cupon.fechaFin | date:'dd/MM/yyyy' }}</td>
+
+                  <!-- USOS -->
+                  <td class="col-usos">
+                    {{ cupon.usosActuales !== null && cupon.usosActuales !== undefined ? cupon.usosActuales : 0 }} /
+                    {{ cupon.usoMaximo ? cupon.usoMaximo : 'Ilimitado' }}
+                  </td>
+
+                  <!-- ESTADO -->
+                  <td>
+                    @if (cupon.estado === EstadoCuponEnum.ACTIVO) {
+                      <span class="badge-stitch badge-stitch--activo">Activo</span>
+                    } @else {
+                      <span class="badge-stitch badge-stitch--inactivo">Inactivo</span>
+                    }
+                  </td>
+
+                  <!-- ACCIONES -->
+                  <td class="text-right">
+                    <div class="actions-group">
+                      <!-- EDITAR -->
+                      <button
+                        type="button"
+                        class="action-btn action-btn--edit"
+                        title="Editar cupón"
+                        (click)="openEditModal(cupon)">
+                        <svg lucidePencil></svg>
+                      </button>
+
+                      <!-- ASIGNAR -->
+                      <button
+                        type="button"
+                        class="action-btn action-btn--assign"
+                        title="Asignar cupón a usuario"
+                        (click)="openAssignModal(cupon)">
+                        <svg lucideUserCheck></svg>
+                      </button>
+
+                      <!-- DESACTIVAR -->
+                      @if (cupon.estado === EstadoCuponEnum.ACTIVO) {
+                        <button
+                          type="button"
+                          class="action-btn action-btn--danger"
+                          title="Desactivar cupón"
+                          (click)="openDeactivateModal(cupon)">
+                          <svg lucideBan></svg>
+                        </button>
+                      }
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FOOTER PAGINACIÓN (STITCH) -->
+        <div class="cupones-table-footer">
+          <span class="footer-summary">
+            Mostrando 1 a {{ filteredCupones.length }} de {{ filteredCupones.length }} resultados
+          </span>
+          <div class="pagination-controls">
+            <button type="button" class="pagination-btn" disabled>
+              <svg lucideChevronLeft></svg>
+            </button>
+            <button type="button" class="pagination-btn pagination-btn--active">
+              1
+            </button>
+            <button type="button" class="pagination-btn" disabled>
+              <svg lucideChevronRight></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- MODAL CREAR / EDITAR CUPÓN -->
+  @if (showFormModal) {
+    <div class="modal-overlay" (click)="closeFormModal()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <header class="modal-card__header">
+          <div class="modal-card__header-info">
+            <div class="modal-card__header-icon">
+              <svg lucideTicket></svg>
+            </div>
+            <div>
+              <h2 class="modal-card__title">
+                {{ selectedCupon ? 'Editar Cupón' : 'Nuevo Cupón' }}
+              </h2>
+              <p class="modal-card__subtitle">
+                {{ selectedCupon ? 'Actualizá la información del cupón seleccionado.' : 'Completá los datos para crear un nuevo cupón.' }}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="modal-card__close"
+            aria-label="Cerrar modal"
+            (click)="closeFormModal()">
+            <svg lucideX></svg>
+          </button>
+        </header>
+
+        <div class="modal-card__body">
+          <app-cupon-form
+            [cuponToEdit]="selectedCupon"
+            (formSubmitted)="onFormSubmitted()"
+            (cancel)="closeFormModal()">
+          </app-cupon-form>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- MODAL ASIGNAR CUPÓN -->
+  @if (showAssignModal) {
+    <app-cupon-asignar-modal
+      [initialCuponId]="selectedCupon?.id || null"
+      [cuponesList]="cupones"
+      (assigned)="onAssigned()"
+      (cancel)="closeAssignModal()">
+    </app-cupon-asignar-modal>
+  }
+
+  <!-- MODAL DE DESACTIVAR CUPÓN -->
+  @if (showDeactivateModal && selectedCupon) {
+    <div class="modal-overlay" (click)="closeDeactivateModal()">
+      <div class="modal-card modal-card--danger" (click)="$event.stopPropagation()">
+        <div class="modal-card__alert-icon">
+          <svg lucideAlertTriangle></svg>
+        </div>
+
+        <div class="modal-card__confirm-content">
+          <h3>¿Desactivar cupón?</h3>
+          <p>
+            Vas a cambiar el estado del cupón
+            <strong>"{{ selectedCupon.codigo }}"</strong>
+            a <strong>INACTIVO</strong>.
+          </p>
+        </div>
+
+        <footer class="modal-card__footer">
+          <button
+            type="button"
+            class="btn btn--outline"
+            [disabled]="isDeactivating"
+            (click)="closeDeactivateModal()">
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="btn btn--primary"
+            [disabled]="isDeactivating"
+            (click)="confirmDeactivate()">
+            Sí, desactivar
+          </button>
+        </footer>
+      </div>
+    </div>
+  }
+
+</section>
+

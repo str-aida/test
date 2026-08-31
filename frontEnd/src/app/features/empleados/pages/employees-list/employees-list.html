@@ -1,0 +1,28 @@
+<section class="employees">
+
+  <app-employee-form
+    (employeeCreated)="onEmployeeCreated()">
+  </app-employee-form>
+
+  <div class="employees__actions">
+
+    <button
+      type="button"
+      class="btn btn-outline-primary"
+      (click)="toggleListado()">
+
+      {{ mostrarListado ? 'Ocultar personal' : 'Listar personal' }}
+
+    </button>
+
+  </div>
+
+  @if (listadoCargado) {
+
+    <div [hidden]="!mostrarListado">
+      <app-employees-table></app-employees-table>
+    </div>
+
+  }
+
+</section>

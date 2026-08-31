@@ -1,0 +1,36 @@
+/* ==========================
+   ESPACIADOS
+========================== */
+
+$space-xs: .5rem; //8px
+
+$space-sm: 1rem; //16px
+
+$space-md: 2rem; //32px
+
+$space-lg: 4rem; //64px
+
+$space-xl: 6rem; //96px
+
+$space-2xl: 8rem; //128px
+
+
+/* ==========================
+   LAYOUT
+========================== */
+
+$container-width: 1280px;
+$form-width: 640px;
+$sidebar-width: 540px; //DESPUES CAMBIAR SU NOMBRE A onboarding-sidebar-width
+$navigation-sidebar-width: 260px;
+
+
+/* ==========================
+   FORMULARIOS
+========================== */
+
+$form-section-gap: 1.5rem; //entre secciones (info general, ubicacion, etc)
+
+$form-row-gap: 0.65rem; //entre filas dentro de una seccion
+
+$form-field-gap: 0.35rem; //entre label e input

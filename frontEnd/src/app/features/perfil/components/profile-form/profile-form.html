@@ -1,0 +1,502 @@
+<section class="onboarding-form">
+
+    <div class="container">
+
+        <header class="onboarding-form__header">
+
+            <h1 class="onboarding-form__title">
+                Mi perfil
+            </h1>
+
+        </header>
+
+        <form
+            class="onboarding-form__form"
+            [formGroup]="profileForm"
+            (ngSubmit)="onSubmit()"
+            >
+
+            <!-- INFORMACIÓN PERSONAL -->
+            <section class="form-section form-section--personal">
+
+                <div class="form-row">
+
+                    <div class="form-field">
+
+                        <label
+                            class="form-field__label"
+                            for="firstName">
+                            Nombre
+
+                            <span class="form-field__required">*</span>
+                        </label>
+
+                        <input
+                            id="firstName"
+                            class="form-field__input"
+                            type="text"
+                            formControlName="nombre">
+
+                            @if (hasError('nombre', 'required')) {
+
+                                <small class="form-field__error">
+                                    El nombre es obligatorio.
+                                </small>
+
+                            } @else if (hasError('nombre', 'maxlength')) {
+
+                                <small class="form-field__error">
+                                    El nombre no puede superar los 100 caracteres.
+                                </small>
+
+                            }
+
+                    </div>
+
+                    <div class="form-field">
+
+                        <label
+                            class="form-field__label"
+                            for="lastName">
+                            Apellido
+
+                            <span class="form-field__required">*</span>
+                        </label>
+
+                        <input
+                            id="lastName"
+                            class="form-field__input"
+                            type="text"
+                            formControlName="apellido">
+
+                            @if (hasError('apellido', 'required')) {
+
+                                <small class="form-field__error">
+                                    El apellido es obligatorio.
+                                </small>
+
+                            } @else if (hasError('apellido', 'maxlength')) {
+
+                                <small class="form-field__error">
+                                    El apellido no puede superar los 100 caracteres.
+                                </small>
+
+                            }
+
+                    </div>
+
+                </div>
+
+                <div class="form-field">
+
+                    <label
+                        class="form-field__label"
+                        for="email">
+                        Email
+
+                        <span class="form-field__required">*</span>
+                    </label>
+
+                    <input
+                        id="email"
+                        class="form-field__input"
+                        type="email"
+                        formControlName="email">
+
+                        @if (hasError('email', 'required')) {
+                            <small class="form-field__error">
+                                El email es obligatorio.
+                            </small>
+                        } @else if (hasError('email', 'email') || hasError('email', 'pattern')) {
+                            <small class="form-field__error">
+                                El email no tiene un formato válido.
+                            </small>
+                        } @else if (hasError('email', 'maxlength')) {
+                            <small class="form-field__error">
+                                El email no puede superar los 150 caracteres.
+                            </small>
+                        }
+
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-field">
+
+                        <label
+                            class="form-field__label"
+                            for="phone">
+                            Teléfono
+
+                            <span class="form-field__required">*</span>
+                        </label>
+
+                        <input
+                            id="phone"
+                            class="form-field__input"
+                            type="tel"
+                            formControlName="telefono"
+                            appPhoneMask>
+
+                            @if (hasError('telefono', 'required')) {
+
+                                <small class="form-field__error">
+                                    El telefono es obligatorio.
+                                </small>
+
+                            } @else if (hasError('telefono', 'maxlength')) {
+
+                                <small class="form-field__error">
+                                    El apellido no puede superar los 20 caracteres.
+                                </small>
+
+                            }
+
+                    </div>
+
+                    <div class="form-field">
+
+                        <label
+                            class="form-field__label"
+                            for="nationalId">
+                            DNI
+
+                            <span class="form-field__required">*</span>
+                        </label>
+
+                        <input
+                            id="nationalId"
+                            class="form-field__input"
+                            type="text"
+                            inputmode="numeric"
+                            formControlName="dni"
+                            appDniMask>
+
+                            @if (hasError('dni', 'required')) {
+
+                                <small class="form-field__error">
+                                    El DNI es obligatorio.
+                                </small>
+
+                            } @else if (hasError('dni', 'maxlength')) {
+
+                                <small class="form-field__error">
+                                    El DNI no puede superar los 20 caracteres.
+                                </small>
+
+                            }
+
+                    </div>
+
+                </div>
+
+                <div class="form-field">
+
+                    <label
+                        class="form-field__label"
+                        for="birthDate">
+                        Fecha de nacimiento
+
+                        <span class="form-field__required">*</span>
+                    </label>
+
+                    <input
+                        id="birthDate"
+                        class="form-field__input"
+                        type="date"
+                        formControlName="fechaNacimiento"
+                        [max]="maxBirthDate">
+
+                        @if (hasError('fechaNacimiento', 'required')) {
+
+                            <small class="form-field__error">
+                                La fecha de nacimiento es obligatoria.
+                            </small>
+
+                        } @else if (hasError('fechaNacimiento', 'pastDate')) {
+
+                            <small class="form-field__error">
+                                La fecha de nacimiento debe ser anterior a hoy.
+                            </small>
+
+                        }
+
+                </div>
+
+            </section>
+
+            <!-- UBICACIÓN -->
+            <section class="form-section form-section--location" formGroupName="direccion">
+
+                <!-- Nombre -->
+
+                    <div class="form-field">
+
+                        <label
+                            class="form-field__label"
+                            for="addressName">
+                            Nombre de la dirección
+                        </label>
+
+                        <input
+                            id="addressName"
+                            class="form-field__input"
+                            type="text"
+                            formControlName="nombre">
+
+                        @if (hasError('direccion.nombre', 'maxlength')) {
+                            <small class="form-field__error">
+                                El nombre no puede superar los 50 caracteres.
+                            </small>
+                        }
+
+                    </div>
+
+                <!-- Calle y número -->
+
+                <div class="form-row">
+
+                    <div class="form-field">
+
+                        <label
+                            class="form-field__label"
+                            for="street">
+                            Calle
+
+                            <span class="form-field__required">*</span>
+                        </label>
+
+                        <input
+                            id="street"
+                            class="form-field__input"
+                            type="text"
+                            formControlName="calle">
+
+                        @if (hasError('direccion.calle', 'required')) {
+                            <small class="form-field__error">
+                                La calle es obligatoria.
+                            </small>
+                        } @else if (hasError('direccion.calle', 'maxlength')) {
+                            <small class="form-field__error">
+                                La calle no puede superar los 100 caracteres.
+                            </small>
+                        }
+
+                    </div>
+
+                    <div class="form-field form-field--small">
+
+                        <label
+                            class="form-field__label"
+                            for="number">
+                            Número
+
+                            <span class="form-field__required">*</span>
+                        </label>
+
+                        <input
+                            id="number"
+                            class="form-field__input"
+                            type="text"
+                            formControlName="numero">
+
+                        @if (hasError('direccion.numero', 'required')) {
+                            <small class="form-field__error">
+                                El número es obligatorio.
+                            </small>
+                        } @else if (hasError('direccion.numero', 'maxlength')) {
+                            <small class="form-field__error">
+                                El número no puede superar los 20 caracteres.
+                            </small>
+                        }
+
+                    </div>
+
+                </div>
+
+                <!-- Localidad -->
+                    <div class="form-field">
+
+                        <label
+                            class="form-field__label"
+                            for="city">
+                            Localidad
+
+                            <span class="form-field__required">*</span>
+                        </label>
+
+                        <input
+                            id="city"
+                            class="form-field__input"
+                            type="text"
+                            formControlName="localidad">
+
+                        @if (hasError('direccion.localidad', 'required')) {
+                            <small class="form-field__error">
+                                La localidad es obligatoria.
+                            </small>
+                        } @else if (hasError('direccion.localidad', 'maxlength')) {
+                            <small class="form-field__error">
+                                La localidad no puede superar los 100 caracteres.
+                            </small>
+                        }
+
+                    </div>
+
+                <!-- Piso y departamento -->
+
+                <div class="form-row">
+
+                    <div class="form-field">
+
+                        <label
+                            class="form-field__label"
+                            for="floor">
+                            Piso
+                        </label>
+
+                        <input
+                            id="floor"
+                            class="form-field__input"
+                            type="text"
+                            formControlName="piso">
+
+                        @if (hasError('direccion.piso', 'maxlength')) {
+                            <small class="form-field__error">
+                                El piso no puede superar los 20 caracteres.
+                            </small>
+                        }
+
+                    </div>
+
+                    <div class="form-field">
+
+                        <label
+                            class="form-field__label"
+                            for="apartment">
+                            Departamento
+                        </label>
+
+                        <input
+                            id="apartment"
+                            class="form-field__input"
+                            type="text"
+                            formControlName="departamento">
+
+                        @if (hasError('direccion.departamento', 'maxlength')) {
+                            <small class="form-field__error">
+                                El departamento no puede superar los 20 caracteres.
+                            </small>
+                        }
+
+                    </div>
+
+                </div>
+
+                <!-- Código postal -->
+
+                    <div class="form-field">
+
+                        <label
+                            class="form-field__label"
+                            for="postalCode">
+                            Código postal
+                        </label>
+
+                        <input
+                            id="postalCode"
+                            class="form-field__input"
+                            type="text"
+                            formControlName="codigoPostal">
+
+                        @if (hasError('direccion.codigoPostal', 'maxlength')) {
+                            <small class="form-field__error">
+                                El código postal no puede superar los 10 caracteres.
+                            </small>
+                        }
+
+                    </div>
+
+                <!-- Referencia -->
+
+                    <div class="form-field">
+
+                        <label
+                            class="form-field__label"
+                            for="reference">
+                            Referencia
+                        </label>
+
+                        <textarea
+                            id="reference"
+                            class="form-field__textarea"
+                            rows="3"
+                            formControlName="referencia"></textarea>
+
+                        @if (hasError('direccion.referencia', 'maxlength')) {
+                            <small class="form-field__error">
+                                La referencia no puede superar los 200 caracteres.
+                            </small>
+                        }
+
+                    </div>
+
+            </section>
+
+            <!-- SEGURIDAD -->
+            <section class="form-section form-section--security">
+
+                <!-- ROL -->
+                    <div class="form-field">
+
+                        <label class="form-field__label">
+                            Rol
+                            <span class="form-field__required">*</span>
+
+                        </label>
+
+                        <input
+                            class="form-field__input"
+                            type="text"
+                            formControlName="rol"
+                            readonly>
+
+                    </div>
+
+                <div class="form-actions">
+
+                    @if (!isEditing) {
+
+                        <button
+                            type="button"
+                            class="btn btn--primary"
+                            (click)="editProfile()">
+                            Editar perfil
+                        </button>
+
+                    } @else {
+
+                        <button
+                            type="submit"
+                            class="btn btn--primary">
+                            Guardar cambios
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn--secondary"
+                            (click)="cancelEdit()">
+                            Cancelar
+                        </button>
+
+                    }
+
+                </div>
+
+            </section>
+
+        </form>
+
+    </div>
+
+</section>

@@ -1,0 +1,18 @@
+@use '../styles/form-layout';
+
+//solo estilos exclusivos de establishment
+.working-days {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
+}
+
+.working-day {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.working-day input[type="checkbox"] {
+    cursor: pointer;
+}

@@ -1,0 +1,142 @@
+<div class="modal-overlay" (click)="onCancel()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <!-- HEADER -->
+    <header class="modal-card__header">
+      <div class="modal-card__header-info">
+        <div class="modal-card__header-icon">
+          <svg lucideUserCheck></svg>
+        </div>
+        <div>
+          <h2 class="modal-card__title">Asignar Cupón a Usuario</h2>
+          <p class="modal-card__subtitle">
+            Asigna un cupón existente seleccionando un usuario por lista o ingresando su email.
+          </p>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="modal-card__close"
+        aria-label="Cerrar modal"
+        (click)="onCancel()">
+        <svg lucideX></svg>
+      </button>
+    </header>
+
+    <!-- BODY FORM -->
+    <div class="modal-card__body">
+      <form class="asignar-form" [formGroup]="asignarForm" (ngSubmit)="onSubmit()">
+        <!-- SELECTOR DE MODO DE ASIGNACIÓN -->
+        <div class="form-field">
+          <label class="form-field__label">Método de Asignación</label>
+          <div class="asignar-mode-tabs">
+            <button
+              type="button"
+              class="asignar-mode-tab"
+              [class.asignar-mode-tab--active]="tipoAsignacion === 'ID'"
+              (click)="setTipoAsignacion('ID')">
+              <svg lucideUser></svg>
+              <span>Por Usuario</span>
+            </button>
+            <button
+              type="button"
+              class="asignar-mode-tab"
+              [class.asignar-mode-tab--active]="tipoAsignacion === 'EMAIL'"
+              (click)="setTipoAsignacion('EMAIL')">
+              <svg lucideMail></svg>
+              <span>Por Email</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- SELECCIONAR POR USUARIO ID -->
+        @if (tipoAsignacion === 'ID') {
+          <div class="form-field">
+            <label class="form-field__label" for="usuarioId">
+              Usuario Target
+              <span class="form-field__required">*</span>
+            </label>
+            <select
+              id="usuarioId"
+              class="form-field__input"
+              formControlName="usuarioId">
+              <option [ngValue]="null" disabled>-- Selecciona un usuario --</option>
+              @for (u of users; track u.id) {
+                <option [value]="u.id">
+                  {{ u.nombre }} {{ u.apellido }} ({{ u.email }})
+                </option>
+              }
+            </select>
+            @if (hasError('usuarioId', 'required')) {
+              <small class="form-field__error">Debe seleccionar un usuario.</small>
+            }
+            @if (isLoadingUsers) {
+              <small class="form-field__hint">Cargando lista de usuarios...</small>
+            }
+          </div>
+        }
+
+        <!-- ASIGNAR POR EMAIL -->
+        @if (tipoAsignacion === 'EMAIL') {
+          <div class="form-field">
+            <label class="form-field__label" for="email">
+              Email del Usuario
+              <span class="form-field__required">*</span>
+            </label>
+            <input
+              id="email"
+              type="email"
+              class="form-field__input"
+              placeholder="ejemplo@dominio.com"
+              formControlName="email" />
+            @if (hasError('email', 'required')) {
+              <small class="form-field__error">Debe ingresar el email del usuario.</small>
+            }
+            @if (hasError('email', 'email')) {
+              <small class="form-field__error">El email no tiene un formato válido.</small>
+            }
+          </div>
+        }
+
+        <!-- SELECCIONAR CUPÓN -->
+        <div class="form-field">
+          <label class="form-field__label" for="cuponId">
+            Cupón Existente
+            <span class="form-field__required">*</span>
+          </label>
+          <select
+            id="cuponId"
+            class="form-field__input"
+            formControlName="cuponId">
+            <option [ngValue]="null" disabled>-- Selecciona un cupón --</option>
+            @for (c of cuponesList; track c.id) {
+              <option [value]="c.id">
+                {{ c.codigo }} - {{ c.tipoDescuento === 'PORCENTAJE' ? c.valor + '%' : '$' + c.valor }} (Vence: {{ c.fechaFin }})
+              </option>
+            }
+          </select>
+          @if (hasError('cuponId', 'required')) {
+            <small class="form-field__error">Debe seleccionar un cupón.</small>
+          }
+        </div>
+
+        <!-- FOOTER -->
+        <div class="form-actions">
+          <button
+            type="button"
+            class="btn btn--outline"
+            [disabled]="isSubmitting"
+            (click)="onCancel()">
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="btn btn--primary"
+            [disabled]="isSubmitting || (tipoAsignacion === 'ID' && isLoadingUsers)">
+            Asignar Cupón
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+

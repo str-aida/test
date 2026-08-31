@@ -1,0 +1,24 @@
+<app-split-layout>
+
+    <!-- sidebar y content como ATRIBUTOS -->
+    <app-split-sidebar sidebar
+        [info]="sidebarInfo">
+    </app-split-sidebar>
+
+    <div content>
+
+        @if (currentStep === 1) {
+            
+            <app-establishment
+                (completed)="nextStep()">
+            </app-establishment>
+
+        } @else if (currentStep === 2) {
+
+            <app-admin />
+            
+        }
+
+    </div>
+
+</app-split-layout>

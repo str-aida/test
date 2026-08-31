@@ -1,0 +1,133 @@
+<section class="onboarding-form">
+
+    <div class="container">
+
+        <header class="onboarding-form__header">
+
+            <h1 class="onboarding-form__title">
+                ¡Bienvenido!
+            </h1>
+
+            <p class="onboarding-form__subtitle">
+                Inicia sesión para continuar.
+            </p>
+
+        </header>
+
+        <form 
+            class="onboarding-form__form"
+            [formGroup]="loginForm"
+            (ngSubmit)="onSubmit()"
+            >
+
+            <section class="form-section form-section--credentiales">
+
+                <div class="form-field">
+
+                    <label
+                        class="form-field__label"
+                        for="email">
+                        Email
+
+                        <span class="form-field__required">*</span>
+                    </label>
+
+                    <input
+                        id="email"
+                        class="form-field__input"
+                        type="email"
+                        formControlName="email"
+                        placeholder="admin@gestia.com">
+
+                        @if (hasError('email', 'required')) {
+                            <small class="form-field__error">
+                                El email es obligatorio.
+                            </small>
+                        } @else if (hasError('email', 'email') || hasError('email', 'pattern')) {
+                            <small class="form-field__error">
+                                El email no tiene un formato válido.
+                            </small>
+                        }
+
+                </div>
+
+                <div class="form-field">
+
+                    <label
+                        class="form-field__label"
+                        for="password">
+                        Contraseña
+
+                        <span class="form-field__required">*</span>
+                    </label>
+
+                    <div class="password-field">
+
+                        <input
+                            id="password"
+                            class="form-field__input"
+                            [type]="showPassword ? 'text' : 'password'"
+                            formControlName="password"
+                            placeholder="********">
+                    
+                        <button
+                            type="button"
+                            class="password-field__toggle"
+                            (click)="togglePassword()">
+
+                            @if (showPassword) {
+                                <svg lucideEyeOff></svg>
+                            } @else {
+                                <svg lucideEye></svg>
+                            }
+
+                        </button>
+
+                    </div>
+
+                    @if (hasError('password', 'required')) {
+                        <small class="form-field__error">
+                            La contraseña es obligatoria.
+                        </small>
+                    }
+                            
+                </div>
+
+                <div class="form-actions">
+
+                    <a
+                        class="form-actions__link"
+                        routerLink="/forgot-password">
+                        ¿Olvidaste tu contraseña?
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn--primary">
+                        Ingresar
+
+                        <svg lucideArrowRight></svg>
+
+                    </button>
+
+                </div>
+
+                <div class="form-register">
+
+                    <span>¿No tenés cuenta?</span>
+
+                    <a 
+                        class="form-actions__link"
+                        routerLink="/register">
+                        Crear una cuenta
+                    </a>
+                    
+                </div>
+
+            </section>
+
+        </form>
+
+    </div>
+
+</section>

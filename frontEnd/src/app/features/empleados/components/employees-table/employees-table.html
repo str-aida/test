@@ -1,0 +1,196 @@
+<section class="employees-table">
+
+  <header class="employees-table__header">
+
+    <h2 class="employees-table__title">
+      Personal registrado
+    </h2>
+
+    <p class="employees-table__subtitle">
+      Gestioná el personal registrado en el sistema.
+    </p>
+
+  </header>
+
+
+  <div class="employees-table__toolbar">
+
+    <div class="employees-table__search">
+
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Buscar por nombre o email..."
+        [(ngModel)]="texto"
+        (keyup.enter)="search()">
+
+    </div>
+
+    <div class="employees-table__filter">
+
+      <select
+        class="form-select"
+        [(ngModel)]="rol"
+        (change)="search()">
+
+        <option value="">Todos los roles</option>
+        <option value="ADMIN">Administrador</option>
+        <option value="EMPLEADO">Empleado</option>
+
+      </select>
+
+    </div>
+
+    <button
+      type="button"
+      class="btn employees-table__button"
+      (click)="search()">
+      Buscar
+    </button>
+
+  </div>
+
+
+  @if (employees.length === 0) {
+
+    <p class="employees-table__empty">
+      No hay personal registrado.
+    </p>
+
+  } @else {
+
+    <div class="employees-table__wrapper">
+
+      <table class="table employees-table__table">
+
+        <thead>
+
+          <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          @for (employee of employees; track employee.id) {
+
+            <tr>
+
+              <td>
+                @if (editingEmployeeId === employee.id) {
+
+                  <input
+                      type="text"
+                      [(ngModel)]="editingEmployee!.nombre"
+                      class="table-input">
+
+                } @else {
+                  {{ employee.nombre }}
+                }
+              </td>
+              <td>
+                @if (editingEmployeeId === employee.id) {
+
+                  <input
+                      type="text"
+                      [(ngModel)]="editingEmployee!.apellido"
+                      class="table-input">
+
+                } @else {
+                  {{ employee.apellido }}
+                }
+              </td>
+              <td>
+                @if (editingEmployeeId === employee.id) {
+
+                  <input
+                      type="email"
+                      [(ngModel)]="editingEmployee!.email"
+                      class="table-input">
+
+                } @else {
+                  {{ employee.email }}
+                }
+              </td>
+
+              <td>
+                @if (editingEmployeeId === employee.id) {
+                  
+                  <label>
+                    <input
+                      type="radio"
+                      name="estado{{ employee.id }}"
+                      [value]="Estado.ACTIVO"
+                      [(ngModel)]="editingEmployee!.estado">
+
+                    Activo
+                  </label>
+
+                  <label>
+                    <input
+                      type="radio"
+                      name="estado{{ employee.id }}"
+                      [value]="Estado.INACTIVO"
+                      [(ngModel)]="editingEmployee!.estado">
+
+                    Inactivo
+                  </label>
+
+                } @else {
+                  {{ employee.estado }}
+                }
+              </td>
+
+              <td>
+
+                @if (editingEmployeeId === employee.id) {
+
+                  <div class="table-actions">
+
+                    <button
+                      type="button"
+                      class="table-actions__save"
+                      (click)="save(employee)">
+                      Guardar
+                    </button>
+
+                    <button
+                      type="button"
+                      class="table-actions__cancel"
+                      (click)="cancel()">
+                      Cancelar
+                    </button>
+
+                  </div>
+
+                } @else {
+
+                  <button
+                    type="button"
+                    class="table-actions__edit"
+                    (click)="edit(employee)">
+                    Editar
+                  </button>
+
+                }
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  }
+
+</section>

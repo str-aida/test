@@ -1,0 +1,487 @@
+@use 'abstracts/index' as *;
+@use 'sass:color';
+
+.audit-list {
+  width: 100%;
+  padding: $space-md;
+  font-family: $font-body;
+}
+
+// ─── HEADER ─────────────────────────────────────────────────
+
+.audit-list__header {
+  margin-bottom: 1.5rem;
+}
+
+.audit-list__header-title {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+}
+
+.audit-list__icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: rgba($color-primary, 0.1);
+  color: $color-primary;
+  flex-shrink: 0;
+}
+
+.audit-list__icon {
+  width: 26px;
+  height: 26px;
+}
+
+.audit-list__title {
+  font-family: $font-body;
+  font-size: 2rem;
+  font-weight: 700;
+  color: $color-primary;
+  margin: 0 0 0.25rem 0;
+}
+
+.audit-list__subtitle {
+  font-family: $font-body;
+  font-size: 0.88rem;
+  color: $color-text-light;
+  margin: 0;
+}
+
+// ─── TOOLBAR (BÚSQUEDA + ACCIONES) ─────────────────────────
+
+.audit-list__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.audit-search {
+  position: relative;
+  flex: 1;
+  max-width: 380px;
+  min-width: 240px;
+
+  &__icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: $color-text-light;
+  }
+
+  &__input {
+    width: 100%;
+    height: 40px;
+    padding: 0 1rem 0 2.25rem;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    font-family: $font-body;
+    font-size: 0.88rem;
+    color: $color-text;
+    background: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary-light;
+      box-shadow: 0 0 0 3px rgba($color-primary-light, 0.1);
+    }
+  }
+}
+
+.audit-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-stitch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 40px;
+  padding: 0 1rem;
+  border-radius: 8px;
+  font-family: $font-body;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+
+  &__icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  &--secondary {
+    background: #fff;
+    border-color: $color-border;
+    color: $color-text;
+
+    &:hover {
+      background: $color-surface;
+      border-color: color.adjust(#ececec, $lightness: -10%);
+    }
+  }
+
+  &--primary {
+    background: $color-primary;
+    color: #fff;
+
+    &:hover {
+      background: $color-primary-light;
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: $color-text-light;
+
+    &:hover {
+      background: $color-surface;
+      color: $color-text;
+    }
+  }
+}
+
+// ─── PANEL DE FILTROS DESPLEGABLE ───────────────────────────
+
+.audit-filter-panel {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: 10px;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1;
+    min-width: 160px;
+
+    label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: $color-text-light;
+      text-transform: uppercase;
+    }
+  }
+
+  &__input,
+  &__select {
+    height: 38px;
+    padding: 0 0.75rem;
+    border: 1px solid $color-border;
+    border-radius: 6px;
+    font-family: $font-body;
+    font-size: 0.85rem;
+    color: $color-text;
+    background: #fff;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary-light;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+// ─── CARD TABLA Y HEADER MAROON ─────────────────────────────
+
+.table-card {
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1.25rem;
+    border-top: 1px solid $color-border;
+    background: #faf8f7;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: $font-body;
+  font-size: 0.84rem;
+  text-align: left;
+
+  thead {
+    background: $color-primary;
+
+    th {
+      padding: 0.85rem 1rem;
+      font-family: $font-body;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid $color-border;
+      transition: background-color 0.15s ease;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background: #faf8f7;
+      }
+    }
+
+    td {
+      padding: 0.85rem 1rem;
+      vertical-align: middle;
+      color: $color-text;
+      white-space: nowrap;
+    }
+  }
+}
+
+// Columnas específicas
+.col-fecha {
+  color: $color-text-light;
+  font-size: 0.82rem;
+}
+
+.col-usuario {
+  font-weight: 600;
+  color: $color-text;
+}
+
+.col-accion {
+  color: $color-text;
+}
+
+.col-modulo {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: $color-text-light;
+  letter-spacing: 0.04em;
+}
+
+.col-referencia {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: $color-text-light;
+}
+
+.col-campo {
+  font-size: 0.8rem;
+  color: $color-text-light;
+}
+
+.col-descripcion {
+  color: $color-text-light;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Badges de valores anterior/nuevo
+.val-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+
+  &--old {
+    background: #e5e7eb;
+    color: #4b5563;
+  }
+
+  &--new {
+    background: #e5e7eb;
+    color: #4b5563;
+  }
+}
+
+// Badges de Tipo (CREATE, UPDATE, DELETE)
+.tipo-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+
+  &--create {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  &--update {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  &--delete {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  &--neutral {
+    background: #f3f4f6;
+    color: #4b5563;
+  }
+}
+
+// ─── PAGINACIÓN EN FOOTER ───────────────────────────────────
+
+.pagination-info {
+  font-size: 0.8rem;
+  color: $color-text-light;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pagination-btn {
+  height: 32px;
+  padding: 0 0.75rem;
+  border: 1px solid $color-border;
+  border-radius: 6px;
+  background: #fff;
+  font-family: $font-body;
+  font-size: 0.8rem;
+  color: $color-text;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: $color-surface;
+    border-color: color.adjust(#ececec, $lightness: -10%);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.pagination-pages {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.page-num {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid $color-border;
+  border-radius: 6px;
+  background: #fff;
+  font-family: $font-body;
+  font-size: 0.8rem;
+  color: $color-text;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover:not(.page-num--active) {
+    background: $color-surface;
+  }
+
+  &--active {
+    background: $color-primary;
+    border-color: $color-primary;
+    color: #fff;
+    font-weight: 700;
+  }
+}
+
+// ─── ESTADOS (LOADING/ERROR/VACÍO) ──────────────────────────
+
+.audit-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 4rem 1rem;
+  color: $color-text-light;
+  text-align: center;
+
+  &__spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid $color-border;
+    border-top-color: $color-primary;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  &__icon-wrap {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: rgba($color-primary, 0.08);
+    color: $color-primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &--danger {
+      background: rgba($color-danger, 0.1);
+      color: $color-danger;
+    }
+  }
+
+  &__icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  &__text {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

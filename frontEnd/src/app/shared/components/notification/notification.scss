@@ -1,0 +1,121 @@
+@use '../../../../styles/abstracts/colors' as *;
+
+.notifications {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  width: min(400px, calc(100vw - 32px));
+
+  z-index: 9999;
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  min-height: 64px;
+  padding: 14px 16px;
+
+  background-color: $color-white;
+  border-radius: 10px;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  border-left: 4px solid;
+
+  animation: notification-enter 0.25s ease-out;
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    svg {
+      width: 19px;
+      height: 19px;
+      stroke-width: 2.3;
+    }
+  }
+
+  &__message {
+    flex: 1;
+
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  &__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 28px;
+    height: 28px;
+
+    padding: 0;
+
+    border: none;
+    background: transparent;
+
+    cursor: pointer;
+
+    opacity: 0.5;
+
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &--success {
+    border-left-color: #2e7d32;
+
+    .notification__icon {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+  }
+
+  &--error {
+    border-left-color: #c62828;
+
+    .notification__icon {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+  }
+}
+
+@keyframes notification-enter {
+
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

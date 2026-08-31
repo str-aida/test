@@ -1,0 +1,230 @@
+@use 'abstracts/index' as *;
+
+.how-it-works {
+
+    padding: $space-xl 0;
+
+}
+
+.how-it-works__subtitle {
+
+    margin-bottom: $space-xs;
+
+    font-family: $font-body;
+    font-size: $fs-caption;
+    font-weight: $fw-semibold;
+
+    color: $color-primary-light;
+
+    text-transform: uppercase;
+    letter-spacing: .1em;
+
+}
+
+.how-it-works__title {
+
+    font-family: $font-heading;
+    font-size: $fs-section-title;
+    font-weight: $fw-bold;
+
+    color: $color-primary;
+
+}
+
+.how-it-works__header {
+
+    display: flex;
+    flex-direction: column;
+    gap: $space-xs;
+
+    margin-bottom: $space-lg;
+
+}
+
+.how-it-works__timeline {
+
+    position: relative;
+
+}
+
+.how-it-works__timeline::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 2.5rem; // linea en el centro de los cuadrados
+
+    // modificar si decido mover los numeros
+    left: 0;
+    right: 0;
+
+    height: 2px;
+
+    background: $color-divider;
+
+}
+
+.how-it-works__steps {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: $space-md;
+
+    // align-items: stretch; REVISAR
+
+}
+
+.how-it-works__step {
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+.how-it-works__indicator {
+
+    display: flex;
+    
+    //si decido mover un poco los numeros
+    //padding-left: $space-sm;
+    
+    margin-bottom: $space-md;
+
+}
+
+.how-it-works__number {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 5rem;
+    aspect-ratio: 1;
+
+    border-radius: .5rem;
+
+    color: $color-white;
+    font-weight: $fw-bold;
+
+    font-family: $font-heading;
+
+    font-size: 1.8rem;
+
+    z-index: 1;
+
+}
+
+.how-it-works__step:nth-child(1) .how-it-works__number {
+
+    background: $color-primary;
+
+}
+
+.how-it-works__step:nth-child(2) .how-it-works__number {
+
+    background: $color-primary-light;
+
+}
+
+.how-it-works__step:nth-child(3) .how-it-works__number {
+
+    background: $color-primary-dark;
+
+}
+
+.how-it-works__card {
+
+    display: flex;
+    flex-direction: column;
+    gap: $space-sm;
+
+    height: 100%;
+
+    padding: $space-md;
+
+    border: 1px solid $color-border;
+    border-radius: 1.2rem;
+
+    background: $color-surface;
+
+}
+
+.how-it-works__card-title {
+
+    font-family: $font-heading;
+    font-size: $fs-h3;
+    font-weight: $fw-bold;
+
+    color: $color-primary;
+
+    line-height: 1.2;
+
+}
+
+.how-it-works__card-description {
+
+    font-family: $font-body;
+    font-size: $fs-body;
+    font-weight: $fw-regular;
+
+    color: $color-text-light;
+
+    line-height: 1.5;
+
+}
+
+
+/* ======================================
+   TABLET
+====================================== */
+
+@include laptop {
+
+    .how-it-works__steps {
+
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+
+}
+
+/* ======================================
+   MOBILE
+====================================== */
+
+@include mobile {
+
+    .how-it-works__header {
+
+        text-align: center;
+
+    }
+
+    .how-it-works__steps {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .how-it-works__timeline::before {
+
+        display: none;
+
+    }
+
+    .how-it-works__indicator {
+
+        justify-content: center;
+
+    }
+
+    .how-it-works__card {
+
+        text-align: center;
+
+    }
+
+}

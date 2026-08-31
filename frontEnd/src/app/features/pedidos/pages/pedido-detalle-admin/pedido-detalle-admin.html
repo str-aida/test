@@ -1,0 +1,307 @@
+<div class="admin-detalle-page">
+
+  <!-- HEADER DE PÁGINA CON BOTÓN VOLVER Y TÍTULO STITCH -->
+  <header class="admin-detalle-header">
+    <a [routerLink]="backRouteValue" class="admin-detalle-back-link" title="Volver a Pedidos">
+      <svg lucideArrowLeft class="admin-detalle-back-icon"></svg>
+    </a>
+    <h1 class="admin-detalle-header__title">
+      Detalle de Pedido #{{ pedido()?.numeroPedido || pedido()?.id }}
+    </h1>
+  </header>
+
+  <!-- ESTADO: LOADING INICIAL -->
+  @if (isLoading()) {
+    <div class="admin-detalle-state">
+      <div class="admin-detalle-state__spinner"></div>
+      <p>Cargando detalle del pedido...</p>
+    </div>
+  }
+
+  <!-- ESTADO: ERROR -->
+  @else if (errorMsg()) {
+    <div class="admin-detalle-error">
+      <svg lucideAlertTriangle class="admin-detalle-error__icon"></svg>
+      <h2>Error al cargar el pedido</h2>
+      <p>{{ errorMsg() }}</p>
+      <a [routerLink]="backRouteValue" class="btn-stitch-action-dark">
+        Volver a Pedidos
+      </a>
+    </div>
+  }
+
+  <!-- CONTENIDO PRINCIPAL DE PEDIDO STITCH -->
+  @else if (pedido()) {
+    <div class="admin-detalle-grid">
+
+      <!-- FILA SUPERIOR: RESUMEN DEL PEDIDO + CLIENTE -->
+      <div class="top-row">
+
+        <!-- CARD 1: RESUMEN DEL PEDIDO -->
+        <div class="stitch-card card-resumen">
+          <div class="stitch-card__header">
+            RESUMEN DEL PEDIDO
+          </div>
+          <div class="stitch-card__body">
+            
+            <div class="resumen-top-info">
+              <div class="ref-block">
+                <span class="caption">ORDER REFERENCE</span>
+                <h3 class="ref-title">
+                  {{ pedido()?.nombreCliente }} — {{ pedido()?.fechaHora | date:'dd/MM/yyyy' }}
+                </h3>
+                <span class="ref-sub">
+                  Recibido a las {{ pedido()?.fechaHora | date:'HH:mm' }} hs
+                </span>
+              </div>
+              <div class="amount-block">
+                <span class="caption">TOTAL AMOUNT</span>
+                <h2 class="amount-title">
+                  ${{ (pedido()?.totalConDescuento ?? pedido()?.total) | number:'1.2-2' }}
+                </h2>
+              </div>
+            </div>
+
+            <div class="resumen-status-row">
+              <div class="status-col">
+                <span class="caption">ESTADO DEL PEDIDO</span>
+                <div class="status-badge-wrap">
+                  <span class="status-pill" [ngClass]="'status-pill--' + pedido()?.estado?.toLowerCase()">
+                    <span class="status-pill__dot"></span>
+                    {{ getEstadoLabel(pedido()!.estado) }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- ACCIONES SEGÚN ESTADO -->
+              <div class="actions-col">
+                @if (pedido()?.estado === EstadoPedido.PENDIENTE) {
+                  <button
+                    type="button"
+                    class="btn-stitch-action-outline"
+                    [disabled]="!!accionEnCurso()"
+                    (click)="rechazarPedido()"
+                    id="btn-rechazar-pedido">
+                    @if (accionEnCurso() === 'rechazar') {
+                      <svg lucideLoader class="btn-icon btn-icon--spin"></svg>
+                    } @else {
+                      <svg lucideX class="btn-icon"></svg>
+                    }
+                    <span>Rechazar Pedido</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn-stitch-action-dark"
+                    [disabled]="!!accionEnCurso()"
+                    (click)="aceptarPedido()"
+                    id="btn-aceptar-pedido">
+                    @if (accionEnCurso() === 'aceptar') {
+                      <svg lucideLoader class="btn-icon btn-icon--spin"></svg>
+                    } @else {
+                      <svg lucideCheck class="btn-icon"></svg>
+                    }
+                    <span>Aceptar Pedido</span>
+                  </button>
+                }
+
+                @if (pedido()?.estado === EstadoPedido.ACEPTADO) {
+                  <button
+                    type="button"
+                    class="btn-stitch-action-dark"
+                    [disabled]="!!accionEnCurso()"
+                    (click)="pasarAEnPreparacion()"
+                    id="btn-en-preparacion">
+                    @if (accionEnCurso() === 'en-preparacion') {
+                      <svg lucideLoader class="btn-icon btn-icon--spin"></svg>
+                    } @else {
+                      <svg lucideChefHat class="btn-icon"></svg>
+                    }
+                    <span>Pasar a preparación</span>
+                  </button>
+                }
+
+                @if (pedido()?.estado === EstadoPedido.EN_PREPARACION) {
+                  <button
+                    type="button"
+                    class="btn-stitch-action-dark"
+                    [disabled]="!!accionEnCurso()"
+                    (click)="marcarComoListo()"
+                    id="btn-marcar-listo">
+                    @if (accionEnCurso() === 'listo') {
+                      <svg lucideLoader class="btn-icon btn-icon--spin"></svg>
+                    } @else {
+                      <svg lucideCheckCircle2 class="btn-icon"></svg>
+                    }
+                    <span>Marcar como listo</span>
+                  </button>
+                }
+
+                @if (pedido()?.estado === EstadoPedido.LISTO) {
+                  <button
+                    type="button"
+                    class="btn-stitch-action-dark"
+                    [disabled]="!!accionEnCurso()"
+                    (click)="marcarComoEntregado()"
+                    id="btn-marcar-entregado">
+                    @if (accionEnCurso() === 'entregado') {
+                      <svg lucideLoader class="btn-icon btn-icon--spin"></svg>
+                    } @else {
+                      <svg lucidePackageCheck class="btn-icon"></svg>
+                    }
+                    <span>Marcar como entregado</span>
+                  </button>
+                }
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- CARD 2: CLIENTE -->
+        <div class="stitch-card card-cliente">
+          <div class="stitch-card__header">
+            CLIENTE
+          </div>
+          <div class="stitch-card__body">
+            <div class="cliente-info-list">
+
+              <div class="cliente-info-item">
+                <svg lucideUser class="cliente-icon"></svg>
+                <div>
+                  <span class="caption">NOMBRE COMPLETO</span>
+                  <span class="info-val">{{ pedido()?.nombreCliente }}</span>
+                </div>
+              </div>
+
+              <div class="cliente-info-item">
+                <svg lucidePhone class="cliente-icon"></svg>
+                <div>
+                  <span class="caption">TELÉFONO</span>
+                  <span class="info-val">{{ pedido()?.telefonoCliente }}</span>
+                </div>
+              </div>
+
+              <div class="cliente-info-item">
+                <svg lucideCreditCard class="cliente-icon"></svg>
+                <div>
+                  <span class="caption">MÉTODO DE PAGO</span>
+                  <span class="info-val">{{ pedido()?.metodoPago }}</span>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="cliente-divider"></div>
+
+            <div class="pago-status-block">
+              <span class="caption">ESTADO DE PAGO</span>
+              
+              @switch (pedido()?.estadoPago) {
+                @case (EstadoPago.APROBADO) {
+                  <div class="pago-badge pago-badge--aprobado">
+                    <svg lucideCheckCircle2 class="pago-badge__icon"></svg>
+                    <div>
+                      <span class="pago-badge__title">APROBADO</span>
+                      <span class="pago-badge__sub">Transacción procesada exitosamente</span>
+                    </div>
+                  </div>
+                }
+                @case (EstadoPago.REEMBOLSADO) {
+                  <div class="pago-badge pago-badge--reembolsado">
+                    <svg lucideRefreshCw class="pago-badge__icon"></svg>
+                    <div>
+                      <span class="pago-badge__title">REEMBOLSADO</span>
+                      <span class="pago-badge__sub">El pago fue reembolsado</span>
+                    </div>
+                  </div>
+                }
+                @case (EstadoPago.ANULADO) {
+                  <div class="pago-badge pago-badge--anulado">
+                    <svg lucideXCircle class="pago-badge__icon"></svg>
+                    <div>
+                      <span class="pago-badge__title">ANULADO</span>
+                      <span class="pago-badge__sub">El pago fue cancelado o anulado</span>
+                    </div>
+                  </div>
+                }
+                @default {
+                  <div class="pago-badge pago-badge--pendiente">
+                    <svg lucideClock class="pago-badge__icon"></svg>
+                    <div>
+                      <span class="pago-badge__title">PENDIENTE</span>
+                      <span class="pago-badge__sub">Pago pendiente de confirmación</span>
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- FILA MEDIA: DETALLES DE ENTREGA -->
+      <div class="stitch-card card-entrega">
+        <div class="entrega-content">
+          <div class="entrega-icon-box">
+            @if (pedido()?.tipoEntrega === TipoEntrega.DELIVERY) {
+              <svg lucideTruck></svg>
+            } @else {
+              <svg lucideStore></svg>
+            }
+          </div>
+          <div class="entrega-details">
+            <span class="caption">DETALLES DE ENTREGA</span>
+            @if (pedido()?.tipoEntrega === TipoEntrega.DELIVERY && pedido()?.direccionCliente) {
+              <p class="entrega-address">
+                Dirección: <strong>{{ pedido()?.direccionCliente }}</strong>
+              </p>
+            } @else {
+              <p class="entrega-address">
+                Retiro en local
+              </p>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- FILA INFERIOR: ÍTEMS DEL PEDIDO -->
+      <div class="stitch-card card-items">
+        <div class="stitch-card__header stitch-card__header--split">
+          <span>ÍTEMS DEL PEDIDO</span>
+          <span class="items-count-badge">{{ pedido()?.detalles?.length || 0 }} Productos</span>
+        </div>
+
+        <div class="items-table-container">
+          <table class="items-table">
+            <thead>
+              <tr>
+                <th>PRODUCTO</th>
+                <th>PRECIO UNITARIO</th>
+                <th>CANTIDAD</th>
+                <th>SUBTOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (det of pedido()?.detalles; track det.productoId) {
+                <tr>
+                  <td class="col-product">
+                    <span class="product-title">{{ det.nombreProducto }}</span>
+                  </td>
+                  <td class="col-unit">${{ det.precioUnitario | number:'1.2-2' }}</td>
+                  <td class="col-qty">{{ det.cantidad }}</td>
+                  <td class="col-subtotal">${{ det.subtotal | number:'1.2-2' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  }
+
+</div>
+

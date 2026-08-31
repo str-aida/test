@@ -1,0 +1,161 @@
+<section class="pedidos-en-curso">
+
+  <!-- ─── HEADER ──────────────────────────────────────────────── -->
+  <header class="pedidos-list__header">
+    <div class="pedidos-list__header-title">
+      <div class="pedidos-list__icon-wrapper pedidos-list__icon-wrapper--curso">
+        <svg lucideActivity class="pedidos-list__icon"></svg>
+      </div>
+      <div>
+        <h1 class="pedidos-list__title">Pedidos en Curso</h1>
+        <p class="pedidos-list__subtitle">
+          Pedidos activos que requieren seguimiento operativo.
+        </p>
+      </div>
+    </div>
+    <button
+      type="button"
+      class="btn-actualizar"
+      (click)="cargarPedidosEnCurso()"
+      [disabled]="isLoading()"
+      id="btn-actualizar-en-curso"
+      title="Actualizar">
+      <svg lucideRefreshCw class="btn-actualizar__icon" [class.btn-actualizar__icon--spin]="isLoading()"></svg>
+      <span>Actualizar</span>
+    </button>
+  </header>
+
+  <!-- ─── LOADING ─────────────────────────────────────────────── -->
+  @if (isLoading()) {
+    <div class="pedidos-state">
+      <div class="pedidos-state__spinner"></div>
+      <p>Cargando pedidos en curso...</p>
+    </div>
+  }
+
+  <!-- ─── ERROR ──────────────────────────────────────────────── -->
+  @else if (hasError()) {
+    <div class="pedidos-state pedidos-state--error">
+      <svg lucideAlertTriangle class="pedidos-state__icon pedidos-state__icon--danger"></svg>
+      <p>Error al cargar los pedidos en curso.</p>
+      <button type="button" class="btn btn--primary" (click)="cargarPedidosEnCurso()">Reintentar</button>
+    </div>
+  }
+
+  <!-- ─── TABLA ─────────────────────────────────────────────── -->
+  @else if (pedidos.length > 0) {
+
+    <div class="table-wrapper">
+      <table class="tabla-pedidos">
+        <thead>
+          <tr>
+            <th>ID / FECHA</th>
+            <th>CLIENTE</th>
+            <th>ENTREGA</th>
+            <th>PAGO</th>
+            <th class="col-right">TOTAL</th>
+            <th>ESTADO</th>
+            <th class="col-center">ACCIÓN</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (pedido of pedidos; track pedido.id) {
+            <tr class="tabla-pedidos__row">
+
+              <td class="tabla-pedidos__id">
+                <span class="id-num">#{{ pedido.numeroPedido || pedido.id }}</span>
+                <span class="id-fecha">{{ pedido.fechaHora | date:'dd/MM/yyyy HH:mm' }}</span>
+              </td>
+
+              <td class="tabla-pedidos__cliente">
+                {{ pedido.nombreCliente }}
+              </td>
+
+              <td>
+                @if (pedido.tipoEntrega === TipoEntrega.DELIVERY) {
+                  <span class="entrega-badge entrega-badge--delivery">
+                    <svg lucideTruck class="entrega-badge__icon"></svg>
+                    DELIVERY
+                  </span>
+                } @else {
+                  <span class="entrega-badge entrega-badge--retiro">
+                    <svg lucideStore class="entrega-badge__icon"></svg>
+                    RETIRO
+                  </span>
+                }
+              </td>
+
+              <td>
+                <span class="pago-badge" [ngClass]="getPagoClass(pedido.estadoPago)">
+                  {{ getPagoLabel(pedido.estadoPago) }}
+                </span>
+              </td>
+
+              <td class="tabla-pedidos__total">
+                ${{ pedido.total | number:'1.0-0' }}
+              </td>
+
+              <td>
+                <span class="estado-badge" [ngClass]="getEstadoClass(pedido.estado)">
+                  {{ getEstadoLabel(pedido.estado) }}
+                </span>
+              </td>
+
+              <td class="col-center">
+                <button
+                  type="button"
+                  class="accion-btn"
+                  (click)="verDetalle(pedido.id)"
+                  [id]="'btn-ver-curso-' + pedido.id"
+                  title="Ver detalle y gestionar">
+                  <svg lucideEye class="accion-btn__icon"></svg>
+                  <span>GESTIONAR</span>
+                </button>
+              </td>
+
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ─── PAGINACIÓN REAL DEL BACKEND ─────────────────────── -->
+    <div class="paginacion">
+      <span class="paginacion__info">
+        Mostrando <strong>{{ mostrandoDesde }}–{{ mostrandoHasta }}</strong> de <strong>{{ totalElementos }}</strong> pedidos en curso
+        (Página <strong>{{ currentPage() + 1 }}</strong> de <strong>{{ totalPaginas }}</strong>)
+      </span>
+      <div class="paginacion__btns">
+        <button
+          type="button"
+          class="paginacion__btn paginacion__btn--prev"
+          [disabled]="esPrimeraPagina || isLoading()"
+          (click)="prevPage()"
+          id="btn-enc-anterior">
+          <svg lucideChevronLeft class="paginacion__arrow"></svg>
+          Anterior
+        </button>
+        <button
+          type="button"
+          class="paginacion__btn paginacion__btn--next"
+          [disabled]="esUltimaPagina || isLoading()"
+          (click)="nextPage()"
+          id="btn-enc-siguiente">
+          Siguiente
+          <svg lucideChevronRight class="paginacion__arrow"></svg>
+        </button>
+      </div>
+    </div>
+
+  }
+
+  <!-- ─── VACÍO ─────────────────────────────────────────────── -->
+  @else if (!isLoading()) {
+    <div class="pedidos-state">
+      <svg lucideInbox class="pedidos-state__icon"></svg>
+      <p class="pedidos-state__msg">No hay pedidos en curso actualmente.</p>
+      <p class="pedidos-state__sub">Cuando lleguen nuevos pedidos aparecerán aquí automáticamente.</p>
+    </div>
+  }
+
+</section>

@@ -1,0 +1,129 @@
+<section class="products-table">
+
+  <div class="products-table__toolbar">
+
+    <div class="products-table__search">
+
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Buscar por nombre o descripción..."
+        [(ngModel)]="texto"
+        (keyup.enter)="search()">
+
+    </div>
+
+    <div class="products-table__filter">
+
+      <select
+        class="form-select"
+        [(ngModel)]="categoriaId"
+        (change)="search()">
+
+        <option [ngValue]="undefined">Todas las categorías</option>
+
+        @for (categoria of categorias(); track categoria.id) {
+          <option [ngValue]="categoria.id"> {{ categoria.nombre }} </option>
+        }
+
+      </select>
+
+    </div>
+
+    <div class="products-table__filter">
+
+      <select
+        class="form-select"
+        [(ngModel)]="estado"
+        (change)="search()">
+
+        <option value="">Todos los estados</option>
+        <option value="ACTIVO">Activo</option>
+        <option value="INACTIVO">Inactivo</option>
+
+      </select>
+
+    </div>
+
+    <button
+      type="button"
+      class="btn products-table__button"
+      (click)="search()">
+      Buscar
+    </button>
+
+  </div>
+
+
+  @if (products.length === 0) {
+
+    <div class="products-table__empty">
+
+      @if (hasActiveFilters()) {
+        <p>No se encontraron productos con los filtros seleccionados.</p>
+      } @else {
+        <p>No hay productos registrados.</p>
+      }
+
+    </div>
+
+  } @else {
+
+    <div class="products-table__wrapper">
+
+      <table class="table products-table__table">
+
+        <thead>
+
+          <tr>
+            <th>Código</th>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          @for (product of products; track product.id) {
+
+            <tr>
+              <td> {{ product.codigo }} </td>
+              <td>
+                @if (product.imagenUrl) {
+                    <img
+                        class="product-table__image"
+                        [src]="getImageUrl(product.imagenUrl)"
+                        [alt]="product.nombre">
+                } @else {
+                    <div class="products-table__image-placeholder">
+                        <svg lucideImage></svg>
+                    </div>
+                }
+              </td>
+              <td> {{ product.nombre }} </td>
+              <td> {{ product.descripcion || 'Sin descripción' }} </td>
+              <td> {{ product.categoriaNombre }} </td>
+              <td> ${{ product.precio | number:'1.2-2' }} </td>
+              <td> {{ product.stock }} </td>
+              <td> {{ product.estado }} </td>
+              <td> <!--ACCIONES--> </td>
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  }
+
+</section>

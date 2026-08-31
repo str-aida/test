@@ -1,0 +1,101 @@
+<section class="categories-table">
+
+  @if (categories().length === 0) {
+
+    <p class="table-empty">
+      No hay categorías registradas.
+    </p>
+
+  } @else {
+
+    <div class="table-wrapper">
+
+      <table class="table">
+
+        <thead>
+
+          <tr>
+            <th>NOMBRE</th>
+            <th>DESCRIPCIÓN</th>
+            <th>ESTADO</th>
+            <th>ACCIONES</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          @for (category of categories(); track category.id) {
+
+            <tr>
+
+              <td>
+                <div class="table-category">
+
+                  <span class="table-category__icon">
+                    <svg lucideShapes></svg>
+                  </span>
+                  <span>{{ category.nombre }}</span>
+
+                </div>
+                
+              </td>
+
+              <td class="table-description">
+                {{ category.descripcion || '-' }}
+              </td>
+
+              <td>
+                <span
+                  class="table-status"
+                  [class.table-status--active]="category.estado === Estado.ACTIVO"
+                  [class.table-status--inactive]="category.estado === Estado.INACTIVO">
+
+                  {{ category.estado === Estado.ACTIVO ? 'Activa' : 'Inactiva' }}
+
+                </span>
+              </td>
+
+              <td>
+
+                <div class="table-actions">
+
+                  <button
+                    type="button"
+                    class="table-actions__edit"
+                    title="Editar categoría"
+                    (click)="edit(category)">
+                    
+                    <svg lucidePencil></svg>
+                    <span>Editar</span>
+
+                  </button>
+
+                  <button
+                    type="button"
+                    class="table-actions__delete"
+                    title="Desactivar categoría"
+                    (click)="delete(category)">
+                    
+                    <svg lucideTrash2></svg>
+                    <span>Eliminar</span>
+
+                  </button>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  }
+
+</section>

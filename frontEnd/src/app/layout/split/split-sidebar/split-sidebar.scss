@@ -1,0 +1,173 @@
+@use 'abstracts/index' as *;
+
+.split-sidebar{
+
+    height: 100%;
+    background: $color-primary;
+    color: $color-white;
+    display: flex;
+    flex-direction: column;
+    padding: $space-lg;
+    gap: $space-md;
+
+    @include tablet {
+
+        padding: $space-md;
+
+    }
+
+    @include mobile {
+
+        height: auto;
+        gap: $space-md;
+
+    }
+
+}
+
+.split-sidebar__hero {
+
+    display: flex;
+    flex-direction: column;
+    gap: $space-xs;
+
+}
+
+.split-sidebar__steps {
+
+    display: flex;
+    flex-direction: column;
+    gap: $space-md;
+
+}
+
+.split-sidebar__footer {
+
+    margin-top: auto;
+    padding-top: $space-xl;
+
+    @include mobile {
+
+        margin-top: 0;
+        padding-top: $space-md;
+
+    }
+
+}
+
+.step-progress {
+
+    display: inline-block;
+    font-size: $fs-body;
+    font-weight: $fw-medium;
+    color: rgba($color-white, .8);
+
+}
+
+.brand {
+
+    display: flex;
+    align-items: center;
+    gap: $space-sm;
+
+}
+
+.brand__logo {
+
+    width: 40px;
+    height: auto; //o 42px; REVISAR
+    //object-fit: contain;
+    flex-shrink: 0;
+
+}
+
+.brand__name {
+
+    font-family: $font-heading;
+    font-size: $fs-h3;
+    font-weight: $fw-bold;
+    color: $color-white;
+
+}
+
+.hero__eyebrow {
+
+    color: rgba($color-white, .75);
+    font-family: $font-body;
+    font-size: $fs-caption;
+    font-weight: $fw-medium;
+    text-transform: uppercase;
+    letter-spacing: .05rem;
+    opacity: .8;
+
+}
+
+.hero__title {
+
+    font-family: $font-heading;
+    font-size: $fs-section-title;
+    line-height: $lh-heading;
+
+}
+
+.hero__description{
+
+    font-family: $font-body;
+    font-size: $fs-body;
+    font-weight: $fw-regular;
+    max-width: 340px;
+    line-height: $lh-body;
+    color: rgba($color-white, .8);
+
+    @include mobile {
+
+        max-width: 100%;
+
+    }
+
+}
+
+.step-card{
+
+    display: flex;
+    align-items: center;
+    gap: $space-md;
+
+}
+
+.step-card__icon {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba($color-white, .15);
+    border-radius: 14px;
+}
+
+.step-card__icon svg {
+
+    width: 24px;
+    height: 24px;
+    color: $color-white;
+
+}
+
+.step-card__title{
+
+    font-family: $font-body;
+    font-size: 1rem;
+    font-weight: $fw-semibold;
+
+}
+
+.step-card__description{
+
+    font-family: $font-body;
+    font-size: $fs-small;
+    font-weight: $fw-light;
+    color: rgba($color-white, .75);
+
+}

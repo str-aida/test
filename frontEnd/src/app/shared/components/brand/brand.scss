@@ -1,0 +1,21 @@
+@use 'abstracts/index' as *;
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: $space-sm;
+}
+
+.brand__logo {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.brand__name {
+    font-family: $font-heading;
+    font-size: $fs-h3;
+    font-weight: $fw-bold;
+    color: $color-white;
+}

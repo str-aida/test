@@ -1,0 +1,190 @@
+@use 'abstracts/index' as *;
+
+.categories-table {
+    width: 100%;
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+/* CONTENEDOR DE LA TABLA */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    background: $color-white;
+    border: 1px solid $color-border;
+    border-radius: 12px;
+}
+
+
+/* TABLA */
+
+.table {
+    width: 100%;
+    margin: 0;
+    table-layout: auto;
+    border-collapse: collapse;
+    font-family: $font-body;
+
+    thead {
+        background: $color-primary;
+
+        th {
+            padding: 1rem 1.25rem;
+            color: $color-white;
+            font-size: $fs-caption;
+            font-weight: $fw-semibold;
+            text-align: left;
+            border: none;
+        }
+
+        th:last-child {
+            text-align: center;
+        }
+    }
+
+    tbody {
+
+        tr {
+            transition: background-color .2s ease;
+
+            &:hover {
+                background: rgba($color-primary, .04);
+            }
+        }
+
+        td {
+            padding: 1rem 1.25rem;
+            color: $color-text;
+            font-size: $fs-caption;
+            vertical-align: middle;
+            border-bottom: 1px solid $color-border;
+        }
+    }
+}
+
+
+/* NOMBRE DE CATEGORÍA */
+
+.table-category {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    font-weight: $fw-semibold;
+}
+
+.table-category__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: rgba($color-primary, .08);
+    color: $color-primary;
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+
+/* DESCRIPCIÓN */
+
+.table-description {
+    color: $color-text-light;
+    line-height: 1.4;
+}
+
+
+/* ESTADO */
+
+.table-status {
+    display: inline-flex;
+    align-items: center;
+    padding: .35rem .7rem;
+    border-radius: 999px;
+    font-size: $fs-small;
+    font-weight: $fw-semibold;
+}
+
+.table-status--active {
+    background: rgba(34, 197, 94, .1);
+    color: #15803d;
+}
+
+.table-status--inactive {
+    background: rgba(107, 114, 128, .12);
+    color: #4b5563;
+}
+
+
+/* ACCIONES */
+
+.table-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+}
+
+.table-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    min-height: 34px;
+    padding: .4rem .65rem;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    font-family: $font-body;
+    font-size: $fs-small;
+    font-weight: $fw-semibold;
+    cursor: pointer;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease;
+}
+
+.table-actions svg {
+    width: 16px;
+    height: 16px;
+}
+
+
+/* Editar */
+
+.table-actions__edit {
+    color: $color-primary;
+
+    &:hover {
+        background: rgba($color-primary, .15);
+    }
+}
+
+
+/* Desactivar */
+
+.table-actions__delete {
+    color: $color-danger;
+
+    &:hover {
+        background: rgba($color-danger, .15);
+    }
+}
+
+
+/* ESTADO VACÍO */
+
+.table-empty {
+    padding: 3rem;
+    text-align: center;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: 12px;
+    color: $color-text-light;
+}

@@ -1,0 +1,22 @@
+@use 'abstracts/index' as *;
+
+.split-layout{
+
+    display: grid;
+    grid-template-columns: $sidebar-width 1fr;
+    min-height: 100vh;
+
+    @include tablet {
+        grid-template-columns: 320px 1fr;
+    }
+
+    @include mobile {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+    }
+
+}
+
+.split-layout__content {
+    background: $color-background;
+}

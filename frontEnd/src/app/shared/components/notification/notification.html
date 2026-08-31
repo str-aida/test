@@ -1,0 +1,39 @@
+<div class="notifications">
+
+    @for (notification of notifications(); track notification.id) {
+
+        <div
+            class="notification"
+            [class.notification--success]="notification.type === 'success'"
+            [class.notification--error]="notification.type === 'error'"
+        >
+
+            <div class="notification__icon">
+
+                @if (notification.type === 'success') {
+                    <svg lucideCircleCheck></svg>
+                }
+                @if (notification.type === 'error') {
+                    <svg lucideCircleX></svg>
+                }
+
+            </div>
+
+            <span class="notification__message">
+                {{ notification.message }}
+            </span>
+
+            <button
+                type="button"
+                class="notification__closa"
+                aria-label="Cerrar notificación"
+                (click)="remove(notification.id)"
+            >
+                <svg lucideX></svg>
+            </button>
+
+        </div>
+
+    }
+
+</div>

@@ -1,0 +1,280 @@
+@use 'abstracts/index' as *;
+
+/* ==========================
+   DISEÑO COMPARTIDO
+========================== */
+.onboarding-form{
+
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    padding: $space-lg;
+
+    @include tablet {
+
+        padding: $space-md;
+
+    }
+
+    @include mobile {
+
+        padding: $space-md;
+
+    }
+
+}
+
+.onboarding-form__header {
+    margin-bottom: $form-section-gap;
+}
+
+.onboarding-form__eyebrow {
+    display: inline-block;
+    font-size: $fs-small;
+    font-weight: $fw-medium;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    color: $color-text;
+}
+
+.onboarding-form__title {
+
+    font-family: $font-heading;
+    font-size: $fs-section-title;
+}
+
+.onboarding-form__subtitle {
+    color: $color-text-light;
+}
+
+.onboarding-form__form {
+    display: flex;
+    flex-direction: column;
+    gap: $form-section-gap;
+}
+
+.form-section {
+    font-family: $font-body;
+    font-size: $fs-caption;
+    display: flex;
+    flex-direction: column;
+    gap: $form-row-gap;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: $form-field-gap;
+}
+
+.form-field__label {
+    
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    font-weight: $fw-medium;
+}
+
+.form-field__required {
+
+    color: $color-danger;
+    font-weight: $fw-bold;
+
+}
+
+.form-field__input {
+    width: 100%;
+    padding: .40rem 1rem;
+    border: 1px solid $color-border;
+    border-radius: .75rem;
+    font: inherit;
+    //REVISAR SI DEJAR O NO***
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+//REVISAR SI DEJAR O NO***
+.form-field__input:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.15);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $form-row-gap;
+
+    @include mobile {
+
+        grid-template-columns: 1fr;
+
+    }
+}
+
+.form-row--address {
+
+    grid-template-columns: 2fr 1fr;
+
+    @include mobile {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+.schedule-range {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.schedule-range__separator {
+    color: $color-text-light;
+    font-weight: $fw-medium;
+}
+
+.service-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $form-row-gap;
+}
+
+.service-option__input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+
+.service-option__card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    min-height: 5rem;
+    //padding: .75rem;
+    border: 1px solid $color-border;
+    border-radius: .75rem;
+    cursor: pointer;
+
+    @include mobile {
+
+        min-height: 4.2rem;
+        padding: .6rem;
+        gap: .4rem;
+
+    }
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        transform .2s ease;
+}
+
+.service-option__card svg {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.service-option__card span {
+    font-size: $fs-small;
+    font-weight: $fw-medium;
+}
+
+.service-option__card:hover {
+    border-color: $color-primary;
+}
+
+.service-option__input:checked + .service-option__card {
+
+    background: $color-primary;
+
+    border-color: $color-primary;
+
+    color: $color-white;
+
+}
+
+.service-option__input:focus-visible + .service-option__card {
+
+    outline: 3px solid rgba($color-primary, .25);
+
+    outline-offset: 2px;
+
+}
+
+
+.form-field__textarea {
+    width: 100%;
+    min-height: 8rem;
+    padding: .9rem 1rem;
+    border: 1px solid $color-border;
+    border-radius: .75rem;
+    font: inherit;
+    resize: vertical;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+.form-field__textarea:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, .15);
+}
+
+.form-field__counter {
+    align-self: flex-end;
+    font-size: .8rem;
+    color: #8a8a8a;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    @include mobile {
+
+        justify-content: stretch;
+
+        .btn {
+
+            width: 100%;
+
+        }
+
+    }
+}
+
+
+//borde rojo para los mensajes
+.form-field__input.ng-invalid.ng-touched,
+.form-field__textarea.ng-invalid.ng-touched {
+
+    border-color: $color-danger;
+
+}
+
+.form-field__input.ng-invalid.ng-touched:focus,
+.form-field__textarea.ng-invalid.ng-touched:focus {
+
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, .15);
+
+}
+
+//estilo del mensaje
+.form-field__error {
+
+    margin-top: .25rem;
+    color: $color-danger;
+    font-size: .85rem;
+    font-weight: $fw-medium;
+
+}

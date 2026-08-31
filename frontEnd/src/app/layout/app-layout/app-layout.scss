@@ -1,0 +1,18 @@
+@use 'abstracts/index' as *;
+
+.app-layout {
+    display: grid;
+    grid-template-columns: $navigation-sidebar-width 1fr;
+    min-height: 100vh;
+}
+
+.app-layout__content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    
+}
+
+.app-layout__main {
+    flex: 1;
+}

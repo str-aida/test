@@ -1,0 +1,695 @@
+@use 'abstracts/index' as *;
+
+// ─── PÁGINA ─────────────────────────────────────────────────
+
+.pedidos-list {
+  width: 100%;
+  padding: $space-md;
+  padding-bottom: 4rem;
+}
+
+// ─── HEADER ─────────────────────────────────────────────────
+
+.pedidos-list__header {
+  margin-bottom: $space-md;
+}
+
+.pedidos-list__header-title {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+}
+
+.pedidos-list__icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: rgba($color-primary, 0.1);
+  color: $color-primary;
+  flex-shrink: 0;
+}
+
+.pedidos-list__icon {
+  width: 26px;
+  height: 26px;
+}
+
+.pedidos-list__title {
+  font-family: $font-heading;
+  font-size: $fs-h3;
+  font-weight: $fw-bold;
+  color: $color-primary;
+  margin: 0;
+}
+
+.pedidos-list__subtitle {
+  margin: 2px 0 0;
+  font-family: $font-body;
+  font-size: $fs-caption;
+  color: $color-text-light;
+}
+
+// ─── CARDS DE RESUMEN ────────────────────────────────────────
+// Inspirado en el diseño de Stitch: fila de tarjetas con conteo por estado
+
+.estado-cards {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: $space-md;
+}
+
+.estado-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 16px;
+  background: $color-background;
+  border: 1.5px solid $color-border;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: $font-body;
+
+  &:hover {
+    border-color: $color-primary-light;
+    background: rgba($color-primary, 0.03);
+  }
+
+  &--active {
+    border-color: $color-primary;
+    background: rgba($color-primary, 0.08);
+
+    .estado-card__label {
+      color: $color-primary;
+      font-weight: $fw-bold;
+    }
+  }
+
+  &__label {
+    font-size: 0.72rem;
+    font-weight: $fw-semibold;
+    color: $color-text-light;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+}
+
+// ─── TOOLBAR ─────────────────────────────────────────────────
+
+.pedidos-toolbar {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  margin-bottom: $space-sm;
+}
+
+// ─── BÚSQUEDA RÁPIDA ─────────────────────────────────────────
+
+.pedidos-search {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  &__icon {
+    position: absolute;
+    left: 14px;
+    width: 17px;
+    height: 17px;
+    color: $color-text-light;
+    pointer-events: none;
+  }
+
+  &__input {
+    width: 100%;
+    height: 42px;
+    padding: 0 40px 0 42px;
+    border: 1.5px solid $color-border;
+    border-radius: 8px;
+    font-family: $font-body;
+    font-size: $fs-body;
+    color: $color-text;
+    background: $color-background;
+    transition: border-color 0.2s;
+
+    &::placeholder { color: $color-text-light; }
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary-light;
+    }
+  }
+
+  &__clear {
+    position: absolute;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    color: $color-text-light;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.15s;
+
+    svg { width: 14px; height: 14px; }
+
+    &:hover {
+      background: $color-surface;
+      color: $color-text;
+    }
+  }
+}
+
+// ─── BOTÓN BUSCAR ─────────────────────────────────────────────
+
+.btn-buscar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 42px;
+  padding: 0 16px;
+  background: $color-primary;
+  color: $color-white;
+  border: none;
+  border-radius: 8px;
+  font-family: $font-body;
+  font-size: $fs-caption;
+  font-weight: $fw-semibold;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: filter 0.15s;
+
+  &:hover { filter: brightness(1.15); }
+
+  &__icon {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+// ─── BOTÓN FILTROS AVANZADOS ─────────────────────────────────
+// Stitch: botón oscuro con ícono de filtro
+
+.btn-filtros {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 18px;
+  background: $color-background;
+  color: $color-text;
+  border: 1.5px solid $color-border;
+  border-radius: 8px;
+  font-family: $font-body;
+  font-size: $fs-caption;
+  font-weight: $fw-semibold;
+  cursor: pointer;
+  white-space: nowrap;
+  position: relative;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: $color-primary-light;
+    color: $color-primary;
+  }
+
+  &--active {
+    border-color: $color-primary;
+    color: $color-primary;
+    background: rgba($color-primary, 0.04);
+  }
+
+  &__icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  &__dot {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 7px;
+    height: 7px;
+    background: #f59e0b;
+    border-radius: 50%;
+    border: 1.5px solid $color-border;
+  }
+}
+
+// ─── PANEL FILTROS AVANZADOS ──────────────────────────────────
+
+.filtros-panel {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: 10px;
+  padding: $space-sm $space-md;
+  margin-bottom: $space-sm;
+  animation: slideDown 0.15s ease;
+
+  &__grid {
+    display: flex;
+    gap: $space-sm;
+    flex-wrap: wrap;
+    margin-bottom: $space-sm;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 160px;
+  }
+
+  &__label {
+    font-family: $font-body;
+    font-size: $fs-caption;
+    font-weight: $fw-semibold;
+    color: $color-text;
+  }
+
+  &__input,
+  &__select {
+    height: 38px;
+    padding: 0 $space-xs;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    font-family: $font-body;
+    font-size: $fs-body;
+    color: $color-text;
+    background: $color-background;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary-light;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: $space-xs;
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ─── ESTADOS ─────────────────────────────────────────────────
+
+.pedidos-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $space-sm;
+  padding: 4rem $space-md;
+  text-align: center;
+  color: $color-text-light;
+  font-family: $font-body;
+  font-size: $fs-body;
+
+  &__spinner {
+    width: 38px;
+    height: 38px;
+    border: 3px solid $color-border;
+    border-top-color: $color-primary;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  &__icon {
+    width: 36px;
+    height: 36px;
+    color: $color-text-light;
+  }
+
+  &__icon--danger { color: $color-danger; }
+
+  &--error { color: $color-danger; }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+// ─── TABLA ───────────────────────────────────────────────────
+
+.table-wrapper {
+  border-radius: 10px;
+  border: 1px solid $color-border;
+  overflow-x: auto;
+  margin-bottom: $space-sm;
+}
+
+.tabla-pedidos {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: $font-body;
+  font-size: $fs-body;
+
+  // Header oscuro — exactamente como Stitch
+  thead {
+    tr {
+      background: $color-primary; // #300006 maroon muy oscuro
+    }
+
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: $fw-bold;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+
+      &:first-child { border-radius: 10px 0 0 0; }
+      &:last-child  { border-radius: 0 10px 0 0; }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid $color-border;
+      transition: background 0.12s;
+
+      &:last-child { border-bottom: none; }
+      &:hover { background: rgba($color-primary, 0.025); }
+    }
+
+    td {
+      padding: 14px 16px;
+      vertical-align: middle;
+      color: $color-text;
+    }
+  }
+}
+
+.col-right  { text-align: right; }
+.col-center { text-align: center; }
+
+// ─── CELDAS ESPECÍFICAS ──────────────────────────────────────
+
+.tabla-pedidos__id {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.id-num {
+  font-weight: $fw-bold;
+  font-family: $font-heading;
+  color: $color-text;
+}
+
+.id-fecha {
+  font-size: $fs-small;
+  color: $color-text-light;
+}
+
+.tabla-pedidos__cliente {
+  font-weight: $fw-medium;
+}
+
+.tabla-pedidos__total {
+  font-weight: $fw-bold;
+  text-align: right;
+  white-space: nowrap;
+}
+
+// ─── BADGE ENTREGA ────────────────────────────────────────────
+// Stitch: pill rosado con ícono
+
+.entrega-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: $fw-bold;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+
+  &__icon {
+    width: 13px;
+    height: 13px;
+  }
+
+  &--delivery {
+    background: #fce8f0;
+    color: #9b2c4e;
+  }
+
+  &--retiro {
+    background: #f3e8f5;
+    color: #6b3580;
+  }
+}
+
+// ─── BADGE PAGO ───────────────────────────────────────────────
+// PENDIENTE en amarillo (#fef3c7 / #92400e)
+// APROBADO en verde (#dcfce7 / #166534)
+// RECHAZADO en rojo (#fee2e2 / #991b1b)
+
+.pago-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: $fw-bold;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+
+  &.pago--aprobado {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  &.pago--pendiente {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  &.pago--rechazado,
+  &.pago--anulado,
+  &.pago--reembolsado {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+}
+
+// ─── BADGE ESTADO ─────────────────────────────────────────────
+// Stitch: PENDIENTE con fondo oscuro, otros con fondo/borde más suave
+
+.estado-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: $fw-bold;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+
+  &.estado--pendiente {
+    background: $color-primary;
+    color: $color-white;
+  }
+
+  &.estado--aceptado {
+    background: transparent;
+    border: 1.5px solid $color-text-light;
+    color: $color-text;
+  }
+
+  &.estado--preparacion {
+    background: #fce8f0;
+    color: #9b2c4e;
+    border: 1.5px solid #f0a8c0;
+  }
+
+  &.estado--listo {
+    background: transparent;
+    border: 1.5px solid $color-text-light;
+    color: $color-text;
+  }
+
+  &.estado--entregado {
+    background: transparent;
+    border: 1.5px solid $color-text-light;
+    color: $color-text-light;
+  }
+
+  &.estado--rechazado {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1.5px solid #fca5a5;
+  }
+}
+
+// ─── BOTÓN DETALLE ─────────────────────────────────────────────
+// Ícono de ojo + texto DETALLE
+
+.accion-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border: 1.5px solid $color-border;
+  background: $color-background;
+  color: $color-text;
+  font-family: $font-body;
+  font-size: 0.72rem;
+  font-weight: $fw-bold;
+  letter-spacing: 0.03em;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+
+  &__icon {
+    width: 15px;
+    height: 15px;
+    color: $color-text-light;
+    transition: color 0.15s ease;
+  }
+
+  &:hover {
+    border-color: $color-primary-light;
+    background: rgba($color-primary, 0.05);
+    color: $color-primary;
+
+    .accion-btn__icon {
+      color: $color-primary;
+    }
+  }
+}
+
+// ─── PAGINACIÓN ───────────────────────────────────────────────
+// Stitch: texto "Mostrando X de Y" + Anterior/Siguiente
+
+.paginacion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: $space-sm;
+  padding: $space-xs 0;
+
+  &__info {
+    font-family: $font-body;
+    font-size: $fs-caption;
+    color: $color-text-light;
+
+    strong { color: $color-text; }
+  }
+
+  &__btns {
+    display: flex;
+    gap: 8px;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 7px;
+    font-family: $font-body;
+    font-size: $fs-caption;
+    font-weight: $fw-semibold;
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &--prev {
+      background: $color-background;
+      border: 1.5px solid $color-border;
+      color: $color-text;
+
+      &:hover:not(:disabled) {
+        border-color: $color-primary-light;
+        color: $color-primary;
+      }
+    }
+
+    &--next {
+      background: $color-primary;
+      border: 1.5px solid $color-primary;
+      color: $color-white;
+
+      &:hover:not(:disabled) { filter: brightness(1.15); }
+    }
+  }
+
+  &__arrow {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+// ─── RESPONSIVE ──────────────────────────────────────────────
+
+@include tablet {
+  .estado-cards {
+    gap: 7px;
+  }
+
+  .estado-card {
+    padding: 10px 12px;
+    &__count { font-size: 1.5rem; }
+  }
+
+  .pedidos-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .pedidos-search { min-width: 100%; order: -1; }
+}
+
+@include mobile {
+  .pedidos-list {
+    padding: $space-sm;
+  }
+
+  .estado-cards {
+    gap: 6px;
+  }
+
+  .estado-card {
+    padding: 8px 10px;
+    min-width: 70px;
+    &__count { font-size: 1.3rem; }
+    &__label { font-size: 0.6rem; }
+  }
+
+  .filtros-panel__grid {
+    flex-direction: column;
+  }
+
+  .paginacion {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tabla-pedidos {
+    font-size: $fs-caption;
+
+    .id-fecha,
+    .tabla-pedidos__cliente { display: none; }
+  }
+}

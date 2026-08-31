@@ -1,0 +1,398 @@
+<div class="checkout-page">
+
+  <!-- Header -->
+  <header class="checkout-header">
+    <div class="checkout-header__nav">
+      <a routerLink="/cliente/carrito" class="checkout-back-link">
+        <svg lucideArrowLeft class="checkout-back-link__icon"></svg>
+        <span>Volver al carrito</span>
+      </a>
+    </div>
+
+    <div class="checkout-header__title-row">
+      <h1 class="checkout-header__title">Finalizar Compra</h1>
+      <p class="checkout-header__subtitle">
+        Completá los datos de tu pedido para confirmar la compra
+      </p>
+    </div>
+  </header>
+
+  <div class="checkout-layout">
+
+    <!-- Formulario / Opciones del pedido (Columna Izquierda) -->
+    <main class="checkout-main">
+
+      <!-- 1. Tipo de Entrega -->
+      <section class="checkout-card">
+        <div class="checkout-card__header">
+          <span class="checkout-card__step">1</span>
+          <h2 class="checkout-card__title">Tipo de entrega</h2>
+        </div>
+
+        <div class="delivery-options">
+          <label
+            class="delivery-option"
+            [class.delivery-option--selected]="tipoEntrega === TipoEntrega.DELIVERY">
+            <input
+              type="radio"
+              name="tipoEntrega"
+              [value]="TipoEntrega.DELIVERY"
+              [(ngModel)]="tipoEntrega"
+              class="delivery-option__radio">
+            <div class="delivery-option__content">
+              <div class="delivery-option__icon-wrapper">
+                <svg lucideTruck class="delivery-option__icon"></svg>
+              </div>
+              <div class="delivery-option__text">
+                <span class="delivery-option__label">Envío a domicilio (Delivery)</span>
+                <span class="delivery-option__desc">Recibí tu pedido en la dirección que elijas</span>
+              </div>
+            </div>
+          </label>
+
+          <label
+            class="delivery-option"
+            [class.delivery-option--selected]="tipoEntrega === TipoEntrega.RETIRO">
+            <input
+              type="radio"
+              name="tipoEntrega"
+              [value]="TipoEntrega.RETIRO"
+              [(ngModel)]="tipoEntrega"
+              class="delivery-option__radio">
+            <div class="delivery-option__content">
+              <div class="delivery-option__icon-wrapper">
+                <svg lucideStore class="delivery-option__icon"></svg>
+              </div>
+              <div class="delivery-option__text">
+                <span class="delivery-option__label">Retiro en local</span>
+                <span class="delivery-option__desc">Retirá tu pedido directamente en nuestra sucursal</span>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Selección de Dirección (Solo si DELIVERY) -->
+        @if (tipoEntrega === TipoEntrega.DELIVERY) {
+          <div class="address-section">
+            <div class="address-section__header">
+              <h3 class="address-section__title">
+                <svg lucideMapPin class="address-section__icon"></svg>
+                Dirección de entrega
+              </h3>
+              @if (direcciones.length > 0 && !mostrarFormNuevaDireccion) {
+                <button
+                  type="button"
+                  class="address-add-btn"
+                  (click)="toggleFormNuevaDireccion(true)">
+                  <svg lucidePlus class="address-add-btn__icon"></svg>
+                  <span>Nueva dirección</span>
+                </button>
+              }
+            </div>
+
+            @if (isLoadingDirecciones) {
+              <p class="checkout-loading-text">Cargando direcciones...</p>
+            }
+
+            @else if (mostrarFormNuevaDireccion) {
+              <div class="address-form-card">
+                <div class="address-form-card__header">
+                  <h4>{{ direcciones.length === 0 ? 'Registrá tu dirección de entrega' : 'Agregar nueva dirección' }}</h4>
+                  @if (direcciones.length > 0) {
+                    <button type="button" class="address-form-close" (click)="toggleFormNuevaDireccion(false)" title="Cancelar">
+                      <svg lucideX class="address-form-close__icon"></svg>
+                    </button>
+                  }
+                </div>
+
+                <div class="address-form-grid">
+                  <div class="form-group form-group--full">
+                    <label for="dirNombre">Nombre identificatorio (Ej: Casa, Trabajo)</label>
+                    <input id="dirNombre" type="text" class="form-input" [(ngModel)]="nuevaDireccionForm.nombre" placeholder="Ej: Mi Casa">
+                  </div>
+
+                  <div class="form-group form-group--col-8">
+                    <label for="dirCalle">Calle *</label>
+                    <input id="dirCalle" type="text" class="form-input" [(ngModel)]="nuevaDireccionForm.calle" placeholder="Ej: Av. San Martín">
+                  </div>
+
+                  <div class="form-group form-group--col-4">
+                    <label for="dirNumero">Número *</label>
+                    <input id="dirNumero" type="text" class="form-input" [(ngModel)]="nuevaDireccionForm.numero" placeholder="Ej: 1234">
+                  </div>
+
+                  <div class="form-group form-group--col-6">
+                    <label for="dirLocalidad">Localidad *</label>
+                    <input id="dirLocalidad" type="text" class="form-input" [(ngModel)]="nuevaDireccionForm.localidad" placeholder="Ej: Córdoba">
+                  </div>
+
+                  <div class="form-group form-group--col-3">
+                    <label for="dirPiso">Piso</label>
+                    <input id="dirPiso" type="text" class="form-input" [(ngModel)]="nuevaDireccionForm.piso" placeholder="Ej: 3">
+                  </div>
+
+                  <div class="form-group form-group--col-3">
+                    <label for="dirDepto">Dpto</label>
+                    <input id="dirDepto" type="text" class="form-input" [(ngModel)]="nuevaDireccionForm.departamento" placeholder="Ej: B">
+                  </div>
+
+                  <div class="form-group form-group--col-4">
+                    <label for="dirCP">Código Postal</label>
+                    <input id="dirCP" type="text" class="form-input" [(ngModel)]="nuevaDireccionForm.codigoPostal" placeholder="Ej: 5000">
+                  </div>
+
+                  <div class="form-group form-group--col-8">
+                    <label for="dirRef">Referencia</label>
+                    <input id="dirRef" type="text" class="form-input" [(ngModel)]="nuevaDireccionForm.referencia" placeholder="Ej: Portón verde, timbre 3B">
+                  </div>
+
+                  <div class="form-group form-group--full form-group--checkbox">
+                    <label class="checkbox-label">
+                      <input type="checkbox" [(ngModel)]="nuevaDireccionForm.esPrincipal">
+                      <span>Marcar como dirección principal</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="address-form-actions">
+                  @if (direcciones.length > 0) {
+                    <button type="button" class="btn-cancel" (click)="toggleFormNuevaDireccion(false)">
+                      Cancelar
+                    </button>
+                  }
+                  <button type="button" class="btn-save" [disabled]="isSavingDireccion" (click)="guardarNuevaDireccion()">
+                    @if (isSavingDireccion) {
+                      Guardando...
+                    } @else {
+                      Guardar y Usar
+                    }
+                  </button>
+                </div>
+              </div>
+            }
+
+            @else if (direcciones.length > 0) {
+              <div class="address-list">
+                @for (dir of direcciones; track dir.id) {
+                  <label
+                    class="address-item"
+                    [class.address-item--selected]="direccionIdSelected === dir.id">
+                    <input
+                      type="radio"
+                      name="direccion"
+                      [value]="dir.id"
+                      [(ngModel)]="direccionIdSelected"
+                      class="address-item__radio">
+                    <div class="address-item__details">
+                      <div class="address-item__top">
+                        <span class="address-item__name">{{ dir.nombre || 'Mi Dirección' }}</span>
+                        @if (dir.esPrincipal) {
+                          <span class="address-item__badge">Principal</span>
+                        }
+                      </div>
+                      <p class="address-item__street">
+                        {{ dir.calle }} {{ dir.numero }}
+                        @if (dir.piso || dir.departamento) {
+                          ({{ dir.piso ? 'Piso ' + dir.piso : '' }} {{ dir.departamento ? 'Depto ' + dir.departamento : '' }})
+                        }
+                      </p>
+                      <p class="address-item__locality">{{ dir.localidad }}</p>
+                      @if (dir.referencia) {
+                        <p class="address-item__ref">Ref: {{ dir.referencia }}</p>
+                      }
+                    </div>
+                  </label>
+                }
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+      <!-- 2. Método de Pago -->
+      <section class="checkout-card">
+        <div class="checkout-card__header">
+          <span class="checkout-card__step">2</span>
+          <h2 class="checkout-card__title">Método de pago</h2>
+        </div>
+
+        <div class="payment-options">
+          <label
+            class="payment-option"
+            [class.payment-option--selected]="metodoPago === MetodoPago.EFECTIVO">
+            <input
+              type="radio"
+              name="metodoPago"
+              [value]="MetodoPago.EFECTIVO"
+              [(ngModel)]="metodoPago"
+              class="payment-option__radio">
+            <div class="payment-option__content">
+              <div class="payment-option__icon-wrapper">
+                <svg lucideBanknote class="payment-option__icon"></svg>
+              </div>
+              <div class="payment-option__text">
+                <span class="payment-option__label">Efectivo</span>
+                <span class="payment-option__desc">Abonás al momento de recibir o retirar tu pedido</span>
+              </div>
+            </div>
+          </label>
+
+          <label
+            class="payment-option"
+            [class.payment-option--selected]="metodoPago === MetodoPago.TARJETA">
+            <input
+              type="radio"
+              name="metodoPago"
+              [value]="MetodoPago.TARJETA"
+              [(ngModel)]="metodoPago"
+              class="payment-option__radio">
+            <div class="payment-option__content">
+              <div class="payment-option__icon-wrapper">
+                <svg lucideCreditCard class="payment-option__icon"></svg>
+              </div>
+              <div class="payment-option__text">
+                <span class="payment-option__label">Tarjeta / MercadoPago</span>
+                <span class="payment-option__desc">Pago seguro online a través de la pasarela de pagos</span>
+              </div>
+            </div>
+          </label>
+        </div>
+      </section>
+
+      <!-- 3. Cupones de Descuento -->
+      <section class="checkout-card">
+        <div class="checkout-card__header">
+          <span class="checkout-card__step">3</span>
+          <h2 class="checkout-card__title">Cupón de descuento</h2>
+        </div>
+
+        <div class="coupon-section">
+
+          <!-- Mis Cupones Disponibles -->
+          @if (misCupones.length > 0) {
+            <div class="available-coupons">
+              <h3 class="coupon-subtitle">Tus cupones disponibles:</h3>
+              <div class="coupons-grid">
+                @for (cUser of misCupones; track cUser.id) {
+                  <button
+                    type="button"
+                    class="coupon-pill"
+                    [class.coupon-pill--selected]="cuponSeleccionado?.id === cUser.id"
+                    (click)="seleccionarCuponDeLista(cUser)">
+                    <div class="coupon-pill__info">
+                      <svg lucideTicket class="coupon-pill__icon"></svg>
+                      <span class="coupon-pill__code">{{ cUser.cupon.codigo }}</span>
+                    </div>
+                    <span class="coupon-pill__val">
+                      {{ cUser.cupon.tipoDescuento === TipoDescuento.PORCENTAJE ? (cUser.cupon.valor + '% OFF') : ('$' + cUser.cupon.valor + ' OFF') }}
+                    </span>
+                  </button>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Entrada manual de código -->
+          <div class="coupon-input-box">
+            <label for="codigoCuponInput" class="coupon-subtitle">O ingresá un código:</label>
+            <div class="coupon-input-row">
+              <input
+                id="codigoCuponInput"
+                type="text"
+                class="coupon-input"
+                placeholder="EJ: DESCUENTO10"
+                [(ngModel)]="codigoCuponIngresado"
+                [disabled]="!!cuponSeleccionado">
+              @if (codigoCuponIngresado) {
+                <button
+                  type="button"
+                  class="coupon-clear-btn"
+                  (click)="limpiarCupon()">
+                  Quitar
+                </button>
+              }
+            </div>
+          </div>
+
+          @if (getCodigoCuponFinal()) {
+            <div class="coupon-applied-alert">
+              <svg lucideCheckCircle class="coupon-applied-alert__icon"></svg>
+              <span>Se intentará aplicar el cupón <strong>"{{ getCodigoCuponFinal() }}"</strong> al confirmar el pedido.</span>
+            </div>
+          }
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Resumen lateral (Columna Derecha) -->
+    <aside class="checkout-summary">
+      <div class="checkout-summary-card">
+        <h2 class="checkout-summary-card__title">Resumen de tu pedido</h2>
+
+        <!-- Lista de productos -->
+        <div class="checkout-items-list">
+          @for (item of cartService.items(); track item.producto.id) {
+            <div class="checkout-item">
+              <div class="checkout-item__img-box">
+                @if (item.producto.imagenUrl) {
+                  <img [src]="getImageUrl(item.producto.imagenUrl)" [alt]="item.producto.nombre" class="checkout-item__img">
+                } @else {
+                  <svg lucideImage class="checkout-item__placeholder-icon"></svg>
+                }
+              </div>
+              <div class="checkout-item__info">
+                <span class="checkout-item__title">{{ item.producto.nombre }}</span>
+                <span class="checkout-item__qty">Cant: {{ item.cantidad }}</span>
+              </div>
+              <div class="checkout-item__price">
+                ${{ (item.producto.precio * item.cantidad) | number:'1.2-2' }}
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="checkout-summary-divider"></div>
+
+        <!-- Totales diferenciados -->
+        <div class="checkout-totals">
+          <div class="checkout-totals__row">
+            <span>Subtotal</span>
+            <span>${{ cartService.subtotal() | number:'1.2-2' }}</span>
+          </div>
+
+          @if (getDescuentoEstimado() > 0) {
+            <div class="checkout-totals__row checkout-totals__row--discount">
+              <span>Descuento estimado</span>
+              <span>-${{ getDescuentoEstimado() | number:'1.2-2' }}</span>
+            </div>
+          }
+
+          <div class="checkout-totals__row checkout-totals__row--total">
+            <span>Total a pagar</span>
+            <span>${{ getTotalEstimado() | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <!-- Botón de Confirmación -->
+        <button
+          type="button"
+          class="checkout-submit-btn"
+          [disabled]="isSubmitting() || (tipoEntrega === TipoEntrega.DELIVERY && !direccionIdSelected)"
+          (click)="confirmarPedido()">
+          @if (isSubmitting()) {
+            <span class="spinner"></span>
+            <span>Procesando pedido...</span>
+          } @else {
+            <span>Confirmar Pedido</span>
+            <svg lucideArrowRight class="checkout-submit-btn__icon"></svg>
+          }
+        </button>
+
+      </div>
+    </aside>
+
+  </div>
+
+</div>

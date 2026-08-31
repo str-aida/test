@@ -1,0 +1,112 @@
+<div class="split-sidebar">
+
+    <!-- Logo -->
+    <header class="split-sidebar__brand">
+
+        <div class="brand">
+
+            <img
+                src="images/logo/gestia-isotype-light.svg"
+                alt="Isotipo Gestia"
+                class="brand__logo">
+
+            <span class="brand__name">
+                Gestia
+            </span>
+
+        </div>
+
+    </header>
+
+    <!-- Hero -->
+    <section class="split-sidebar__hero">
+
+        @if (info.eyebrow) {
+            <span class="hero__eyebrow">
+                {{ info.eyebrow }}
+            </span>
+        }
+
+        <h1 class="hero__title">
+            {{ info.title }}
+        </h1>
+
+        <p class="hero__description">
+            {{ info.description }}
+        </p>
+
+    </section>
+
+    <!-- Cards -->
+    <section class="split-sidebar__steps">
+
+        @for (card of info.cards; track card.title) {
+
+            <article class="step-card">
+
+                <div class="step-card__icon">
+
+                    @switch (getCardIcon($index)) {
+
+                        @case ('store') {
+                            <svg lucideStore></svg>
+                        }
+                        @case ('map-pin') {
+                            <svg lucideMapPin></svg>
+                        }
+                        @case ('phone') {
+                            <svg lucidePhone></svg>
+                        }
+                        @case ('shield-check') {
+                            <svg lucideShieldCheck></svg>
+                        }
+                        @case ('users') {
+                            <svg lucideUsers></svg>
+                        }
+                        @case ('key-round') {
+                            <svg lucideKeyRound></svg>
+                        }
+                        @case ('shopping-cart') {
+                            <svg lucideShoppingCart></svg>
+                        }
+                        @case ('chart-column') {
+                            <svg lucideChartColumn></svg>
+                        }
+
+                    }
+
+                </div>
+
+                <div class="step-card__content">
+
+                    <h3 class="step-card__title">
+                        {{ card.title }}
+                    </h3>
+                    <p class="step-card__description">
+                        {{ card.description }}
+                    </p>
+
+                </div>
+
+            </article>
+
+        }
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="split-sidebar__footer">
+
+        @if (info.footer) {
+            <span class="split-sidebar__footer-text">
+                {{ info.footer }}
+            </span>
+        } @else {
+            <span class="split-sidebar__footer-text">
+                Paso {{ info.currentStep }} de {{ info.totalSteps }}
+            </span>
+        }
+
+    </footer>
+
+</div>

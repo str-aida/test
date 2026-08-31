@@ -1,0 +1,14 @@
+<app-split-layout>
+
+    <app-split-sidebar
+        sidebar
+        [info]="sidebarInfo">
+    </app-split-sidebar>
+
+    <div content>
+        <router-outlet />
+    </div>
+
+</app-split-layout>
+
+<app-notification />

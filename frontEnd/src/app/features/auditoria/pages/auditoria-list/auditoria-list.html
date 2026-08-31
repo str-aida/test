@@ -1,0 +1,253 @@
+<section class="audit-list">
+
+  <!-- HEADER -->
+  <header class="audit-list__header">
+    <div class="audit-list__header-title">
+      <div class="audit-list__icon-wrapper">
+        <svg lucideShieldCheck class="audit-list__icon"></svg>
+      </div>
+      <div>
+        <h1 class="audit-list__title">Auditoría</h1>
+        <p class="audit-list__subtitle">
+          Registro de movimientos y cambios realizados en el sistema.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <!-- BARRA SUPERIOR DE BÚSQUEDA Y BOTONES -->
+  <div class="audit-list__toolbar">
+    <div class="audit-search">
+      <svg lucideSearch class="audit-search__icon"></svg>
+      <input
+        id="filtro-buscar"
+        type="text"
+        class="audit-search__input"
+        placeholder="Buscar movimientos..."
+        [(ngModel)]="filtroAccion"
+        (keyup.enter)="buscar()" />
+    </div>
+
+    <div class="audit-actions">
+      <button
+        type="button"
+        class="btn-stitch btn-stitch--secondary"
+        (click)="toggleFiltros()"
+        id="btn-filtros">
+        <svg lucideSlidersHorizontal class="btn-stitch__icon"></svg>
+        <span>Filtros</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn-stitch btn-stitch--secondary"
+        (click)="descargarPDF()"
+        id="btn-descargar-pdf">
+        <svg lucideDownload class="btn-stitch__icon"></svg>
+        <span>Exportar</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- PANEL DESPLEGABLE DE FILTROS ADICIONALES -->
+  @if (mostrarFiltros) {
+    <div class="audit-filter-panel">
+      <div class="audit-filter-panel__field">
+        <label for="filtro-rol">Rol</label>
+        <select
+          id="filtro-rol"
+          class="audit-filter-panel__select"
+          [(ngModel)]="filtroRol">
+          <option value="">Todos los roles</option>
+          @for (rol of rolesDisponibles; track rol) {
+            <option [value]="rol">{{ rol }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="audit-filter-panel__field">
+        <label for="filtro-usuario">Usuario</label>
+        <input
+          id="filtro-usuario"
+          type="text"
+          class="audit-filter-panel__input"
+          placeholder="Buscar por usuario..."
+          [(ngModel)]="filtroUsuario" />
+      </div>
+
+      <div class="audit-filter-panel__buttons">
+        <button type="button" class="btn-stitch btn-stitch--primary" (click)="buscar()">
+          Aplicar
+        </button>
+        <button type="button" class="btn-stitch btn-stitch--ghost" (click)="limpiarFiltros()">
+          Limpiar
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- ESTADO: LOADING -->
+  @if (isLoading()) {
+    <div class="audit-state">
+      <div class="audit-state__spinner"></div>
+      <p class="audit-state__text">Cargando registros...</p>
+    </div>
+  }
+
+  <!-- ESTADO: ERROR -->
+  @else if (hasError()) {
+    <div class="audit-state audit-state--error">
+      <div class="audit-state__icon-wrap audit-state__icon-wrap--danger">
+        <svg lucideAlertTriangle class="audit-state__icon"></svg>
+      </div>
+      <p class="audit-state__text">Error al cargar los registros de auditoría.</p>
+      <button
+        type="button"
+        class="btn-stitch btn-stitch--primary"
+        (click)="cargarLogs()">
+        Reintentar
+      </button>
+    </div>
+  }
+
+  <!-- ESTADO: VACÍO -->
+  @else if (logs().length === 0) {
+    <div class="audit-state">
+      <div class="audit-state__icon-wrap">
+        <svg lucideInbox class="audit-state__icon"></svg>
+      </div>
+      <p class="audit-state__text">No se encontraron registros de auditoría.</p>
+    </div>
+  }
+
+  <!-- TABLA STITCH -->
+  @else {
+    <div class="table-card">
+      <div class="table-wrapper">
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>FECHA</th>
+              <th>USUARIO</th>
+              <th>ACCIÓN</th>
+              <th>MÓDULO</th>
+              <th>REFERENCIA</th>
+              <th>CAMPO</th>
+              <th>VAL. ANTERIOR</th>
+              <th>VAL. NUEVO</th>
+              <th>TIPO</th>
+              <th>DESCRIPCIÓN</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (log of logsPaginados; track log.id) {
+              <tr>
+                <!-- FECHA -->
+                <td class="col-fecha">
+                  {{ log.fecha | date:'dd/MM/yyyy HH:mm' }}
+                </td>
+
+                <!-- USUARIO -->
+                <td class="col-usuario">
+                  {{ log.usuario || '-' }}
+                </td>
+
+                <!-- ACCIÓN -->
+                <td class="col-accion">
+                  {{ getAccionLabel(log) }}
+                </td>
+
+                <!-- MÓDULO (antes Tabla) -->
+                <td class="col-modulo">
+                  {{ (log.tablaAfectada || '-').toUpperCase() }}
+                </td>
+
+                <!-- REFERENCIA -->
+                <td class="col-referencia">
+                  {{ log.referencia || '-' }}
+                </td>
+
+                <!-- CAMPO -->
+                <td class="col-campo">
+                  {{ log.campoModificado || '-' }}
+                </td>
+
+                <!-- VALOR ANTERIOR -->
+                <td class="col-val-anterior">
+                  @if (log.valorAnterior) {
+                    <span class="val-badge val-badge--old">{{ log.valorAnterior }}</span>
+                  } @else {
+                    -
+                  }
+                </td>
+
+                <!-- VALOR NUEVO -->
+                <td class="col-val-nuevo">
+                  @if (log.valorNuevo) {
+                    <span class="val-badge val-badge--new">{{ log.valorNuevo }}</span>
+                  } @else {
+                    -
+                  }
+                </td>
+
+                <!-- TIPO -->
+                <td class="col-tipo">
+                  <span
+                    class="tipo-badge"
+                    [ngClass]="getTipoBadgeClass(log.tipoOperacion)">
+                    {{ getTipoOperacionBadgeLabel(log.tipoOperacion) }}
+                  </span>
+                </td>
+
+                <!-- DESCRIPCIÓN -->
+                <td class="col-descripcion">
+                  {{ getDescripcion(log) }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- FOOTER CON INFO Y PAGINACIÓN -->
+      <div class="table-card__footer">
+        <span class="pagination-info">
+          Mostrando {{ logsPaginados.length }} de {{ logs().length }} registros
+        </span>
+
+        @if (totalPages > 1) {
+          <div class="pagination-controls">
+            <button
+              type="button"
+              class="pagination-btn"
+              [disabled]="currentPage() === 1"
+              (click)="prevPage()">
+              Anterior
+            </button>
+
+            <div class="pagination-pages">
+              @for (page of pageNumbers; track page) {
+                <button
+                  type="button"
+                  class="page-num"
+                  [class.page-num--active]="page === currentPage()"
+                  (click)="goToPage(page)">
+                  {{ page }}
+                </button>
+              }
+            </div>
+
+            <button
+              type="button"
+              class="pagination-btn"
+              [disabled]="currentPage() === totalPages"
+              (click)="nextPage()">
+              Siguiente
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+</section>

@@ -1,0 +1,254 @@
+<section class="pedidos-list">
+
+  <!-- ─── HEADER ──────────────────────────────────────────── -->
+  <header class="pedidos-list__header">
+    <div class="pedidos-list__header-title">
+      <div class="pedidos-list__icon-wrapper">
+        <svg lucideShoppingBag class="pedidos-list__icon"></svg>
+      </div>
+      <div>
+        <h1 class="pedidos-list__title">Todos los Pedidos</h1>
+        <p class="pedidos-list__subtitle">
+          Historial completo de pedidos del establecimiento.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── CARDS DE ESTADO (filtros rápidos sin conteos) ───── -->
+  <div class="estado-cards">
+    @for (card of estadoCards; track card.label) {
+      <button
+        type="button"
+        class="estado-card"
+        [class.estado-card--active]="estadoActivoCard === card.estado"
+        (click)="seleccionarCard(card.estado)"
+        [id]="'card-estado-' + (card.estado ?? 'todos')">
+        <span class="estado-card__label">{{ card.label }}</span>
+      </button>
+    }
+  </div>
+
+  <!-- ─── BARRA DE BÚSQUEDA + FILTROS AVANZADOS ────────────── -->
+  <div class="pedidos-toolbar">
+
+    <div class="pedidos-search">
+      <svg lucideSearch class="pedidos-search__icon"></svg>
+      <input
+        id="busqueda-rapida"
+        type="text"
+        class="pedidos-search__input"
+        placeholder="Buscar por cliente o número de pedido..."
+        [(ngModel)]="busquedaRapida"
+        (keydown.enter)="buscar()" />
+      @if (busquedaRapida) {
+        <button type="button" class="pedidos-search__clear" (click)="limpiarBusqueda()">
+          <svg lucideX></svg>
+        </button>
+      }
+    </div>
+
+    <button
+      type="button"
+      class="btn-buscar"
+      (click)="buscar()"
+      id="btn-buscar">
+      <svg lucideSearch class="btn-buscar__icon"></svg>
+      <span>Buscar</span>
+    </button>
+
+    <button
+      type="button"
+      class="btn-filtros"
+      [class.btn-filtros--active]="mostrarFiltrosAvanzados || hayFiltrosAvanzadosActivos"
+      (click)="toggleFiltrosAvanzados()"
+      id="btn-filtros-avanzados">
+      <svg lucideSlidersHorizontal class="btn-filtros__icon"></svg>
+      <span>Filtros</span>
+      @if (hayFiltrosAvanzadosActivos) {
+        <span class="btn-filtros__dot"></span>
+      }
+    </button>
+
+  </div>
+
+  <!-- ─── PANEL FILTROS AVANZADOS ───────────────────────────── -->
+  @if (mostrarFiltrosAvanzados) {
+    <div class="filtros-panel">
+      <div class="filtros-panel__grid">
+
+        <div class="filtros-panel__field">
+          <label class="filtros-panel__label" for="filtro-entrega">Tipo de entrega</label>
+          <select id="filtro-entrega" class="filtros-panel__select" [(ngModel)]="filtroTipoEntrega">
+            <option value="">Todos</option>
+            <option [value]="TipoEntrega.DELIVERY">Delivery</option>
+            <option [value]="TipoEntrega.RETIRO">Retiro en local</option>
+          </select>
+        </div>
+
+        <div class="filtros-panel__field">
+          <label class="filtros-panel__label" for="filtro-metodo-pago">Método de pago</label>
+          <select id="filtro-metodo-pago" class="filtros-panel__select" [(ngModel)]="filtroMetodoPago">
+            <option value="">Todos</option>
+            <option [value]="MetodoPago.EFECTIVO">Efectivo</option>
+            <option [value]="MetodoPago.TARJETA">Tarjeta</option>
+          </select>
+        </div>
+
+        <div class="filtros-panel__field">
+          <label class="filtros-panel__label" for="filtro-desde">Fecha desde</label>
+          <input id="filtro-desde" type="date" class="filtros-panel__input" [(ngModel)]="filtroFechaDesde" />
+        </div>
+
+        <div class="filtros-panel__field">
+          <label class="filtros-panel__label" for="filtro-hasta">Fecha hasta</label>
+          <input id="filtro-hasta" type="date" class="filtros-panel__input" [(ngModel)]="filtroFechaHasta" />
+        </div>
+
+      </div>
+
+      <div class="filtros-panel__actions">
+        <button type="button" class="btn btn--primary" (click)="aplicarFiltrosAvanzados()" id="btn-aplicar-filtros">
+          Aplicar filtros
+        </button>
+        <button type="button" class="btn btn--outline" (click)="limpiarFiltrosAvanzados()" id="btn-limpiar-filtros">
+          Limpiar
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- ─── LOADING ────────────────────────────────────────────── -->
+  @if (isLoading()) {
+    <div class="pedidos-state">
+      <div class="pedidos-state__spinner"></div>
+      <p>Cargando pedidos...</p>
+    </div>
+  }
+
+  <!-- ─── ERROR ─────────────────────────────────────────────── -->
+  @else if (hasError()) {
+    <div class="pedidos-state pedidos-state--error">
+      <svg lucideAlertTriangle class="pedidos-state__icon pedidos-state__icon--danger"></svg>
+      <p>Error al cargar los pedidos.</p>
+      <button type="button" class="btn btn--primary" (click)="cargarPedidos()">Reintentar</button>
+    </div>
+  }
+
+  <!-- ─── TABLA ─────────────────────────────────────────────── -->
+  @else if (pedidos.length > 0) {
+
+    <div class="table-wrapper">
+      <table class="tabla-pedidos">
+        <thead>
+          <tr>
+            <th>ID / FECHA</th>
+            <th>CLIENTE</th>
+            <th>ENTREGA</th>
+            <th>PAGO</th>
+            <th class="col-right">TOTAL</th>
+            <th>ESTADO</th>
+            <th class="col-center">DETALLE</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (pedido of pedidos; track pedido.id) {
+            <tr class="tabla-pedidos__row">
+
+              <td class="tabla-pedidos__id">
+                <span class="id-num">#{{ pedido.numeroPedido || pedido.id }}</span>
+                <span class="id-fecha">{{ pedido.fechaHora | date:'dd/MM/yyyy HH:mm' }}</span>
+              </td>
+
+              <td class="tabla-pedidos__cliente">
+                {{ pedido.nombreCliente }}
+              </td>
+
+              <td>
+                @if (pedido.tipoEntrega === TipoEntrega.DELIVERY) {
+                  <span class="entrega-badge entrega-badge--delivery">
+                    <svg lucideTruck class="entrega-badge__icon"></svg>
+                    DELIVERY
+                  </span>
+                } @else {
+                  <span class="entrega-badge entrega-badge--retiro">
+                    <svg lucideStore class="entrega-badge__icon"></svg>
+                    RETIRO
+                  </span>
+                }
+              </td>
+
+              <td>
+                <span class="pago-badge" [ngClass]="getPagoClass(pedido.estadoPago)">
+                  {{ getPagoLabel(pedido.estadoPago) }}
+                </span>
+              </td>
+
+              <td class="tabla-pedidos__total">
+                ${{ pedido.total | number:'1.0-0' }}
+              </td>
+
+              <td>
+                <span class="estado-badge" [ngClass]="getEstadoClass(pedido.estado)">
+                  {{ getEstadoLabel(pedido.estado) }}
+                </span>
+              </td>
+
+              <td class="col-center">
+                <button
+                  type="button"
+                  class="accion-btn"
+                  (click)="verDetalle(pedido.id)"
+                  [id]="'btn-ver-' + pedido.id"
+                  title="Ver detalle">
+                  <svg lucideEye class="accion-btn__icon"></svg>
+                  <span>DETALLE</span>
+                </button>
+              </td>
+
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ─── PAGINACIÓN REAL DEL BACKEND ───────────────────── -->
+    <div class="paginacion">
+      <span class="paginacion__info">
+        Mostrando <strong>{{ mostrandoDesde }}–{{ mostrandoHasta }}</strong> de <strong>{{ totalElementos }}</strong> pedidos
+        (Página <strong>{{ currentPage() + 1 }}</strong> de <strong>{{ totalPaginas }}</strong>)
+      </span>
+      <div class="paginacion__btns">
+        <button
+          type="button"
+          class="paginacion__btn paginacion__btn--prev"
+          [disabled]="esPrimeraPagina || isLoading()"
+          (click)="prevPage()"
+          id="btn-pagina-anterior">
+          <svg lucideChevronLeft class="paginacion__arrow"></svg>
+          Anterior
+        </button>
+        <button
+          type="button"
+          class="paginacion__btn paginacion__btn--next"
+          [disabled]="esUltimaPagina || isLoading()"
+          (click)="nextPage()"
+          id="btn-pagina-siguiente">
+          Siguiente
+          <svg lucideChevronRight class="paginacion__arrow"></svg>
+        </button>
+      </div>
+    </div>
+
+  }
+
+  <!-- ─── VACÍO ─────────────────────────────────────────────── -->
+  @else if (!isLoading()) {
+    <div class="pedidos-state">
+      <svg lucideInbox class="pedidos-state__icon"></svg>
+      <p>No hay pedidos que coincidan con los filtros aplicados.</p>
+    </div>
+  }
+
+
+</section>

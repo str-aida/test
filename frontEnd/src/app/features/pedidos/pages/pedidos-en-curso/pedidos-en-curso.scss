@@ -1,0 +1,467 @@
+@use 'abstracts/index' as *;
+
+// ─── PÁGINA ──────────────────────────────────────────────────
+
+.pedidos-en-curso {
+  width: 100%;
+  padding: $space-md;
+  padding-bottom: 4rem;
+}
+
+// ─── HEADER ──────────────────────────────────────────────────
+
+.pedidos-list__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-md;
+  margin-bottom: $space-md;
+  flex-wrap: wrap;
+}
+
+.pedidos-list__header-title {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+}
+
+.pedidos-list__icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: rgba($color-primary, 0.1);
+  color: $color-primary;
+  flex-shrink: 0;
+
+  &--curso {
+    background-color: rgba(#e44d6e, 0.1);
+    color: #e44d6e;
+  }
+}
+
+.pedidos-list__icon {
+  width: 26px;
+  height: 26px;
+}
+
+.pedidos-list__title {
+  font-family: $font-heading;
+  font-size: $fs-h3;
+  font-weight: $fw-bold;
+  color: $color-primary;
+  margin: 0;
+}
+
+.pedidos-list__subtitle {
+  margin: 2px 0 0;
+  font-family: $font-body;
+  font-size: $fs-caption;
+  color: $color-text-light;
+}
+
+// ─── BOTÓN ACTUALIZAR ─────────────────────────────────────────
+
+.btn-actualizar {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 16px;
+  background: $color-background;
+  color: $color-text;
+  border: 1.5px solid $color-border;
+  border-radius: 8px;
+  font-family: $font-body;
+  font-size: $fs-caption;
+  font-weight: $fw-semibold;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+
+  &:hover:not(:disabled) {
+    border-color: $color-primary-light;
+    color: $color-primary;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &__icon {
+    width: 15px;
+    height: 15px;
+
+    &--spin {
+      animation: spin 0.8s linear infinite;
+    }
+  }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+// ─── ESTADOS ──────────────────────────────────────────────────
+
+.pedidos-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $space-sm;
+  padding: 5rem $space-md;
+  text-align: center;
+  color: $color-text-light;
+  font-family: $font-body;
+  font-size: $fs-body;
+
+  &__spinner {
+    width: 38px;
+    height: 38px;
+    border: 3px solid $color-border;
+    border-top-color: $color-primary;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  &__icon {
+    width: 44px;
+    height: 44px;
+    color: $color-text-light;
+    opacity: 0.5;
+  }
+
+  &__icon--danger { color: $color-danger; opacity: 1; }
+
+  &--error { color: $color-danger; }
+
+  &__msg {
+    font-size: $fs-body;
+    font-weight: $fw-semibold;
+    color: $color-text;
+    margin: 0;
+  }
+
+  &__sub {
+    font-size: $fs-caption;
+    color: $color-text-light;
+    margin: 0;
+  }
+}
+
+// ─── TABLA ────────────────────────────────────────────────────
+
+.table-wrapper {
+  border-radius: 10px;
+  border: 1px solid $color-border;
+  overflow-x: auto;
+  margin-bottom: $space-sm;
+}
+
+.tabla-pedidos {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: $font-body;
+  font-size: $fs-body;
+
+  thead {
+    tr {
+      background: $color-primary;
+    }
+
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: $fw-bold;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+
+      &:first-child { border-radius: 10px 0 0 0; }
+      &:last-child  { border-radius: 0 10px 0 0; }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid $color-border;
+      transition: background 0.12s;
+
+      &:last-child { border-bottom: none; }
+      &:hover { background: rgba($color-primary, 0.025); }
+    }
+
+    td {
+      padding: 14px 16px;
+      vertical-align: middle;
+      color: $color-text;
+    }
+  }
+}
+
+.col-right  { text-align: right; }
+.col-center { text-align: center; }
+
+// ─── CELDAS ───────────────────────────────────────────────────
+
+.tabla-pedidos__id {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.id-num {
+  font-weight: $fw-bold;
+  font-family: $font-heading;
+  color: $color-text;
+}
+
+.id-fecha {
+  font-size: $fs-small;
+  color: $color-text-light;
+}
+
+.tabla-pedidos__cliente {
+  font-weight: $fw-medium;
+}
+
+.tabla-pedidos__total {
+  font-weight: $fw-bold;
+  text-align: right;
+  white-space: nowrap;
+}
+
+// ─── BADGE ENTREGA ────────────────────────────────────────────
+
+.entrega-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: $fw-bold;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+
+  &__icon {
+    width: 13px;
+    height: 13px;
+  }
+
+  &--delivery {
+    background: #fce8f0;
+    color: #9b2c4e;
+  }
+
+  &--retiro {
+    background: #f3e8f5;
+    color: #6b3580;
+  }
+}
+
+// ─── BADGE PAGO ───────────────────────────────────────────────
+
+.pago-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: $fw-bold;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+
+  &.pago--aprobado {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  &.pago--pendiente {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  &.pago--rechazado,
+  &.pago--anulado {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  &.pago--reembolsado {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+}
+
+// ─── BADGE ESTADO ──────────────────────────────────────────────
+
+.estado-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: $fw-bold;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+
+  &.estado--pendiente {
+    background: $color-primary;
+    color: $color-white;
+  }
+
+  &.estado--aceptado {
+    background: transparent;
+    border: 1.5px solid $color-text-light;
+    color: $color-text;
+  }
+
+  &.estado--preparacion {
+    background: #fce8f0;
+    color: #9b2c4e;
+    border: 1.5px solid #f0a8c0;
+  }
+
+  &.estado--listo {
+    background: transparent;
+    border: 1.5px solid $color-text-light;
+    color: $color-text;
+  }
+}
+
+// ─── BOTÓN GESTIONAR ─────────────────────────────────────────
+
+.accion-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border: 1.5px solid $color-border;
+  background: $color-background;
+  color: $color-text;
+  font-family: $font-body;
+  font-size: 0.72rem;
+  font-weight: $fw-bold;
+  letter-spacing: 0.03em;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+
+  &__icon {
+    width: 15px;
+    height: 15px;
+    color: $color-text-light;
+    transition: color 0.15s ease;
+  }
+
+  &:hover {
+    border-color: $color-primary-light;
+    background: rgba($color-primary, 0.05);
+    color: $color-primary;
+
+    .accion-btn__icon {
+      color: $color-primary;
+    }
+  }
+}
+
+// ─── PAGINACIÓN ───────────────────────────────────────────────
+
+.paginacion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: $space-sm;
+  padding: $space-xs 0;
+
+  &__info {
+    font-family: $font-body;
+    font-size: $fs-caption;
+    color: $color-text-light;
+
+    strong { color: $color-text; }
+  }
+
+  &__btns {
+    display: flex;
+    gap: 8px;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 7px;
+    font-family: $font-body;
+    font-size: $fs-caption;
+    font-weight: $fw-semibold;
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &--prev {
+      background: $color-background;
+      border: 1.5px solid $color-border;
+      color: $color-text;
+
+      &:hover:not(:disabled) {
+        border-color: $color-primary-light;
+        color: $color-primary;
+      }
+    }
+
+    &--next {
+      background: $color-primary;
+      border: 1.5px solid $color-primary;
+      color: $color-white;
+
+      &:hover:not(:disabled) { filter: brightness(1.15); }
+    }
+  }
+
+  &__arrow {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+// ─── RESPONSIVE ───────────────────────────────────────────────
+
+@include tablet {
+  .pedidos-list__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-actualizar {
+    align-self: flex-end;
+  }
+}
+
+@include mobile {
+  .pedidos-en-curso {
+    padding: $space-sm;
+  }
+
+  .paginacion {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tabla-pedidos {
+    font-size: $fs-caption;
+
+    .id-fecha,
+    .tabla-pedidos__cliente { display: none; }
+  }
+}

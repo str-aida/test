@@ -1,0 +1,146 @@
+<div class="pedidos-container">
+
+  <!-- Header -->
+  <header class="pedidos-header">
+    <h1 class="pedidos-title">
+      <svg lucidePackage class="pedidos-title__icon"></svg>
+      <span>Mis Pedidos</span>
+    </h1>
+    <p class="pedidos-subtitle">
+      Consultá el historial y estado de tus compras realizadas.
+    </p>
+  </header>
+
+  <!-- Estado de Carga -->
+  @if (isLoading()) {
+    <div class="pedidos-loading">
+      <div class="pedidos-loading__spinner"></div>
+      <p>Cargando tus pedidos...</p>
+    </div>
+  }
+
+  <!-- Lista de Pedidos -->
+  @else if (pedidos().length > 0) {
+    <div class="pedidos-list">
+      @for (pedido of paginatedPedidos(); track pedido.id) {
+        <article class="pedido-card">
+          <div class="pedido-card__content">
+            
+            <!-- Left Info -->
+            <div class="pedido-card__left">
+              <div class="pedido-card__header-row">
+                <h2 class="pedido-card__title">Pedido {{ formatNumeroPedido(pedido) }}</h2>
+                <span class="pedido-card__badge" [ngClass]="getEstadoBadgeClass(pedido.estado)">
+                  {{ getEstadoLabel(pedido.estado) }}
+                </span>
+              </div>
+
+              <div class="pedido-card__meta">
+                <div class="pedido-card__meta-item">
+                  <svg lucideCalendar class="pedido-card__meta-icon"></svg>
+                  <span>{{ pedido.fechaHora | date:'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+
+                <div class="pedido-card__meta-item">
+                  @if (pedido.tipoEntrega === TipoEntrega.DELIVERY) {
+                    <svg lucideTruck class="pedido-card__meta-icon"></svg>
+                    <span>Envío a domicilio</span>
+                  } @else {
+                    <svg lucideStore class="pedido-card__meta-icon"></svg>
+                    <span>Retiro en local</span>
+                  }
+                </div>
+
+                <div class="pedido-card__meta-item">
+                  @if (pedido.metodoPago === MetodoPago.EFECTIVO) {
+                    <svg lucideBanknote class="pedido-card__meta-icon"></svg>
+                  } @else if (pedido.metodoPago === MetodoPago.TARJETA) {
+                    <svg lucideCreditCard class="pedido-card__meta-icon"></svg>
+                  } @else {
+                    <svg lucideWallet class="pedido-card__meta-icon"></svg>
+                  }
+                  <span>{{ pedido.metodoPago }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Info (Total & Action) -->
+            <div class="pedido-card__right">
+              <div class="pedido-card__price-box">
+                <span class="pedido-card__price-label">TOTAL</span>
+                <span class="pedido-card__price-value">${{ pedido.total | number:'1.2-2' }}</span>
+              </div>
+
+              <a [routerLink]="['/cliente/pedidos', pedido.id]" class="pedido-card__btn">
+                <span>Ver detalle</span>
+                <svg lucideArrowRight class="pedido-card__btn-icon"></svg>
+              </a>
+            </div>
+
+          </div>
+        </article>
+      }
+    </div>
+
+    <!-- Paginación -->
+    @if (totalPedidos() > 0) {
+      <div class="pedidos-pagination">
+        <div class="pedidos-pagination__info">
+          Mostrando {{ paginatedPedidos().length }} pedidos de {{ totalPedidos() }}
+        </div>
+
+        <div class="pedidos-pagination__controls">
+          <button 
+            type="button" 
+            class="pedidos-pagination__btn" 
+            [disabled]="currentPage() === 1"
+            (click)="goToPage(currentPage() - 1)">
+            <svg lucideChevronLeft class="pedidos-pagination__icon"></svg>
+          </button>
+
+          @for (page of getPageNumbers(); track $index) {
+            @if (page === '...') {
+              <span class="pedidos-pagination__ellipsis">...</span>
+            } @else {
+              <button 
+                type="button" 
+                class="pedidos-pagination__btn" 
+                [class.pedidos-pagination__btn--active]="page === currentPage()"
+                (click)="goToPage(page)">
+                {{ page }}
+              </button>
+            }
+          }
+
+          <button 
+            type="button" 
+            class="pedidos-pagination__btn" 
+            [disabled]="currentPage() === totalPages()"
+            (click)="goToPage(currentPage() + 1)">
+            <svg lucideChevronRight class="pedidos-pagination__icon"></svg>
+          </button>
+        </div>
+      </div>
+    }
+  }
+
+  <!-- Estado Vacío -->
+  @else {
+    <div class="pedidos-empty">
+      <div class="pedidos-empty__card">
+        <div class="pedidos-empty__icon-wrapper">
+          <svg lucideShoppingBag class="pedidos-empty__icon"></svg>
+        </div>
+        <h2 class="pedidos-empty__title">Aún no realizaste ningún pedido</h2>
+        <p class="pedidos-empty__description">
+          ¡Explorá nuestro catálogo y realiza tu primer pedido hoy mismo!
+        </p>
+        <a routerLink="/cliente/catalogo" class="pedidos-empty__btn">
+          <span>Ir al Catálogo</span>
+        </a>
+      </div>
+    </div>
+  }
+
+</div>
+

@@ -1,0 +1,427 @@
+@use 'abstracts/index' as *;
+
+.pedidos-container {
+  font-family: 'Roboto', sans-serif;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+
+  @media (max-width: 640px) {
+    padding: 1.25rem 1rem 3rem;
+  }
+}
+
+/* Header */
+.pedidos-header {
+  margin-bottom: 2rem;
+
+  .pedidos-title {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-family: 'Roboto', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #1a0307;
+    margin: 0 0 0.4rem;
+
+    &__icon {
+      width: 30px;
+      height: 30px;
+      color: #20050b;
+    }
+
+    @media (max-width: 640px) {
+      font-size: 1.75rem;
+
+      &__icon {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+
+  .pedidos-subtitle {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    color: #665f5c;
+    margin: 0;
+  }
+}
+
+/* Spinner cargando */
+.pedidos-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+  color: #665f5c;
+  font-family: 'Roboto', sans-serif;
+
+  &__spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #e0d8d6;
+    border-top-color: #20050b;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Lista */
+.pedidos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Targeta Pedido */
+.pedido-card {
+  background: #ffffff;
+  border: 1px solid #eae4e1;
+  border-radius: 12px;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  @media (max-width: 640px) {
+    padding: 1.25rem 1.25rem;
+  }
+
+  &:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  }
+
+  &__content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+  }
+
+  &__left {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+  }
+
+  &__header-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  &__title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1a0307;
+    margin: 0;
+
+    @media (max-width: 640px) {
+      font-size: 1.2rem;
+    }
+  }
+
+  &__badge {
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 0.25rem 0.75rem;
+    border-radius: 14px;
+    text-transform: uppercase;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.25rem 1.75rem;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9rem;
+    color: #554e4b;
+  }
+
+  &__meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+
+    span {
+      font-weight: 400;
+    }
+  }
+
+  &__meta-icon {
+    width: 17px;
+    height: 17px;
+    color: #69625f;
+  }
+
+  /* Derecha: Precio & Botón */
+  &__right {
+    display: flex;
+    align-items: flex-end;
+    gap: 2rem;
+
+    @media (max-width: 768px) {
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.75rem;
+      border-top: 1px solid #f3eeeb;
+    }
+  }
+
+  &__price-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    @media (max-width: 768px) {
+      align-items: flex-start;
+    }
+  }
+
+  &__price-label {
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    color: #857e7a;
+    margin-bottom: 0.2rem;
+    text-transform: uppercase;
+  }
+
+  &__price-value {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: #1a0307;
+    line-height: 1.1;
+
+    @media (max-width: 640px) {
+      font-size: 1.4rem;
+    }
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.65rem 1.25rem;
+    border-radius: 6px;
+    background: #20050b;
+    color: #ffffff;
+    border: 1px solid #20050b;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover {
+      background: #3c0c16;
+      border-color: #3c0c16;
+    }
+  }
+
+  &__btn-icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Estilos de Badges según mockup */
+.badge--pendiente {
+  background: #efebe8;
+  color: #574e49;
+}
+
+.badge--preparacion {
+  background: #fde8e8;
+  color: #9b2c2c;
+}
+
+.badge--listo {
+  background: #fde8e8;
+  color: #9b2c2c;
+}
+
+.badge--entregado {
+  background: #efebe8;
+  color: #574e49;
+}
+
+.badge--rechazado {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.badge--neutral {
+  background: #f2eded;
+  color: #665f5c;
+}
+
+/* Paginación */
+.pedidos-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eae4e1;
+  font-family: 'Roboto', sans-serif;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  &__info {
+    font-size: 0.88rem;
+    color: #574e49;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #e2dbd8;
+    background: #ffffff;
+    color: #20050b;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover:not(:disabled):not(&--active) {
+      background: #f6f2f0;
+      border-color: #cdc4c0;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &--active {
+      background: #20050b;
+      color: #ffffff;
+      border-color: #20050b;
+    }
+  }
+
+  &__icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  &__ellipsis {
+    padding: 0 0.25rem;
+    color: #857e7a;
+    font-size: 0.88rem;
+  }
+}
+
+/* Estado Vacío */
+.pedidos-empty {
+  display: flex;
+  justify-content: center;
+  padding: 3.5rem 1rem;
+  font-family: 'Roboto', sans-serif;
+
+  &__card {
+    max-width: 420px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #eae4e1;
+    border-radius: 16px;
+    padding: 2.5rem 1.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  }
+
+  &__icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #fbf2f3;
+    color: #20050b;
+    margin-bottom: 1.25rem;
+  }
+
+  &__icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  &__title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1a0307;
+    margin: 0 0 0.5rem;
+  }
+
+  &__description {
+    font-size: 0.92rem;
+    color: #665f5c;
+    margin: 0 0 1.5rem;
+    line-height: 1.5;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #20050b;
+    color: #ffffff;
+    border-radius: 8px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #3c0c16;
+    }
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+

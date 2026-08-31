@@ -1,0 +1,32 @@
+/* ==========================
+   FUENTES
+========================== */
+$font-heading: "Cambria", Georgia, serif;
+$font-body: "Roboto", sans-serif;
+
+/* ==========================
+   TAMAÑOS
+========================== */
+$fs-display: clamp(3.8rem, 5vw, 5rem); //revisar
+$fs-h1: clamp(3rem, 5vw, 4.5rem);
+$fs-h2: clamp(2.2rem, 4vw, 3rem);
+$fs-section-title: clamp(1.9rem, 3vw, 2.5rem);
+$fs-h3: clamp(1.6rem, 2vw, 2rem);
+$fs-body: 1.05rem;
+$fs-caption: .9rem;
+$fs-small: .775rem;
+
+/* ==========================
+   LINE HEIGHT
+========================== */
+$lh-heading: 1.2; //titulos
+$lh-body: 1.6; //parrafos
+
+/* ==========================
+   PESOS
+========================== */
+$fw-light: 300;
+$fw-regular: 400;
+$fw-medium: 500;
+$fw-semibold: 600;
+$fw-bold: 700;

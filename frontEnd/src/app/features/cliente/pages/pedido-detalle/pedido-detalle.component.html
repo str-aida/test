@@ -1,0 +1,263 @@
+<div class="detalle-page">
+
+  <!-- Header -->
+  <header class="detalle-header">
+    <a routerLink="/cliente/pedidos" class="detalle-back-link">
+      <svg lucideArrowLeft class="detalle-back-link__icon"></svg>
+    </a>
+
+    @if (pedido()) {
+      <h1 class="detalle-header__title">
+        Seguimiento de Pedido #{{ pedido()?.numeroPedido || pedido()?.id }}
+      </h1>
+    } @else {
+      <h1 class="detalle-header__title">Detalle de Pedido</h1>
+    }
+  </header>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="detalle-loading">
+      <div class="detalle-loading__spinner"></div>
+      <p>Cargando detalle del pedido...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @else if (errorMsg()) {
+    <div class="detalle-error">
+      <svg lucideAlertTriangle class="detalle-error__icon"></svg>
+      <h2>Error al cargar el pedido</h2>
+      <p>{{ errorMsg() }}</p>
+      <a routerLink="/cliente/pedidos" class="detalle-error__btn">Ir al historial de pedidos</a>
+    </div>
+  }
+
+  <!-- Pedido Content -->
+  @else if (pedido()) {
+    <div class="detalle-layout">
+
+      <!-- Columna Principal -->
+      <main class="detalle-main">
+
+        <!-- Banner de rechazo si aplica -->
+        @if (pedido()?.estado === EstadoPedido.RECHAZADO) {
+          <div class="rejected-banner">
+            <svg lucideXCircle class="rejected-banner__icon"></svg>
+            <div class="rejected-banner__text">
+              <h3>Pedido Rechazado</h3>
+              <p>Lamentablemente este pedido fue rechazado por el establecimiento. Si tenés dudas, contactate con soporte.</p>
+            </div>
+          </div>
+        }
+
+        <!-- Card: Estado del Envío -->
+        @if (pedido()?.estado !== EstadoPedido.RECHAZADO) {
+          <div class="estado-card">
+            <div class="estado-card__header">
+              <span class="estado-card__header-title">ESTADO DEL ENVÍO</span>
+            </div>
+
+            <div class="estado-card__body">
+              <!-- Referencia y Total -->
+              <div class="estado-card__info-row">
+                <div class="estado-card__ref">
+                  <span class="estado-card__ref-label">REFERENCIA DE PEDIDO</span>
+                  <span class="estado-card__ref-value">
+                    Pedido #{{ pedido()?.numeroPedido || pedido()?.id }} &mdash; {{ pedido()?.fechaHora | date:'dd/MM/yyyy' }}
+                  </span>
+                  @if (pedido()?.tipoEntrega === TipoEntrega.DELIVERY) {
+                    <span class="estado-card__eta">
+                      <svg lucideClock class="estado-card__eta-icon"></svg>
+                      Entrega estimada: 45 - 60 min
+                    </span>
+                  }
+                </div>
+                <div class="estado-card__total-box">
+                  <span class="estado-card__total-label">TOTAL DEL PEDIDO</span>
+                  <span class="estado-card__total-value">
+                    ${{ (pedido()?.totalConDescuento ?? pedido()?.total) | number:'1.2-2' }}
+                  </span>
+                  <span class="detalle-badge" [ngClass]="getEstadoBadgeClass(pedido()!.estado)">
+                    {{ getEstadoLabel(pedido()!.estado) }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Stepper Visual -->
+              <div class="stepper-track">
+                @for (step of steps; track step.estado) {
+                  <div
+                    class="stepper-step"
+                    [class.stepper-step--completed]="isStepCompleted(step.estado)"
+                    [class.stepper-step--current]="isStepCurrent(step.estado)">
+                    <div class="stepper-step__connector-left"></div>
+                    <div class="stepper-step__circle">
+                      @if (isStepCompleted(step.estado)) {
+                        <!-- Completed (includes ENTREGADO as the final step): always show check -->
+                        <svg lucideCheck class="stepper-step__icon"></svg>
+                      } @else if (isStepCurrent(step.estado)) {
+                        <!-- Active but not yet completed: show utensils/in-progress icon -->
+                        <svg lucideUtensils class="stepper-step__icon stepper-step__icon--current"></svg>
+                      }
+                    </div>
+                    <div class="stepper-step__connector-right"></div>
+                    <span class="stepper-step__label">{{ step.label }}</span>
+                    @if (isStepCurrent(step.estado) && !isStepCompleted(step.estado)) {
+                      <span class="stepper-step__time">Activo</span>
+                    } @else if (isStepCompleted(step.estado)) {
+                      <span class="stepper-step__time">&nbsp;</span>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Card: Ítems del Pedido -->
+        <div class="items-card">
+          <div class="items-card__header">
+            <span class="items-card__header-title">ÍTEMS DEL PEDIDO</span>
+            <span class="items-card__count-badge">{{ pedido()?.detalles?.length }} Productos</span>
+          </div>
+
+          <div class="items-table">
+            <div class="items-table__header">
+              <span class="col-product">PRODUCTO</span>
+              <span class="col-price">PRECIO</span>
+              <span class="col-qty">CANTIDAD</span>
+              <span class="col-subtotal">SUBTOTAL</span>
+            </div>
+
+            <div class="items-table__body">
+              @for (det of pedido()?.detalles; track det.productoId) {
+                <div class="items-table__row">
+                  <div class="col-product">
+                    <div class="product-img-placeholder">
+                      <svg lucideShoppingBag class="product-img-placeholder__icon"></svg>
+                    </div>
+                    <div class="product-info">
+                      <span class="product-info__name">{{ det.nombreProducto }}</span>
+                    </div>
+                  </div>
+                  <div class="col-price">${{ det.precioUnitario | number:'1.2-2' }}</div>
+                  <div class="col-qty">{{ det.cantidad }}</div>
+                  <div class="col-subtotal">${{ det.subtotal | number:'1.2-2' }}</div>
+                </div>
+              }
+            </div>
+
+            <!-- Total Row -->
+            <div class="items-table__total-row">
+              <span class="items-table__total-label">TOTAL DEL PEDIDO</span>
+              <span class="items-table__total-value">
+                ${{ (pedido()?.totalConDescuento ?? pedido()?.total) | number:'1.2-2' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+      <!-- Columna Lateral (Derecha) -->
+      <aside class="detalle-sidebar">
+
+        <!-- Card: Entrega -->
+        <div class="sidebar-card">
+          <div class="sidebar-card__header">
+            <span class="sidebar-card__title">ENTREGA</span>
+          </div>
+          <div class="sidebar-card__body">
+            @if (pedido()?.tipoEntrega === TipoEntrega.DELIVERY && pedido()?.direccionCliente) {
+              <div class="sidebar-info-item">
+                <div class="sidebar-info-item__icon-wrap">
+                  <svg lucideMapPin class="sidebar-info-item__icon"></svg>
+                </div>
+                <div class="sidebar-info-item__text">
+                  <span class="sidebar-info-item__label">DIRECCIÓN</span>
+                  <span class="sidebar-info-item__value">{{ pedido()?.direccionCliente }}</span>
+                </div>
+              </div>
+            } @else if (pedido()?.tipoEntrega !== TipoEntrega.DELIVERY) {
+              <div class="sidebar-info-item">
+                <div class="sidebar-info-item__icon-wrap">
+                  <svg lucideStore class="sidebar-info-item__icon"></svg>
+                </div>
+                <div class="sidebar-info-item__text">
+                  <span class="sidebar-info-item__label">MÉTODO</span>
+                  <span class="sidebar-info-item__value">Retiro en local</span>
+                </div>
+              </div>
+            }
+
+            <div class="sidebar-info-item">
+              <div class="sidebar-info-item__icon-wrap">
+                <svg lucideUser class="sidebar-info-item__icon"></svg>
+              </div>
+              <div class="sidebar-info-item__text">
+                <span class="sidebar-info-item__label">CONTACTO</span>
+                <span class="sidebar-info-item__value">{{ pedido()?.nombreCliente }}</span>
+                @if (pedido()?.telefonoCliente) {
+                  <span class="sidebar-info-item__sub">{{ pedido()?.telefonoCliente }}</span>
+                }
+              </div>
+            </div>
+
+            <!-- Método de pago -->
+            <div class="sidebar-info-item">
+              <div class="sidebar-info-item__icon-wrap">
+                @if (pedido()?.metodoPago === MetodoPago.EFECTIVO) {
+                  <svg lucideBanknote class="sidebar-info-item__icon"></svg>
+                } @else {
+                  <svg lucideCreditCard class="sidebar-info-item__icon"></svg>
+                }
+              </div>
+              <div class="sidebar-info-item__text">
+                <span class="sidebar-info-item__label">PAGO</span>
+                <span class="sidebar-info-item__value">{{ pedido()?.metodoPago }}</span>
+              </div>
+            </div>
+
+            <!-- Descuento si aplica -->
+            @if (pedido()?.montoDescuento && (pedido()?.montoDescuento ?? 0) > 0) {
+              <div class="sidebar-info-item">
+                <div class="sidebar-info-item__icon-wrap">
+                  <svg lucideTicket class="sidebar-info-item__icon"></svg>
+                </div>
+                <div class="sidebar-info-item__text">
+                  <span class="sidebar-info-item__label">CUPÓN APLICADO</span>
+                  <span class="sidebar-info-item__value">{{ pedido()?.codigoCuponAplicado }}</span>
+                  <span class="sidebar-info-item__sub sidebar-info-item__sub--discount">
+                    -${{ pedido()?.montoDescuento | number:'1.2-2' }}
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Botón de Pago si es Tarjeta -->
+        @if (pedido()?.metodoPago === MetodoPago.TARJETA && pedido()?.urlPago) {
+          <a [href]="pedido()?.urlPago" target="_blank" rel="noopener noreferrer" class="pay-btn">
+            <span>Pagar pedido online</span>
+            <svg lucideExternalLink class="pay-btn__icon"></svg>
+          </a>
+        }
+
+        <!-- Card: ¿Necesitas ayuda? -->
+        <div class="help-card">
+          <h3 class="help-card__title">¿Necesitas ayuda?</h3>
+          <p class="help-card__text">Nuestro equipo de soporte está disponible para asistirte con cualquier inconveniente.</p>
+          <button class="help-card__btn" type="button">
+            <svg lucideMessageSquare class="help-card__btn-icon"></svg>
+            Contactar Soporte
+          </button>
+        </div>
+
+      </aside>
+
+    </div>
+  }
+
+</div>
