@@ -308,26 +308,27 @@
   white-space: nowrap;
 
   &.estado--pendiente {
-    background: $color-primary;
-    color: $color-white;
+    background: #fef3c7;
+    color: #92400e;
+    border: 1.5px solid #fcd34d;
   }
 
   &.estado--aceptado {
-    background: transparent;
-    border: 1.5px solid $color-text-light;
-    color: $color-text;
+    background: #e0f2fe;
+    color: #0369a1;
+    border: 1.5px solid #7dd3fc;
   }
 
   &.estado--preparacion {
-    background: #fce8f0;
-    color: #9b2c4e;
-    border: 1.5px solid #f0a8c0;
+    background: #f3e8ff;
+    color: #6b21a8;
+    border: 1.5px solid #c084fc;
   }
 
   &.estado--listo {
-    background: transparent;
-    border: 1.5px solid $color-text-light;
-    color: $color-text;
+    background: #ccfbf1;
+    color: #0f766e;
+    border: 1.5px solid #2dd4bf;
   }
 }
 

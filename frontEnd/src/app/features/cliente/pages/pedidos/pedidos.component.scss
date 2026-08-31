@@ -248,33 +248,45 @@
 
 /* Estilos de Badges según mockup */
 .badge--pendiente {
-  background: #efebe8;
-  color: #574e49;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1.5px solid #fcd34d;
+}
+
+.badge--aceptado {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1.5px solid #7dd3fc;
 }
 
 .badge--preparacion {
-  background: #fde8e8;
-  color: #9b2c2c;
+  background: #f3e8ff;
+  color: #6b21a8;
+  border: 1.5px solid #c084fc;
 }
 
 .badge--listo {
-  background: #fde8e8;
-  color: #9b2c2c;
+  background: #ccfbf1;
+  color: #0f766e;
+  border: 1.5px solid #2dd4bf;
 }
 
 .badge--entregado {
-  background: #efebe8;
-  color: #574e49;
+  background: #dcfce7;
+  color: #166534;
+  border: 1.5px solid #86efac;
 }
 
 .badge--rechazado {
   background: #fee2e2;
   color: #991b1b;
+  border: 1.5px solid #fca5a5;
 }
 
 .badge--neutral {
   background: #f2eded;
   color: #665f5c;
+  border: 1.5px solid #e2dbd8;
 }
 
 /* Paginación */

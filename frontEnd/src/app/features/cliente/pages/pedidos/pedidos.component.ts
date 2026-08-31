@@ -140,6 +140,7 @@ export class PedidosComponent implements OnInit {
       case EstadoPedido.PENDIENTE:
         return 'badge--pendiente';
       case EstadoPedido.ACEPTADO:
+        return 'badge--aceptado';
       case EstadoPedido.EN_PREPARACION:
         return 'badge--preparacion';
       case EstadoPedido.LISTO:

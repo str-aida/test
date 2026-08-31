@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { Employee } from '../models/user-profile-response';
+import { UsuarioPerfilResponse } from '../models/usuario-perfil-response';
 import { UserRole } from '../models/enums/user-role.enum';
 import { UpdateEmployeeRequest } from '../models/update-user-request';
 
@@ -32,6 +33,25 @@ export class EmployeesService {
     }
 
     return this.http.get<Employee[]>(this.apiUrl, { params });
+
+  }
+
+  buscarUsuarios(
+    texto?: string,
+    rol?: UserRole
+  ): Observable<UsuarioPerfilResponse[]> {
+
+    let params = new HttpParams();
+
+    if (texto?.trim()) {
+      params = params.set('texto', texto.trim());
+    }
+
+    if (rol) {
+      params = params.set('rol', rol);
+    }
+
+    return this.http.get<UsuarioPerfilResponse[]>(this.apiUrl, { params });
 
   }
 

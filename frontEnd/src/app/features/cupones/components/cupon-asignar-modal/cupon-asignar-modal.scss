@@ -20,7 +20,7 @@
   width: 100%;
   max-width: 520px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .modal-card__header {
@@ -197,3 +197,148 @@
   }
 }
 
+/* AUTOCOMPLETE STYLES */
+.autocomplete-field {
+  position: relative;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .form-field__input {
+    padding-right: 2.5rem;
+  }
+
+  .input-icon,
+  .input-icon-btn {
+    position: absolute;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $color-text-light;
+    background: transparent;
+    border: none;
+    padding: 0;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .input-icon-btn {
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 2px;
+    &:hover {
+      background-color: #f3f4f6;
+      color: $color-text;
+    }
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background-color: $color-white;
+  border: 1px solid $color-border;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 1050;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    font-family: $font-body;
+    font-size: $fs-caption;
+    color: $color-text;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba($color-border, 0.5);
+    }
+
+    &:hover {
+      background-color: rgba($color-primary, 0.05);
+    }
+
+    &--selected {
+      background-color: rgba($color-primary, 0.1);
+      font-weight: $fw-medium;
+      color: $color-primary;
+    }
+
+    &--loading,
+    &--empty,
+    &--error {
+      cursor: default;
+      color: $color-text-light;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px;
+      font-style: italic;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
+    &--error {
+      color: $color-danger;
+    }
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    &__name {
+      font-weight: $fw-semibold;
+      color: $color-text;
+    }
+
+    &__sep {
+      color: $color-text-light;
+    }
+
+    &__email {
+      color: $color-text-light;
+      font-size: 0.82rem;
+    }
+  }
+
+  .check-icon {
+    width: 16px;
+    height: 16px;
+    color: $color-primary;
+    flex-shrink: 0;
+  }
+}

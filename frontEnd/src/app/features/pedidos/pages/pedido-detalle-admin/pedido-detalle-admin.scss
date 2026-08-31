@@ -177,8 +177,8 @@ $stitch-text-muted: #6b7280;
   font-family: $font-body;
   font-size: 0.78rem;
   font-weight: 600;
-  background-color: #fce8e6;
-  color: #c5221f;
+  background-color: #fef3c7;
+  color: #92400e;
 
   &__dot {
     width: 6px;
@@ -187,20 +187,34 @@ $stitch-text-muted: #6b7280;
     background-color: currentColor;
   }
 
-  &--aceptado,
+  &--pendiente {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+
+  &--aceptado {
+    background-color: #e0f2fe;
+    color: #0369a1;
+  }
+
   &--en_preparacion {
-    background-color: #e8f0fe;
-    color: #1a73e8;
+    background-color: #f3e8ff;
+    color: #6b21a8;
   }
 
   &--listo {
-    background-color: #f3e8ff;
-    color: #7e22ce;
+    background-color: #ccfbf1;
+    color: #0f766e;
   }
 
   &--entregado {
-    background-color: #e6f4ea;
-    color: #1e8e3e;
+    background-color: #dcfce7;
+    color: #166534;
+  }
+
+  &--rechazado {
+    background-color: #fee2e2;
+    color: #991b1b;
   }
 }
 
