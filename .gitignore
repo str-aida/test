@@ -1,0 +1,26 @@
+# Dependencias
+node_modules/
+**/node_modules/
+
+# Angular
+.angular/
+**/.angular/
+
+# Maven
+target/
+**/target/
+
+# IDEs
+.idea/
+**/.idea/
+
+# Variables de entorno
+.env
+**/.env
+
+# Logs
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
