@@ -1,0 +1,1 @@
+CREATE INDEX idx_usuario_email_lower ON usuario ((LOWER(email)));

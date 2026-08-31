@@ -1,0 +1,1 @@
+ALTER TABLE pedido ADD COLUMN metodo_pago VARCHAR(20) NULL;

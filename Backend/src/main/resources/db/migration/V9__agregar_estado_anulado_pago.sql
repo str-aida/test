@@ -1,0 +1,7 @@
+ALTER TABLE pago
+MODIFY COLUMN estado ENUM(
+    'PENDIENTE',
+    'REEMBOLSADO',
+    'APROBADO',
+    'ANULADO'
+) NOT NULL;

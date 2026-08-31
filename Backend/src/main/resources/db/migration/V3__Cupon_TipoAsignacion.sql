@@ -1,0 +1,1 @@
+ALTER TABLE cupon ADD COLUMN tipo_asignacion VARCHAR(30) NULL;

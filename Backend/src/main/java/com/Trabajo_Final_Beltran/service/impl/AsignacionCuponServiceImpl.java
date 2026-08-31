@@ -1,0 +1,67 @@
+package com.Trabajo_Final_Beltran.service.impl;
+
+import com.Trabajo_Final_Beltran.dto.request.AsignarCuponRequest;
+import com.Trabajo_Final_Beltran.entity.Cupon;
+import com.Trabajo_Final_Beltran.entity.Usuario;
+import com.Trabajo_Final_Beltran.exception.BusinessException;
+import com.Trabajo_Final_Beltran.repository.CuponRepository;
+import com.Trabajo_Final_Beltran.repository.UsuarioRepository;
+import com.Trabajo_Final_Beltran.service.AsignacionCuponService;
+import com.Trabajo_Final_Beltran.service.CuponUsuarioService;
+import com.Trabajo_Final_Beltran.service.strategy.cupon.AsignacionCuponStrategy;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class AsignacionCuponServiceImpl implements AsignacionCuponService {
+
+    private final List<AsignacionCuponStrategy> strategies;
+    private final CuponUsuarioService cuponUsuarioService;
+    private final UsuarioRepository usuarioRepository;
+    private final CuponRepository cuponRepository;
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void asignarCupones(Usuario usuario) {
+        for (AsignacionCuponStrategy strategy : strategies) {
+            for (Cupon cupon : strategy.obtenerCupones(usuario)) {
+                cuponUsuarioService.asignarCupon(usuario, cupon);
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public void asignarCuponManual(AsignarCuponRequest request) {
+        Usuario usuario = resolverUsuario(request);
+
+        Cupon cupon = cuponRepository.findById(request.getCuponId())
+                .orElseThrow(() -> new BusinessException("Cupón no encontrado"));
+
+        cuponUsuarioService.asignarCupon(usuario, cupon);
+    }
+
+    private Usuario resolverUsuario(AsignarCuponRequest request) {
+        boolean porId = request.getUsuarioId() != null;
+        boolean porEmail = request.getEmail() != null && !request.getEmail().isBlank();
+
+        if (porId == porEmail) {
+            throw new BusinessException(
+                    "Debés indicar exactamente uno: usuarioId o email"
+            );
+        }
+
+        if (porId) {
+            return usuarioRepository.findById(request.getUsuarioId())
+                    .orElseThrow(() -> new BusinessException("Usuario no encontrado"));
+        }
+
+        return usuarioRepository.findByEmailIgnoreCase(request.getEmail().trim())
+                .orElseThrow(() -> new BusinessException("No existe un usuario con ese email"));
+    }
+}
