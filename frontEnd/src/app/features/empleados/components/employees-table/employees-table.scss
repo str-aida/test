@@ -1,192 +1,225 @@
 @use 'abstracts/index' as *;
 
 .employees-table {
-
   width: 100%;
   max-width: 1100px;
   margin: 2rem auto;
   padding: 0 2rem;
 
-  &__header {
-    margin-bottom: $space-md;
-    text-align: center;
-  }
-
-  &__title {
-    font-family: $font-body;
-    color: $color-primary;
-    margin-bottom: .5rem;
-  }
-
-  &__subtitle {
-    color: $color-text;
-    margin: 0;
-  }
-
-  &__wrapper {
-    overflow-x: auto;
-    background: $color-white;
-    border: 1px solid $color-border;
-    border-radius: 12px;
-  }
-
-  &__table {
-
-    width: 100%;
-    table-layout: fixed;
-
-    thead {
-
-      background: $color-primary;
-
-      th {
-
-        text-align: center;
-        color: $color-white;
-        font-weight: 600;
-        border: none;
-        padding: 1rem;
-
-      }
-
-    }
-
-    tbody {
-
-      tr {
-
-        transition: background .2s;
-
-        &:hover {
-          background: rgba($color-primary, .04);
-        }
-
-      }
-
-      td {
-
-        text-align: center;
-        padding: 1rem;
-        vertical-align: middle;
-        border-color: $color-border;
-
-      }
-
-    }
-
-  }
-
-  &__empty {
-
-    padding: 3rem;
-    text-align: center;
-    background: $color-surface;
-    border: 1px solid $color-border;
-    border-radius: 12px;
-
-  }
-
   &__filters {
-
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0 auto 2rem;
-
   }
-
   /* ===========================
    Toolbar
   =========================== */
-
   &__toolbar {
-
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 1rem;
-
     width: 100%;
     margin: 2rem auto 2.5rem;
-
   }
-
   &__search {
-
     flex: 1;
     max-width: 520px;
-
   }
-
   &__filter {
-
     width: 180px;
-
   }
 
   &__search input,
   &__filter select {
-
     width: 100%;
     height: 48px;
-
     padding: 0 1rem;
-
     border: 1px solid $color-border;
     border-radius: 12px;
-
     background: $color-white;
-
     font-family: $font-body;
     font-size: .95rem;
-
     transition: all .2s ease;
-
   }
-
   &__search input::placeholder {
-
     font-family: $font-body;
     color: #888;
-
   }
-
   &__search input:focus,
   &__filter select:focus {
-
     border-color: $color-primary;
     box-shadow: 0 0 0 .15rem rgba($color-primary, .15);
     outline: none;
-
   }
-
   &__button {
-
     width: 150px;
     height: 48px;
-
     border: none;
     border-radius: 12px;
-
     background: $color-primary;
     color: $color-white;
-
-    font-family: $font-body;
+    font-family: $font-heading;
     font-size: 1.05rem;
     font-weight: 600;
-
     transition: .2s ease;
-
   }
-
   &__button:hover {
-
     background: $color-primary-dark;
     color: $color-white;
+  }
+}
 
+/* ESTADO VACÍO */
+.table-empty {
+  padding: 3rem;
+  text-align: center;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: 12px;
+  color: $color-text-light;
+}
+
+/* CONTENEDOR DE LA TABLA */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: 12px;
+}
+
+/* TABLA */
+.table {
+  width: 100%;
+  margin: 0;
+  table-layout: auto;
+  border-collapse: collapse;
+  font-family: $font-body;
+
+  thead {
+    background: $color-primary;
+    th {
+      padding: 1rem 1.25rem;
+      color: $color-white;
+      font-size: $fs-caption;
+      font-weight: $fw-semibold;
+      text-align: left;
+      border: none;
+    }
+    th:last-child {
+      text-align: center;
+    }
   }
 
+  tbody {
+    tr {
+      transition: background-color .2s ease;
+      &:hover {
+        background: rgba($color-primary, .04);
+      }
+    }
+    td {
+      padding: 1rem 1.25rem;
+      color: $color-text;
+      font-size: $fs-caption;
+      vertical-align: middle;
+      border-bottom: 1px solid $color-border;
+    }
+  }
+}
+
+/*  EMPLEADO */
+.employees-table__cell-name {
+  min-width: 230px;
+}
+
+.employees-table__user-info {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.employees-table__avatar-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba($color-primary, .08);
+  color: $color-primary;
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.employees-table__avatar-icon--admin {
+  background: rgba($color-primary, .12);
+  color: $color-primary;
+}
+
+.employees-table__user-details {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+
+.employees-table__name {
+  color: $color-text;
+  font-size: $fs-caption;
+  font-weight: $fw-semibold;
+}
+
+.employees-table__subtext {
+  color: $color-text-light;
+  font-size: $fs-small;
+}
+
+/* CONTACTO */
+.employees-table__cell-contact {
+  min-width: 240px;
+}
+
+.employees-table__contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+
+.employees-table__email {
+  color: $color-text;
+  font-size: $fs-caption;
+}
+
+.employees-table__phone {
+  color: $color-text-light;
+  font-size: $fs-small;
+}
+
+/* ROL */
+.badge-role {
+  display: inline-flex;
+  align-items: center;
+  padding: .35rem .7rem;
+  border-radius: 999px;
+  font-size: $fs-small;
+  font-weight: $fw-semibold;
+  white-space: nowrap;
+}
+
+.badge-role--admin {
+  background: rgba(107, 107, 128, 0.12);
+  color: #171580;
+}
+
+.badge-role--employee {
+  background: rgba(197, 86, 34, 0.1);
+  color: #803715;
 }
 
 .table-input {
@@ -194,14 +227,72 @@
   padding: .4rem .6rem;
 }
 
+/* ESTADO */
+.table-status {
+  display: inline-flex;
+  align-items: center;
+  padding: .35rem .7rem;
+  border-radius: 999px;
+  font-size: $fs-small;
+  font-weight: $fw-semibold;
+}
+
+.table-status--active {
+  background: rgba(34, 197, 94, .1);
+  color: #15803d;
+}
+
+.table-status--inactive {
+  background: rgba(107, 114, 128, .12);
+  color: #4b5563;
+}
+
+/* ACCIONES */
 .table-actions {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: .75rem;
+  gap: .5rem;
 }
 
-.table-actions__edit,
 .table-actions button {
-  min-width: 80px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  min-height: 34px;
+  padding: .4rem .65rem;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  font-family: $font-body;
+  font-size: $fs-small;
+  font-weight: $fw-semibold;
+  cursor: pointer;
+
+  transition:
+    background-color .2s ease,
+    color .2s ease;
+}
+
+.table-actions svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Editar */
+.table-actions__edit {
+  color: $color-primary;
+
+  &:hover {
+    background: rgba($color-primary, .15);
+  }
+}
+
+/* Desactivar */
+.table-actions__delete {
+  color: $color-danger;
+
+  &:hover {
+    background: rgba($color-danger, .15);
+  }
 }

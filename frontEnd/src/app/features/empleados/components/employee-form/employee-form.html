@@ -1,210 +1,152 @@
-<section class="onboarding-form">
+<form
+    class="employee-form"
+    [formGroup]="employeeForm"
+    (ngSubmit)="onSubmit()"
+    >
 
-    <div class="container">
+    <!-- INFORMACIÓN PERSONAL -->
+    <section class="form-section form-section--personal">
+        <div class="form-row">
+            <div class="form-field">
+                <label
+                    class="form-field__label"
+                    for="firstName">
+                    Nombre
+                    <span class="form-field__required">*</span>
+                </label>
+                <input
+                    id="firstName"
+                    class="form-field__input"
+                    type="text"
+                    formControlName="nombre"
+                    placeholder="Juan">
 
-        <header class="onboarding-form__header">
+                    @if (hasError('nombre', 'required')) {
+                        <small class="form-field__error">
+                            El nombre es obligatorio.
+                        </small>
+                    } @else if (hasError('nombre', 'maxlength')) {
+                        <small class="form-field__error">
+                            El nombre no puede superar los 100 caracteres.
+                        </small>
+                    }
+            </div>
+            <div class="form-field">
+                <label
+                    class="form-field__label"
+                    for="lastName">
+                    Apellido
+                    <span class="form-field__required">*</span>
+                </label>
 
-            <h1 class="onboarding-form__title">
-                Registro de nuevo personal
-            </h1>
+                <input
+                    id="lastName"
+                    class="form-field__input"
+                    type="text"
+                    formControlName="apellido"
+                    placeholder="Pérez">
 
-        </header>
+                    @if (hasError('apellido', 'required')) {
+                        <small class="form-field__error">
+                            El apellido es obligatorio.
+                        </small>
+                    } @else if (hasError('apellido', 'maxlength')) {
+                        <small class="form-field__error">
+                            El apellido no puede superar los 100 caracteres.
+                        </small>
+                    }
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-field">
+                <label
+                    class="form-field__label"
+                    for="email">
+                    Email
+                    <span class="form-field__required">*</span>
+                </label>
+                <input
+                    id="email"
+                    class="form-field__input"
+                    type="email"
+                    formControlName="email"
+                    placeholder="admin@gestia.com">
 
-        <form
-            class="onboarding-form__form"
-            [formGroup]="employeeForm"
-            (ngSubmit)="onSubmit()"
-            >
+                    @if (hasError('email', 'required')) {
+                        <small class="form-field__error">
+                            El email es obligatorio.
+                        </small>
+                    } @else if (hasError('email', 'email') || hasError('email', 'pattern')) {
+                        <small class="form-field__error">
+                            El email no tiene un formato válido.
+                        </small>
+                    } @else if (hasError('email', 'maxlength')) {
+                        <small class="form-field__error">
+                            El email no puede superar los 150 caracteres.
+                        </small>
+                    }
+            </div>
+            <div class="form-field">
+                <label
+                    class="form-field__label"
+                    for="phone">
+                    Teléfono
+                    <span class="form-field__required">*</span>
+                </label>
+                <input
+                    id="phone"
+                    class="form-field__input"
+                    type="tel"
+                    formControlName="telefono"
+                    placeholder="+54 11 5555-5555"
+                    appPhoneMask>
 
-            <!-- INFORMACIÓN PERSONAL -->
-            <section class="form-section form-section--personal">
-
-                <div class="form-row">
-
-                    <div class="form-field">
-
-                        <label
-                            class="form-field__label"
-                            for="firstName">
-                            Nombre
-
-                            <span class="form-field__required">*</span>
-                        </label>
-
-                        <input
-                            id="firstName"
-                            class="form-field__input"
-                            type="text"
-                            formControlName="nombre"
-                            placeholder="Juan">
-
-                            @if (hasError('nombre', 'required')) {
-
-                                <small class="form-field__error">
-                                    El nombre es obligatorio.
-                                </small>
-
-                            } @else if (hasError('nombre', 'maxlength')) {
-
-                                <small class="form-field__error">
-                                    El nombre no puede superar los 100 caracteres.
-                                </small>
-
-                            }
-
-                    </div>
-
-                    <div class="form-field">
-
-                        <label
-                            class="form-field__label"
-                            for="lastName">
-                            Apellido
-
-                            <span class="form-field__required">*</span>
-                        </label>
-
-                        <input
-                            id="lastName"
-                            class="form-field__input"
-                            type="text"
-                            formControlName="apellido"
-                            placeholder="Pérez">
-
-                            @if (hasError('apellido', 'required')) {
-
-                                <small class="form-field__error">
-                                    El apellido es obligatorio.
-                                </small>
-
-                            } @else if (hasError('apellido', 'maxlength')) {
-
-                                <small class="form-field__error">
-                                    El apellido no puede superar los 100 caracteres.
-                                </small>
-
-                            }
-
-                    </div>
-
-                </div>
-
+                    @if (hasError('telefono', 'required')) {
+                        <small class="form-field__error">
+                            El telefono es obligatorio.
+                        </small>
+                    } @else if (hasError('telefono', 'maxlength')) {
+                        <small class="form-field__error">
+                            El apellido no puede superar los 20 caracteres.
+                        </small>
+                    }
+            </div>
+        </div>
+        @if (!isEditMode) {
+            <div class="form-row">
                 <div class="form-field">
-
                     <label
                         class="form-field__label"
-                        for="email">
-                        Email
-
+                        for="nationalId">
+                        DNI
                         <span class="form-field__required">*</span>
                     </label>
-
                     <input
-                        id="email"
+                        id="nationalId"
                         class="form-field__input"
-                        type="email"
-                        formControlName="email"
-                        placeholder="admin@gestia.com">
+                        type="text"
+                        inputmode="numeric"
+                        formControlName="dni"
+                        placeholder="30.123.456"
+                        appDniMask>
 
-                        @if (hasError('email', 'required')) {
+                        @if (hasError('dni', 'required')) {
                             <small class="form-field__error">
-                                El email es obligatorio.
+                                El DNI es obligatorio.
                             </small>
-                        } @else if (hasError('email', 'email') || hasError('email', 'pattern')) {
+                        } @else if (hasError('dni', 'minlength')) {
                             <small class="form-field__error">
-                                El email no tiene un formato válido.
-                            </small>
-                        } @else if (hasError('email', 'maxlength')) {
-                            <small class="form-field__error">
-                                El email no puede superar los 150 caracteres.
+                                El DNI debe tener un mínimo de 7 dígitos.
                             </small>
                         }
-
                 </div>
-
-                <div class="form-row">
-
-                    <div class="form-field">
-
-                        <label
-                            class="form-field__label"
-                            for="phone">
-                            Teléfono
-
-                            <span class="form-field__required">*</span>
-                        </label>
-
-                        <input
-                            id="phone"
-                            class="form-field__input"
-                            type="tel"
-                            formControlName="telefono"
-                            placeholder="+54 11 5555-5555"
-                            appPhoneMask>
-
-                            @if (hasError('telefono', 'required')) {
-
-                                <small class="form-field__error">
-                                    El telefono es obligatorio.
-                                </small>
-
-                            } @else if (hasError('telefono', 'maxlength')) {
-
-                                <small class="form-field__error">
-                                    El apellido no puede superar los 20 caracteres.
-                                </small>
-
-                            }
-
-                    </div>
-
-                    <div class="form-field">
-
-                        <label
-                            class="form-field__label"
-                            for="nationalId">
-                            DNI
-
-                            <span class="form-field__required">*</span>
-                        </label>
-
-                        <input
-                            id="nationalId"
-                            class="form-field__input"
-                            type="text"
-                            inputmode="numeric"
-                            formControlName="dni"
-                            placeholder="30.123.456"
-                            appDniMask>
-
-                            @if (hasError('dni', 'required')) {
-
-                                <small class="form-field__error">
-                                    El DNI es obligatorio.
-                                </small>
-
-                            } @else if (hasError('dni', 'minlength')) {
-
-                                <small class="form-field__error">
-                                    El DNI debe tener un mínimo de 7 dígitos.
-                                </small>
-
-                            }
-
-                    </div>
-
-                </div>
-
                 <div class="form-field">
-
                     <label
                         class="form-field__label"
                         for="birthDate">
                         Fecha de nacimiento
-
                         <span class="form-field__required">*</span>
                     </label>
-
                     <input
                         id="birthDate"
                         class="form-field__input"
@@ -213,71 +155,57 @@
                         [max]="maxBirthDate">
 
                         @if (hasError('fechaNacimiento', 'required')) {
-
                             <small class="form-field__error">
                                 La fecha de nacimiento es obligatoria.
                             </small>
-
                         } @else if (hasError('fechaNacimiento', 'pastDate')) {
-
                             <small class="form-field__error">
                                 La fecha de nacimiento debe ser anterior a hoy.
                             </small>
-
                         }
-
                 </div>
+            </div>
+        }
+    </section>
 
-            </section>
-
-            <!-- UBICACIÓN -->
-            <section class="form-section form-section--location" formGroupName="direccion">
-
-                <!-- Nombre -->
-
-                    <div class="form-field">
-
-                        <label
-                            class="form-field__label"
-                            for="addressName">
-                            Nombre de la dirección
-                        </label>
-
-                        <input
-                            id="addressName"
-                            class="form-field__input"
-                            type="text"
-                            formControlName="nombre"
-                            placeholder="Ej. Casa">
+    @if (!isEditMode) {
+        <!-- UBICACIÓN -->
+        <section class="form-section form-section--location" formGroupName="direccion">
+            <!-- Nombre -->
+                <div class="form-field">
+                    <label
+                        class="form-field__label"
+                        for="addressName">
+                        Nombre de la dirección
+                    </label>
+                    <input
+                        id="addressName"
+                        class="form-field__input"
+                        type="text"
+                        formControlName="nombre"
+                        placeholder="Ej. Casa">
 
                         @if (hasError('direccion.nombre', 'maxlength')) {
                             <small class="form-field__error">
                                 El nombre no puede superar los 50 caracteres.
                             </small>
                         }
-
-                    </div>
-
-                <!-- Calle y número -->
-
-                <div class="form-row">
-
-                    <div class="form-field">
-
-                        <label
-                            class="form-field__label"
-                            for="street">
-                            Calle
-
-                            <span class="form-field__required">*</span>
-                        </label>
-
-                        <input
-                            id="street"
-                            class="form-field__input"
-                            type="text"
-                            formControlName="calle"
-                            placeholder="Ej. Av. Corrientes">
+                </div>
+            <!-- Calle y número -->
+            <div class="form-row">
+                <div class="form-field">
+                    <label
+                        class="form-field__label"
+                        for="street">
+                        Calle
+                        <span class="form-field__required">*</span>
+                    </label>
+                    <input
+                        id="street"
+                        class="form-field__input"
+                        type="text"
+                        formControlName="calle"
+                        placeholder="Ej. Av. Corrientes">
 
                         @if (hasError('direccion.calle', 'required')) {
                             <small class="form-field__error">
@@ -288,25 +216,20 @@
                                 La calle no puede superar los 100 caracteres.
                             </small>
                         }
-
-                    </div>
-
-                    <div class="form-field form-field--small">
-
-                        <label
-                            class="form-field__label"
-                            for="number">
-                            Número
-
-                            <span class="form-field__required">*</span>
-                        </label>
-
-                        <input
-                            id="number"
-                            class="form-field__input"
-                            type="text"
-                            formControlName="numero"
-                            placeholder="1234">
+                </div>
+                <div class="form-field form-field--small">
+                    <label
+                        class="form-field__label"
+                        for="number">
+                        Número
+                        <span class="form-field__required">*</span>
+                    </label>
+                    <input
+                        id="number"
+                        class="form-field__input"
+                        type="text"
+                        formControlName="numero"
+                        placeholder="1234">
 
                         @if (hasError('direccion.numero', 'required')) {
                             <small class="form-field__error">
@@ -317,28 +240,23 @@
                                 El número no puede superar los 20 caracteres.
                             </small>
                         }
-
-                    </div>
-
                 </div>
-
-                <!-- Localidad -->
-                    <div class="form-field">
-
-                        <label
-                            class="form-field__label"
-                            for="city">
-                            Localidad
-
-                            <span class="form-field__required">*</span>
-                        </label>
-
-                        <input
-                            id="city"
-                            class="form-field__input"
-                            type="text"
-                            formControlName="localidad"
-                            placeholder="Ej. CABA">
+            </div>
+            <!-- Localidad y piso -->
+            <div class="form-row">
+                <div class="form-field">
+                    <label
+                        class="form-field__label"
+                        for="city">
+                        Localidad
+                        <span class="form-field__required">*</span>
+                    </label>
+                    <input
+                        id="city"
+                        class="form-field__input"
+                        type="text"
+                        formControlName="localidad"
+                        placeholder="Ej. CABA">
 
                         @if (hasError('direccion.localidad', 'required')) {
                             <small class="form-field__error">
@@ -349,310 +267,265 @@
                                 La localidad no puede superar los 100 caracteres.
                             </small>
                         }
-
-                    </div>
-
-                <!-- Piso y departamento -->
-
-                <div class="form-row">
-
-                    <div class="form-field">
-
-                        <label
-                            class="form-field__label"
-                            for="floor">
-                            Piso
-                        </label>
-
-                        <input
-                            id="floor"
-                            class="form-field__input"
-                            type="text"
-                            formControlName="piso"
-                            placeholder="Ej. 3">
+                </div>
+                <div class="form-field">
+                    <label
+                        class="form-field__label"
+                        for="floor">
+                        Piso
+                    </label>
+                    <input
+                        id="floor"
+                        class="form-field__input"
+                        type="text"
+                        formControlName="piso"
+                        placeholder="Ej. 3">
 
                         @if (hasError('direccion.piso', 'maxlength')) {
                             <small class="form-field__error">
                                 El piso no puede superar los 20 caracteres.
                             </small>
                         }
-
-                    </div>
-
-                    <div class="form-field">
-
-                        <label
-                            class="form-field__label"
-                            for="apartment">
-                            Departamento
-                        </label>
-
-                        <input
-                            id="apartment"
-                            class="form-field__input"
-                            type="text"
-                            formControlName="departamento"
-                            placeholder="Ej. B">
+                </div>
+            </div>
+            <!-- Depto y código postal -->
+            <div class="form-row">
+                <div class="form-field">
+                    <label
+                        class="form-field__label"
+                        for="apartment">
+                        Departamento
+                    </label>
+                    <input
+                        id="apartment"
+                        class="form-field__input"
+                        type="text"
+                        formControlName="departamento"
+                        placeholder="Ej. B">
 
                         @if (hasError('direccion.departamento', 'maxlength')) {
                             <small class="form-field__error">
                                 El departamento no puede superar los 20 caracteres.
                             </small>
                         }
-
-                    </div>
-
                 </div>
-
-                <!-- Código postal -->
-
-                    <div class="form-field">
-
-                        <label
-                            class="form-field__label"
-                            for="postalCode">
-                            Código postal
-                        </label>
-
-                        <input
-                            id="postalCode"
-                            class="form-field__input"
-                            type="text"
-                            formControlName="codigoPostal"
-                            placeholder="C1043">
+                <div class="form-field">
+                    <label
+                        class="form-field__label"
+                        for="postalCode">
+                        Código postal
+                    </label>
+                    <input
+                        id="postalCode"
+                        class="form-field__input"
+                        type="text"
+                        formControlName="codigoPostal"
+                        placeholder="C1043">
 
                         @if (hasError('direccion.codigoPostal', 'maxlength')) {
                             <small class="form-field__error">
                                 El código postal no puede superar los 10 caracteres.
                             </small>
                         }
-
-                    </div>
-
-                <!-- Referencia -->
-
-                    <div class="form-field">
-
-                        <label
-                            class="form-field__label"
-                            for="reference">
-                            Referencia
-                        </label>
-
-                        <textarea
-                            id="reference"
-                            class="form-field__textarea"
-                            rows="3"
-                            formControlName="referencia"
-                            placeholder="Ej. Frente a la plaza"></textarea>
-
-                        @if (hasError('direccion.referencia', 'maxlength')) {
-                            <small class="form-field__error">
-                                La referencia no puede superar los 200 caracteres.
-                            </small>
-                        }
-
-                    </div>
-
-            </section>
-
-            <!-- SEGURIDAD -->
-            <section class="form-section form-section--security">
-
-                    <div class="form-row">
-
-                        <div class="form-field">
-
-                            <label
-                                class="form-field__label"
-                                for="password">
-                                Contraseña
-
-                                <span class="form-field__required">*</span>
-                            </label>
-
-                            <div class="password-field">
-
-                                <input
-                                    id="password"
-                                    class="form-field__input"
-                                    [type]="showPassword ? 'text' : 'password'"
-                                    formControlName="password"
-                                    placeholder="********">
-                                
-                                <button
-                                    type="button"
-                                    class="password-field__toggle"
-                                    (click)="togglePassword()">
-
-                                    @if (showPassword) {
-
-                                        <svg lucideEyeOff></svg>
-
-                                    } @else {
-
-                                        <svg lucideEye></svg>
-
-                                    }
-
-                                </button>
-
-                            </div>
-
-                            @if (hasError('password', 'required')) {
-
-                                <small class="form-field__error">
-                                    La contraseña es obligatoria.
-                                </small>
-
-                            } @else if (hasError('password', 'maxlength')) {
-
-                                <small class="form-field__error">
-                                    La contraseña no puede superar los 255 caracteres.
-                                </small>
-
-                            }
-                                
-                        </div>
-
-                        <div class="form-field">
-
-                            <label
-                                class="form-field__label"
-                                for="confirmPassword">
-                                Confirmar contraseña
-
-                                <span class="form-field__required">*</span>
-                            </label>
-
-                            <div class="password-field">
-
-                                <input
-                                    id="confirmPassword"
-                                    class="form-field__input"
-                                    [type]="showConfirmPassword ? 'text' : 'password'"
-                                    formControlName="confirmPassword"
-                                    placeholder="********">
-
-                                <button
-                                    type="button"
-                                    class="password-field__toggle"
-                                    (click)="toggleConfirmPassword()">
-
-                                    @if (showConfirmPassword) {
-
-                                        <svg lucideEyeOff></svg>
-
-                                    } @else {
-
-                                        <svg lucideEye></svg>
-
-                                    }
-
-                                </button>
-                            
-                            </div>
-
-                            @if (hasError('confirmPassword', 'required')) {
-
-                                <small class="form-field__error">
-                                    Confirmá la contraseña.
-                                </small>
-
-                            } @else if (employeeForm.hasError('passwordMismatch')) {
-
-                                <small class="form-field__error">
-                                    Las contraseñas no coinciden.
-                                </small>
-
-                            }
-
-                        </div>
-
-                    </div>
-                
-                <!-- REQUISITOS DE CONTRASEÑA -->
-                    <div class="password-requirements">
-
-                        @for (requirement of passwordRequirements; track requirement.key) {
-
-                            <div class="password-requirement">
-
-                                @if (requirement.valid) {
-
-                                    <svg
-                                        lucideCircleCheck
-                                        class="password-requirement__icon password-requirement__icon--valid">
-                                    </svg>
-
-                                } @else {
-
-                                    <svg
-                                        lucideCircle
-                                        class="password-requirement__icon">
-                                    </svg>
-
-                                }
-
-                                <span>
-
-                                    {{ requirement.label }}
-
-                                </span>
-
-                            </div>
-
-                        }
-
-                    </div>
-                
-
-                <!-- ROL -->
-                    <div class="form-field">
-
-                        <label class="form-field__label">
-                            Rol
-                            <span class="form-field__required">*</span>
-
-                        </label>
-
-                        <div class="role-selector">
-
-                            @for (role of userRoles; track role.value) {
-
-                                <label class="role-selector__option">
-
-                                    <input
-                                        type="radio"
-                                        formControlName="rol"
-                                        [value]="role.value">
-
-                                    <span>
-                                        {{ role.label }}
-                                    </span>
-
-                                </label>
-
-                            }
-
-                        </div>
-
-                    </div>
-
-                <div class="form-actions">
-
-                    <button
-                        type="submit"
-                        class="btn btn--primary">
-                        Guardar personal
-                    </button>
-
                 </div>
+            </div>
+            <!-- Referencia -->
+            <div class="form-field">
+                <label
+                    class="form-field__label"
+                    for="reference">
+                    Referencia
+                </label>
+                <textarea
+                    id="reference"
+                    class="form-field__textarea"
+                    rows="3"
+                    formControlName="referencia"
+                    placeholder="Ej. Frente a la plaza"></textarea>
 
-            </section>
+                    @if (hasError('direccion.referencia', 'maxlength')) {
+                        <small class="form-field__error">
+                            La referencia no puede superar los 200 caracteres.
+                        </small>
+                    }
+            </div>
+        </section>
+    }
 
-        </form>
+    <!-- SEGURIDAD -->
+    <section class="form-section form-section--security">
+        @if (!isEditMode) {
+            <div class="form-row">
+                <div class="form-field">
+                    <label
+                        class="form-field__label"
+                        for="password">
+                        Contraseña
+                        <span class="form-field__required">*</span>
+                    </label>
 
-    </div>
+                    <div class="password-field">
+                        <input
+                            id="password"
+                            class="form-field__input"
+                            [type]="showPassword ? 'text' : 'password'"
+                            formControlName="password"
+                            placeholder="********">
+        
+                        <button
+                            type="button"
+                            class="password-field__toggle"
+                            (click)="togglePassword()">
 
-</section>
+                            @if (showPassword) {
+                                <svg lucideEyeOff></svg>
+                            } @else {
+                                <svg lucideEye></svg>
+                            }
+                        </button>
+                    </div>
+
+                    @if (hasError('password', 'required')) {
+                        <small class="form-field__error">
+                            La contraseña es obligatoria.
+                        </small>
+                    } @else if (hasError('password', 'maxlength')) {
+                        <small class="form-field__error">
+                            La contraseña no puede superar los 255 caracteres.
+                        </small>
+                    }    
+                </div>
+                <div class="form-field">
+                    <label
+                        class="form-field__label"
+                        for="confirmPassword">
+                        Confirmar contraseña
+                        <span class="form-field__required">*</span>
+                    </label>
+                    <div class="password-field">
+                        <input
+                            id="confirmPassword"
+                            class="form-field__input"
+                            [type]="showConfirmPassword ? 'text' : 'password'"
+                            formControlName="confirmPassword"
+                            placeholder="********">
+
+                        <button
+                            type="button"
+                            class="password-field__toggle"
+                            (click)="toggleConfirmPassword()">
+
+                            @if (showConfirmPassword) {
+                                <svg lucideEyeOff></svg>
+                            } @else {
+                                <svg lucideEye></svg>
+                            }
+                        </button>
+                    </div>
+
+                    @if (hasError('confirmPassword', 'required')) {
+                        <small class="form-field__error">
+                            Confirmá la contraseña.
+                        </small>
+                    } @else if (employeeForm.hasError('passwordMismatch')) {
+                        <small class="form-field__error">
+                            Las contraseñas no coinciden.
+                        </small>
+                    }
+                </div>
+            </div>
+            <!-- REQUISITOS DE CONTRASEÑA -->
+            <div class="password-requirements">
+
+                @for (requirement of passwordRequirements; track requirement.key) {
+                    <div class="password-requirement">
+                        @if (requirement.valid) {
+                            <svg
+                                lucideCircleCheck
+                                class="password-requirement__icon password-requirement__icon--valid">
+                            </svg>
+                        } @else {
+                            <svg
+                                lucideCircle
+                                class="password-requirement__icon">
+                            </svg>
+                        }
+                        <span>{{ requirement.label }}</span>
+                    </div>
+                }
+            </div>
+            <!-- ROL -->
+            <div class="form-field">
+                <label class="form-field__label">
+                    Rol
+                    <span class="form-field__required">*</span>
+                </label>
+                <div class="role-toggle">
+                    @for (role of userRoles; track role.value) {
+                        <label 
+                            class="role-toggle__option"
+                            [class.role-toggle__option--selected]="
+                                employeeForm.get('rol')?.value === role.value
+                            ">
+                            <input
+                                type="radio"
+                                formControlName="rol"
+                                [value]="role.value">
+                            <span class="role-toggle__indicator"></span>
+                            <span>{{ role.label }}</span>
+                        </label>
+                    }
+                </div>
+            </div>
+        }
+        <!-- ESTADO -->
+        @if (isEditMode) {
+            <div class="form-field">
+                <label class="form-field__label">
+                    Estado
+                    <span class="form-field__required">*</span>
+                </label>
+                <div class="estado-toggle">
+                    <label
+                        class="estado-toggle__option estado-toggle__option--active"
+                        [class.estado-toggle__option--selected]="
+                            employeeForm.get('estado')?.value === Estado.ACTIVO
+                        ">
+                        <input
+                            type="radio"
+                            formControlName="estado"
+                            [value]="Estado.ACTIVO">
+                        <span class="estado-toggle__indicator"></span>
+                        <span>Activo</span>
+                    </label>
+                    <label
+                        class="estado-toggle__option estado-toggle__option--inactive"
+                        [class.estado-toggle__option--selected]="
+                            employeeForm.get('estado')?.value === Estado.INACTIVO
+                        ">
+                        <input
+                            type="radio"
+                            formControlName="estado"
+                            [value]="Estado.INACTIVO">
+                        <span class="estado-toggle__indicator"></span>
+                        <span>Inactivo</span>
+                    </label>
+                </div>
+            </div>
+        }
+
+        <div class="form-actions">
+            <button
+                type="button"
+                class="btn btn-primary"
+                (click)="onCancel()">
+                Cancelar
+            </button>
+            <button
+                type="submit"
+                class="btn btn--primary">
+                {{ isEditMode? 'Guardar cambios' : 'Crear personal' }}
+            </button>
+        </div>
+    </section>
+</form>

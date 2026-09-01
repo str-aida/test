@@ -1,28 +1,195 @@
-<section class="employees">
+<section class="employees-list">
 
-  <app-employee-form
-    (employeeCreated)="onEmployeeCreated()">
-  </app-employee-form>
+  <header class="employees-list__header">
 
-  <div class="employees__actions">
+    <div class="employees-list__header-title">
+
+      <div class="employees-list__icon-wrapper">
+        <svg lucideShapes class="employees-list__icon"></svg>
+      </div>
+      <div>
+        <h1 class="employees-list__title">
+          Gestión de personal
+        </h1>
+        <p class="employees-list__subtitle">
+          Administrá el personal de tu establecimiento.
+        </p>
+      </div>
+
+    </div>
 
     <button
       type="button"
-      class="btn btn-outline-primary"
-      (click)="toggleListado()">
+      class="btn btn--primary product-list__add-btn"
+      (click)="openCreateModal()">
 
-      {{ mostrarListado ? 'Ocultar personal' : 'Listar personal' }}
-
+      <svg lucidePlus class="btn__icon"></svg>
+      <span>Nuevo personal</span>
     </button>
 
-  </div>
+  </header>
+  
+  <app-employees-table
+    (editEmployee)="openEditModal($event)"
+    (deleteEmployee)="openDeleteModal($event)">
+  </app-employees-table>
 
-  @if (listadoCargado) {
+  <!-- MODAL DE NUEVA EMPLEADO -->
+  @if (showCreateModal) {
+    <div
+      class="modal-overlay"
+      (click)="closeCreateModal()">
 
-    <div [hidden]="!mostrarListado">
-      <app-employees-table></app-employees-table>
+      <div
+        class="modal-card"
+        (click)="$event.stopPropagation()">
+
+        <!-- HEADER DEL MODAL -->
+        <header class="modal-card__header">
+
+          <div class="modal-card__header-info">
+
+            <div class="modal-card__header-icon">
+              <svg lucideShapes></svg>
+            </div>
+
+            <div>
+              <h2 class="modal-card__title">
+                Nuevo personal
+              </h2>
+              <p class="modal-card__subtitle">
+                Completá los datos para registrar un nuevo personal.
+              </p>
+            </div>
+
+          </div>
+
+          <button
+            type="button"
+            class="modal-card__close"
+            aria-label="Cerrar modal"
+            (click)="closeCreateModal()">
+
+            <svg lucideX></svg>
+
+          </button>
+
+        </header>
+
+        <!-- FORMULARIO -->
+        <div class="modal-card__body">
+
+          <app-employee-form
+            (employeeCreated)="onEmployeeCreate()"
+            (cancel)="closeCreateModal()">
+          </app-employee-form>
+
+        </div>
+
+      </div>
+
     </div>
+  }
 
+  <!-- MODAL DE EDITAR EMPLEADO -->
+  @if (showEditModal && selectedEmployee) {
+    <div
+      class="modal-overlay"
+      (click)="closeEditModal()">
+
+      <div
+        class="modal-card"
+        (click)="$event.stopPropagation()">
+
+        <!-- HEADER DEL MODAL -->
+        <header class="modal-card__header">
+
+          <div class="modal-card__header-info">
+
+            <div class="modal-card__header-icon">
+              <svg lucideShapes></svg>
+            </div>
+
+            <div>
+              <h2 class="modal-card__title">
+                Editar personal
+              </h2>
+              <p class="modal-card__subtitle">
+                Modificá los datos del personal seleccionada.
+              </p>
+            </div>
+
+          </div>
+
+          <button
+            type="button"
+            class="modal-card__close"
+            aria-label="Cerrar modal"
+            (click)="closeEditModal()">
+
+            <svg lucideX></svg>
+
+          </button>
+
+        </header>
+
+        <!-- FORMULARIO -->
+        <div class="modal-card__body">
+
+          <app-employee-form
+            [editingEmployee]="selectedEmployee"
+            (employeeUpdated)="onEmployeeUpdated()"
+            (cancel)="closeEditModal()">
+          </app-employee-form>
+
+        </div>
+
+      </div>
+
+    </div>
+  }
+
+  <!-- MODAL DE ELIMINAR EMPLEADO -->
+  @if (showDeleteModal && selectedEmployee) {
+    <div
+      class="modal-overlay"
+      (click)="closeDeleteModal()">
+
+      <div
+        class="modal-card modal-card--danger"
+        (click)="$event.stopPropagation()">
+
+        <div class="modal-card__alert-icon">
+          <svg lucideAlertTriangle></svg>
+        </div>
+
+        <div class="modal-card__confirm-content">
+          <h3>¿Desactivar personal?</h3>
+          <p>
+            Vas a cambiar el estado de <strong>{{ selectedEmployee.nombre }}</strong> a <strong>INACTIVO</strong>.
+          </p>
+        </div>
+
+        <footer class="modal-card__footer">
+
+          <button
+            type="button"
+            class="btn btn--outline"
+            (click)="closeDeleteModal()">
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="btn btn--primary"
+            (click)="confirmDelete()">
+            Sí, desactivar
+          </button>
+
+        </footer>
+
+      </div>
+
+    </div>
   }
 
 </section>

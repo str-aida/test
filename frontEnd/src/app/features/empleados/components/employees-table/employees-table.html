@@ -1,44 +1,25 @@
 <section class="employees-table">
-
-  <header class="employees-table__header">
-
-    <h2 class="employees-table__title">
-      Personal registrado
-    </h2>
-
-    <p class="employees-table__subtitle">
-      Gestioná el personal registrado en el sistema.
-    </p>
-
-  </header>
-
-
+  
   <div class="employees-table__toolbar">
 
     <div class="employees-table__search">
-
       <input
         type="text"
         class="form-control"
         placeholder="Buscar por nombre o email..."
         [(ngModel)]="texto"
         (keyup.enter)="search()">
-
     </div>
 
     <div class="employees-table__filter">
-
       <select
         class="form-select"
         [(ngModel)]="rol"
         (change)="search()">
-
         <option value="">Todos los roles</option>
         <option value="ADMIN">Administrador</option>
         <option value="EMPLEADO">Empleado</option>
-
       </select>
-
     </div>
 
     <button
@@ -51,134 +32,122 @@
   </div>
 
 
-  @if (employees.length === 0) {
+  @if (employees().length === 0) {
 
-    <p class="employees-table__empty">
-      No hay personal registrado.
-    </p>
+    <div class="table-empty">
+
+      @if (hasActiveFilters()) {
+        <p>No se encontró personal con los filtros seleccionados.</p>
+      } @else {
+        <p>No hay personal registrado.</p>
+      }
+
+    </div>
 
   } @else {
 
-    <div class="employees-table__wrapper">
+    <div class="table-wrapper">
 
-      <table class="table employees-table__table">
+      <table class="table">
 
         <thead>
-
           <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Email</th>
-            <th>Estado</th>
-            <th>Acciones</th>
+            <th>EMPLEADO</th>
+            <th>EMAIL / TELÉFONO</th>
+            <th>ROL</th>
+            <th>ESTADO</th>
+            <th>ACCIONES</th>
           </tr>
-
         </thead>
 
         <tbody>
 
-          @for (employee of employees; track employee.id) {
+          @for (employee of employees(); track employee.id) {
 
             <tr>
+              <!-- EMPLEADO -->
+              <td class="employees-table__cell-name">
+                <div class="employees-table__user-info">
+                  <span
+                    class="employees-table__avatar-icon"
+                    [class.employees-table__avatar-icon--admin]="employee.rol === UserRole.ADMIN">
 
-              <td>
-                @if (editingEmployeeId === employee.id) {
+                    @if (employee.rol === UserRole.ADMIN) {
+                      <svg lucideShield></svg>
+                    } @else {
+                      <svg lucideUserCheck></svg>
+                    }
+                  </span>
+                  <div class="employees-table__user-details">
+                    <span class="employees-table__name">
+                      {{ employee.nombre }} {{ employee.apellido }}
+                    </span>
 
-                  <input
-                      type="text"
-                      [(ngModel)]="editingEmployee!.nombre"
-                      class="table-input">
-
-                } @else {
-                  {{ employee.nombre }}
-                }
-              </td>
-              <td>
-                @if (editingEmployeeId === employee.id) {
-
-                  <input
-                      type="text"
-                      [(ngModel)]="editingEmployee!.apellido"
-                      class="table-input">
-
-                } @else {
-                  {{ employee.apellido }}
-                }
-              </td>
-              <td>
-                @if (editingEmployeeId === employee.id) {
-
-                  <input
-                      type="email"
-                      [(ngModel)]="editingEmployee!.email"
-                      class="table-input">
-
-                } @else {
-                  {{ employee.email }}
-                }
-              </td>
-
-              <td>
-                @if (editingEmployeeId === employee.id) {
-                  
-                  <label>
-                    <input
-                      type="radio"
-                      name="estado{{ employee.id }}"
-                      [value]="Estado.ACTIVO"
-                      [(ngModel)]="editingEmployee!.estado">
-
-                    Activo
-                  </label>
-
-                  <label>
-                    <input
-                      type="radio"
-                      name="estado{{ employee.id }}"
-                      [value]="Estado.INACTIVO"
-                      [(ngModel)]="editingEmployee!.estado">
-
-                    Inactivo
-                  </label>
-
-                } @else {
-                  {{ employee.estado }}
-                }
-              </td>
-
-              <td>
-
-                @if (editingEmployeeId === employee.id) {
-
-                  <div class="table-actions">
-
-                    <button
-                      type="button"
-                      class="table-actions__save"
-                      (click)="save(employee)">
-                      Guardar
-                    </button>
-
-                    <button
-                      type="button"
-                      class="table-actions__cancel"
-                      (click)="cancel()">
-                      Cancelar
-                    </button>
-
+                    @if (employee.dni) {
+                      <small class="employees-table__subtext">
+                        DNI: {{ employee.dni }}
+                      </small>
+                    }
                   </div>
 
-                } @else {
+                </div>
+              </td>
+              <!-- CONTACTO -->
+              <td class="employees-table__cell-contact">
+                <div class="employees-table__contact-info">
+                  <span class="employees-table__email">
+                    {{ employee.email }}
+                  </span>
 
+                  @if (employee.telefono) {
+                    <small class="employees-table__phone">
+                      {{ employee.telefono }}
+                    </small>
+                  }
+                </div>
+              </td>
+              <!-- ROL -->
+              <td>
+                <span
+                  class="badge-role"
+                  [class.badge-role--admin]="employee.rol === UserRole.ADMIN"
+                  [class.badge-role--employee]="employee.rol === UserRole.EMPLEADO">
+
+                  {{ employee.rol === UserRole.ADMIN ? 'Administrador' : 'Empleado' }}
+                </span>
+              </td>
+              <td>
+                <span
+                  class="table-status"
+                  [class.table-status--active]="employee.estado === Estado.ACTIVO"
+                  [class.table-status--inactive]="employee.estado === Estado.INACTIVO">
+
+                  {{ employee.estado === Estado.ACTIVO ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td>
+                <div class="table-actions">
                   <button
                     type="button"
                     class="table-actions__edit"
+                    title="Editar producto"
                     (click)="edit(employee)">
-                    Editar
+                    
+                    <svg lucidePencil></svg>
+                    <span>Editar</span>
+
                   </button>
+                  <button
+                    type="button"
+                    class="table-actions__delete"
+                    title="Desactivar categoría"
+                    (click)="delete(employee)">
+                    
+                    <svg lucideTrash2></svg>
+                    <span>Eliminar</span>
 
-                }
-
+                  </button>
+                </div>
               </td>
 
             </tr>
