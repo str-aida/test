@@ -62,7 +62,8 @@ export const routes: Routes = [
         data: { title: 'Productos' },
         children: [
           { path: '', component: ProductsListComponent },
-          { path: 'nuevo', component: ProductFormComponent }
+          { path: 'nuevo', component: ProductFormComponent },
+          { path: 'editar/:id', component: ProductFormComponent }
         ]
       },
       { path: 'pedidos/en-curso', component: PedidosEnCursoComponent, data: { title: 'Pedidos en Curso' } },

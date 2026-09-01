@@ -76,15 +76,15 @@
         <thead>
 
           <tr>
-            <th>Código</th>
-            <th>Imagen</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Categoría</th>
-            <th>Precio</th>
-            <th>Stock</th>
-            <th>Estado</th>
-            <th>Acciones</th>
+            <th class="th-code">Código</th>
+            <th class="th-image">Imagen</th>
+            <th class="th-name">Nombre</th>
+            <th class="th-desc">Descripción</th>
+            <th class="th-cat">Categoría</th>
+            <th class="th-price">Precio</th>
+            <th class="th-stock">Stock</th>
+            <th class="th-status">Estado</th>
+            <th class="th-actions">Acciones</th>
           </tr>
 
         </thead>
@@ -94,11 +94,11 @@
           @for (product of products; track product.id) {
 
             <tr>
-              <td> {{ product.codigo }} </td>
-              <td>
+              <td class="td-code"> {{ product.codigo }} </td>
+              <td class="td-image">
                 @if (product.imagenUrl) {
                     <img
-                        class="product-table__image"
+                        class="products-table__image"
                         [src]="getImageUrl(product.imagenUrl)"
                         [alt]="product.nombre">
                 } @else {
@@ -107,13 +107,43 @@
                     </div>
                 }
               </td>
-              <td> {{ product.nombre }} </td>
-              <td> {{ product.descripcion || 'Sin descripción' }} </td>
-              <td> {{ product.categoriaNombre }} </td>
-              <td> ${{ product.precio | number:'1.2-2' }} </td>
-              <td> {{ product.stock }} </td>
-              <td> {{ product.estado }} </td>
-              <td> <!--ACCIONES--> </td>
+              <td class="td-name"> {{ product.nombre }} </td>
+              <td class="td-desc" [title]="product.descripcion || ''"> {{ product.descripcion || 'Sin descripción' }} </td>
+              <td class="td-cat"> {{ product.categoriaNombre }} </td>
+              <td class="td-price"> ${{ product.precio | number:'1.2-2' }} </td>
+              <td class="td-stock"> {{ product.stock }} </td>
+              <td class="td-status">
+                <span
+                  class="table-status"
+                  [class.table-status--active]="product.estado === Estado.ACTIVO"
+                  [class.table-status--inactive]="product.estado === Estado.INACTIVO">
+                  {{ product.estado === Estado.ACTIVO ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="td-actions">
+                <div class="table-actions">
+
+                  <a
+                    [routerLink]="['/admin/productos/editar', product.id]"
+                    class="table-actions__edit"
+                    title="Editar producto">
+                    <svg lucidePencil></svg>
+                    <span>Editar</span>
+                  </a>
+
+                  <button
+                    type="button"
+                    class="table-actions__toggle"
+                    [class.table-actions__toggle--deactivate]="product.estado === Estado.ACTIVO"
+                    [class.table-actions__toggle--activate]="product.estado === Estado.INACTIVO"
+                    [title]="product.estado === Estado.ACTIVO ? 'Desactivar producto' : 'Activar producto'"
+                    (click)="toggleStatus(product)">
+                    <svg lucidePower></svg>
+                    <span>{{ product.estado === Estado.ACTIVO ? 'Desactivar' : 'Activar' }}</span>
+                  </button>
+
+                </div>
+              </td>
             </tr>
 
           }

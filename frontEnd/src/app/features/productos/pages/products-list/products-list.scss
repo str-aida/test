@@ -1,0 +1,218 @@
+@use 'abstracts/index' as *;
+
+.product-list {
+    width: 100%;
+    padding: $space-md;
+}
+
+.product-list__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.product-list__header-title {
+    display: flex;
+    align-items: center;
+    gap: $space-md;
+}
+
+.product-list__icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 48px;
+    height: 48px;
+
+    border-radius: 12px;
+
+    background-color: rgba($color-primary, 0.1);
+    color: $color-primary;
+}
+
+.product-list__icon {
+    width: 26px;
+    height: 26px;
+}
+
+.product-list__title {
+    margin: 0;
+
+    font-family: $font-heading;
+    font-size: $fs-h3;
+    font-weight: $fw-bold;
+    color: $color-primary;
+}
+
+.product-list__subtitle {
+    font-family: $font-body;
+    font-size: $fs-caption;
+    color: $color-text-light;
+}
+
+.product-list__add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-sm;
+    padding: 0.75rem 1.25rem;
+    border-radius: 10px;
+    background-color: $color-primary;
+    color: $color-white;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: $color-primary-dark;
+    }
+}
+
+.product-list__add-btn .btn__icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* MODAL GENERAL */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 1.5rem;
+
+    background: rgba(0, 0, 0, .45);
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.modal-card {
+    width: 100%;
+    max-width: 440px;
+    padding: $space-md;
+    text-align: center;
+
+    overflow: hidden;
+
+    background: $color-white;
+
+    border-radius: 14px;
+
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .2);
+
+    animation: modal-enter .2s ease;
+}
+
+.modal-card__header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 52px;
+    height: 52px;
+
+    margin: 0 auto 1.25rem;
+    border-radius: 12px;
+
+    background: rgba($color-primary, .1);
+    color: $color-primary;
+
+    svg {
+        width: 26px;
+        height: 26px;
+    }
+}
+
+.modal-card--danger .modal-card__header-icon {
+    background: rgba($color-danger, .1);
+    color: $color-danger;
+}
+
+.modal-card__confirm-content {
+    h3 {
+        margin: 0;
+        font-family: $font-heading;
+        font-size: $fs-body;
+        font-weight: $fw-bold;
+        color: $color-primary;
+    }
+
+    p {
+        margin: .75rem 0 0;
+        font-family: $font-body;
+        font-size: $fs-body;
+        line-height: $lh-body;
+        color: $color-text-light;
+    }
+
+    strong {
+        color: $color-text;
+        font-weight: $fw-semibold;
+    }
+}
+
+.modal-card__footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: $space-sm;
+    margin-top: 1.75rem;
+
+    .btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+    }
+
+    .btn--outline {
+        background: transparent;
+        border: 1px solid $color-border;
+        color: #374151;
+
+        &:hover {
+            background: #f3f4f6;
+        }
+    }
+
+    .btn--danger {
+        background: $color-danger;
+        color: $color-white;
+
+        &:hover {
+            background: #dc2626;
+        }
+    }
+
+    .btn--primary {
+        background: $color-primary;
+        color: $color-white;
+
+        &:hover {
+            background: $color-primary-dark;
+        }
+    }
+}
+
+@keyframes modal-enter {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
