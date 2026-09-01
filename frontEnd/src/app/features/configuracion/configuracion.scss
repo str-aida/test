@@ -1,0 +1,239 @@
+@use 'abstracts/index' as *;
+
+.configuration-form{
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: $form-section-gap;
+    padding: $space-md;
+}
+
+.form-section {
+    font-family: $font-body;
+    font-size: $fs-caption;
+    display: flex;
+    flex-direction: column;
+    gap: $form-row-gap;
+
+    padding: 1.5rem;
+    background-color: $color-background;
+    border: 1px solid $color-border;
+    border-radius: 1rem;
+}
+
+.form-section__header {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid $color-border;
+}
+
+.form-section__title {
+    margin: 0;
+    font-family: $font-heading;
+    font-size: 1.35rem;
+    font-weight: $fw-bold;
+    color: $color-primary;
+}
+
+.form-section__subtitle {
+    margin: 0;
+    color: $color-text-light;
+    font-size: $fs-caption;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $form-row-gap;
+    @include mobile {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-row--three {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $form-row-gap;
+    @include tablet {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @include mobile {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: $form-field-gap;
+}
+
+.form-field__textarea {
+    width: 100%;
+    min-height: 8rem;
+    padding: .9rem 1rem;
+    border: 1px solid $color-border;
+    border-radius: .75rem;
+    font: inherit;
+    resize: vertical;
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+.form-field__textarea:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, .15);
+}
+
+.form-field__label {
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    font-weight: $fw-medium;
+}
+
+.form-field__required {
+    color: $color-danger;
+    font-weight: $fw-bold;
+}
+
+.form-field__input {
+    width: 100%;
+    padding: .40rem 1rem;
+    border: 1px solid $color-border;
+    border-radius: .75rem;
+    font: inherit;
+    //REVISAR SI DEJAR O NO***
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+//REVISAR SI DEJAR O NO***
+.form-field__input:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.15);
+}
+
+//borde rojo para los mensajes
+.form-field__input.ng-invalid.ng-touched,
+.form-field__textarea.ng-invalid.ng-touched {
+    border-color: $color-danger;
+}
+
+.form-field__input.ng-invalid.ng-touched:focus,
+.form-field__textarea.ng-invalid.ng-touched:focus {
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, .15);
+}
+
+.form-field__error {
+    margin-top: .25rem;
+    color: $color-danger;
+    font-size: .85rem;
+    font-weight: $fw-medium;
+}
+
+.form-field__counter {
+    align-self: flex-end;
+    font-size: .8rem;
+    color: #8a8a8a;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: $space-sm;
+}
+
+.schedule-range {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.schedule-range__separator {
+    color: $color-text-light;
+    font-weight: $fw-medium;
+}
+
+.service-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $form-row-gap;
+}
+
+.service-option__input {
+    position: absolute;
+    opacity: 0;
+}
+
+.service-option__card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    min-height: 5rem;
+    //padding: .75rem;
+    border: 1px solid $color-border;
+    border-radius: .75rem;
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        transform .2s ease;
+
+    @include mobile {
+        min-height: 4.2rem;
+        padding: .6rem;
+        gap: .4rem;
+    }
+}
+
+.service-option__card svg {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.service-option__card span {
+    font-size: $fs-small;
+    font-weight: $fw-medium;
+}
+
+.service-option__input:not(:disabled) + .service-option__card:hover {
+    border-color: $color-primary;
+}
+
+.service-option__input:checked + .service-option__card {
+    background: $color-primary;
+    border-color: $color-primary;
+    color: $color-white;
+}
+
+.service-option__input:focus-visible + .service-option__card {
+    outline: 3px solid rgba($color-primary, .25);
+    outline-offset: 2px;
+}
+
+.service-option__input:disabled + .service-option__card {
+    opacity: 0.65;
+}
+
+.working-days {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.4rem;
+}
+
+.working-day {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}

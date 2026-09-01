@@ -24,6 +24,7 @@ import { MisCuponesComponent } from './features/cliente/pages/mis-cupones/mis-cu
 import { PedidosListComponent } from './features/pedidos/pages/pedidos-list/pedidos-list';
 import { PedidoDetalleAdminComponent } from './features/pedidos/pages/pedido-detalle-admin/pedido-detalle-admin';
 import { PedidosEnCursoComponent } from './features/pedidos/pages/pedidos-en-curso/pedidos-en-curso';
+import { ConfiguracionComponent } from './features/configuracion/configuracion';
 
 export const routes: Routes = [
 
@@ -69,6 +70,7 @@ export const routes: Routes = [
       { path: 'pedidos/:id', component: PedidoDetalleAdminComponent, data: { title: 'Detalle de Pedido' } },
       { path: 'cupones', component: CuponesListComponent, data: { title: 'Gestión de Cupones' } },
       { path: 'auditoria', component: AuditoriaListComponent, data: { title: 'Auditoría' } },
+      { path: 'configuracion', component: ConfiguracionComponent, data: { title: 'Configuración' } },
       { path: '', redirectTo: 'personal', pathMatch: 'full' }
     ]
   },
