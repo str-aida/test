@@ -11,6 +11,7 @@ public interface ProductoCacheService {
             Long establecimientoId,
             Long categoriaId,
             EstadoProducto estado,
-            String texto
+            String texto,
+            boolean soloCategoriasActivas
     );
 }

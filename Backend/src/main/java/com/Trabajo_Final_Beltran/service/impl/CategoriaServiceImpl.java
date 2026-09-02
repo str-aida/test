@@ -20,6 +20,11 @@ import com.Trabajo_Final_Beltran.exception.BusinessException;
 import java.util.List;
 import com.Trabajo_Final_Beltran.entity.Usuario;
 import com.Trabajo_Final_Beltran.security.SecurityUtils;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 
 
@@ -31,6 +36,7 @@ public class CategoriaServiceImpl implements CategoriaService {
   private final CategoriaRepository categoriaRepository;
   private final EstablecimientoRepository establecimientoRepository;
   private final LogSistemaService logSistemaService;
+  private final CacheManager cacheManager;
 
 
 
@@ -58,6 +64,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 
 
   @Override
+  @CacheEvict(value = "productos", allEntries = true)
   public MensajeResponse crearCategoria(CreateCategoriaRequest request) {
 
     Usuario usuario =
@@ -118,6 +125,8 @@ public class CategoriaServiceImpl implements CategoriaService {
         TipoOperacion.INSERT
     );
 
+    evictarCacheProductosPostCommit();
+
     return MensajeResponse.builder()
         .mensaje("Categoría creada correctamente")
         .build();
@@ -145,6 +154,7 @@ public class CategoriaServiceImpl implements CategoriaService {
   }
 
   @Override
+  @CacheEvict(value = "productos", allEntries = true)
   public CategoriaResponse editarCategoria(Long id, UpdateCategoriaRequest request) {
 
     Categoria categoria =
@@ -220,6 +230,7 @@ public class CategoriaServiceImpl implements CategoriaService {
             "Se modificó el estado de la categoría"
         );
 
+    evictarCacheProductosPostCommit();
 
     return CategoriaMapper.toResponse(
         categoriaActualizada
@@ -227,6 +238,7 @@ public class CategoriaServiceImpl implements CategoriaService {
   }
 
   @Override
+  @CacheEvict(value = "productos", allEntries = true)
   public void eliminarCategoria(Long id) {
     Categoria categoria =
         categoriaRepository.findById(id)
@@ -258,6 +270,8 @@ public class CategoriaServiceImpl implements CategoriaService {
         categoria.getEstado().name(),
         "Categoría desactivada"
     );
+
+    evictarCacheProductosPostCommit();
   }
 
 
@@ -269,6 +283,28 @@ public class CategoriaServiceImpl implements CategoriaService {
     return Character.toUpperCase(
         nombreNormalizado.charAt(0)
     ) + nombreNormalizado.substring(1);
+  }
+
+  private void evictarCacheProductosPostCommit() {
+    Runnable evictTask = () -> {
+      Cache cache = cacheManager.getCache("productos");
+      if (cache != null) {
+        cache.clear();
+      }
+    };
+
+    if (TransactionSynchronizationManager.isActualTransactionActive()) {
+      TransactionSynchronizationManager.registerSynchronization(
+          new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+              evictTask.run();
+            }
+          }
+      );
+    } else {
+      evictTask.run();
+    }
   }
 
 }

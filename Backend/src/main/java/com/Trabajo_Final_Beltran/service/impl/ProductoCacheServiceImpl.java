@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,20 +22,26 @@ public class ProductoCacheServiceImpl implements ProductoCacheService {
     private final ProductoRepository productoRepository;
 
     @Override
+    @Transactional(readOnly = true)
     @Cacheable(
         value = "productos",
-        key = "#establecimientoId + '-' + #categoriaId + '-' + #estado + '-' + #texto"
+        key = "#establecimientoId + '-' + #categoriaId + '-' + #estado + '-' + #texto + '-' + #soloCategoriasActivas"
     )
     public List<ProductoResponse> buscarProductosFiltrados(
             Long establecimientoId,
             Long categoriaId,
             EstadoProducto estado,
-            String texto
+            String texto,
+            boolean soloCategoriasActivas
     ) {
         Specification<Producto> spec = Specification
                 .where(
                         ProductoSpecification.establecimientoId(establecimientoId)
                 );
+
+        if (soloCategoriasActivas) {
+            spec = spec.and(ProductoSpecification.categoriaActiva());
+        }
 
         if (categoriaId != null) {
             spec = spec.and(ProductoSpecification.categoriaId(categoriaId));
