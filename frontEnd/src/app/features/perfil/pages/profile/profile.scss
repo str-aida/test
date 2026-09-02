@@ -1,5 +1,15 @@
+@use 'abstracts/index' as *;
+
 .profile-page {
+    width: 100%;
+    padding: $space-md;
+    gap: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    @include tablet {
+        padding: $space-md;
+    }
+    @include mobile {
+        padding: $space-sm;
+    }
 }

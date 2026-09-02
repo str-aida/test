@@ -1,0 +1,278 @@
+@use 'abstracts/index' as *;
+
+.product-list {
+    width: 100%;
+    padding: $space-md;
+}
+
+.product-list__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.product-list__header-title {
+    display: flex;
+    align-items: center;
+    gap: $space-md;
+}
+
+.product-list__icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background-color: rgba($color-primary, 0.1);
+    color: $color-primary;
+}
+
+.product-list__icon {
+    width: 26px;
+    height: 26px;
+}
+
+.product-list__title {
+    margin: 0;
+    font-family: $font-heading;
+    font-size: $fs-h3;
+    font-weight: $fw-bold;
+    color: $color-primary;
+}
+
+.product-list__subtitle {
+    //margin: $space-xs 0 0;
+    font-family: $font-body;
+    font-size: $fs-caption;
+    color: $color-text-light;
+}
+
+.product-list__add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-sm;
+}
+
+.product-list__add-btn .btn__icon {
+    width: 20px;
+    height: 20px;
+}
+
+
+/* MODAL GENERAL */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, .45);
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.modal-card {
+    width: 100%;
+    max-width: 650px;
+    max-height: 90vh; //*combinacion
+    display: flex; //*combinacion
+    flex-direction: column; //*combinacion
+    overflow: hidden;
+    background: $color-white;
+    border-radius: 14px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .2);
+    animation: modal-enter .2s ease;
+}
+
+
+/* HEADER */
+.modal-card__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: $space-sm;
+    padding: $space-md;
+    border-bottom: 1px solid $color-border;
+}
+
+.modal-card__header-info {
+    display: flex;
+    align-items: center;
+    gap: $space-sm;
+}
+
+.modal-card__header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: rgba($color-primary, .08);
+    color: $color-primary;
+
+    svg {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+.modal-card__title {
+    margin: 0;
+    font-family: $font-heading;
+    font-size: 1.35rem;
+    font-weight: $fw-bold;
+    color: $color-primary;
+}
+
+.modal-card__subtitle {
+    margin: .3rem 0 0;
+    font-family: $font-body;
+    font-size: $fs-caption;
+    color: $color-text-light;
+}
+
+.modal-card__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: $color-primary;
+    cursor: pointer;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease;
+
+    svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    &:hover {
+        background: rgba($color-primary, .08);
+        color: $color-primary;
+    }
+}
+
+/* CUERPO */
+.modal-card__body {
+    padding: $space-md; //antes 1.5rem REVISAR
+    overflow-y: auto; //*combinacion
+    min-height: 0; //*combinacion
+}
+
+/* ANIMACIÓN */
+@keyframes modal-enter {
+
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+/* ESPECÍFICOS DE "DESACTIVAR" PRODUCTO */
+.modal-card--danger {
+    max-width: 400px;
+    padding: $space-md;
+    text-align: center;
+}
+
+/* ÍCONO DE ALERTA */
+.modal-card__alert-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 1.25rem;
+    border-radius: 12px;
+    background: rgba($color-danger, .1);
+    color: $color-danger;
+
+    svg {
+        width: 26px;
+        height: 26px;
+    }
+}
+
+/* CONTENIDO */
+.modal-card__confirm-content {
+    h3 {
+        margin: 0;
+        font-family: $font-heading;
+        font-size: 1.35rem;
+        font-weight: $fw-bold;
+        color: $color-primary;
+    }
+
+    p {
+        margin: .75rem 0 0;
+        font-family: $font-body;
+        font-size: $fs-body;
+        line-height: $lh-body;
+        color: $color-text-light;
+    }
+
+    strong {
+        color: $color-text;
+        font-weight: $fw-semibold;
+    }
+}
+
+/* FOOTER */
+.modal-card__footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: $space-sm;
+    margin-top: 1.75rem;
+}
+
+/* BOTÓN CANCELAR */
+.modal-card__footer .btn--outline {
+    min-width: 140px;
+}
+
+/* BOTÓN DESACTIVAR */
+.modal-card__footer .btn--primary {
+    min-width: 200px;
+}
+
+.modal-card__footer .btn--danger-action {
+    background-color: $color-danger;
+
+    &:hover:not(:disabled) {
+        filter: brightness(0.9);
+    }
+}
+
+.btn__spin-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

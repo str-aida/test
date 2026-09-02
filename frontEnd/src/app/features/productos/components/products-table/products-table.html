@@ -55,9 +55,9 @@
   </div>
 
 
-  @if (products.length === 0) {
+  @if (products().length === 0) {
 
-    <div class="products-table__empty">
+    <div class="table-empty">
 
       @if (hasActiveFilters()) {
         <p>No se encontraron productos con los filtros seleccionados.</p>
@@ -69,51 +69,87 @@
 
   } @else {
 
-    <div class="products-table__wrapper">
+    <div class="table-wrapper">
 
-      <table class="table products-table__table">
+      <table class="table">
 
         <thead>
 
           <tr>
-            <th>Código</th>
-            <th>Imagen</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Categoría</th>
-            <th>Precio</th>
-            <th>Stock</th>
-            <th>Estado</th>
-            <th>Acciones</th>
+            <th>CÓDIGO</th>
+            <th>PRODUCTO</th>
+            <th>DESCRIPCIÓN</th>
+            <th>CATEGORÍA</th>
+            <th>PRECIO</th>
+            <th>STOCK</th>
+            <th>ESTADO</th>
+            <th>ACCIONES</th>
           </tr>
 
         </thead>
 
         <tbody>
 
-          @for (product of products; track product.id) {
+          @for (product of products(); track product.id) {
 
             <tr>
               <td> {{ product.codigo }} </td>
               <td>
-                @if (product.imagenUrl) {
-                    <img
-                        class="product-table__image"
-                        [src]="getImageUrl(product.imagenUrl)"
-                        [alt]="product.nombre">
-                } @else {
-                    <div class="products-table__image-placeholder">
-                        <svg lucideImage></svg>
-                    </div>
-                }
+                <div class="table-product">
+                  @if (product.imagenUrl) {
+                      <img
+                          class="table-product__image"
+                          [src]="getImageUrl(product.imagenUrl)"
+                          [alt]="product.nombre">
+                  } @else {
+                      <div class="table-product__image-placeholder">
+                          <svg lucideImage></svg>
+                      </div>
+                  }
+                  <span> {{ product.nombre }} </span>
+                </div>
               </td>
-              <td> {{ product.nombre }} </td>
               <td> {{ product.descripcion || 'Sin descripción' }} </td>
               <td> {{ product.categoriaNombre }} </td>
               <td> ${{ product.precio | number:'1.2-2' }} </td>
               <td> {{ product.stock }} </td>
-              <td> {{ product.estado }} </td>
-              <td> <!--ACCIONES--> </td>
+              <td> 
+                <span
+                  class="table-status"
+                  [class.table-status--active]="product.estado === Estado.ACTIVO"
+                  [class.table-status--inactive]="product.estado === Estado.INACTIVO">
+
+                  {{ product.estado === Estado.ACTIVO ? 'Activo' : 'Inactivo' }}
+
+                </span>
+              </td>
+              <td class="table-actions-cell">
+                <div class="table-actions">
+
+                  <button
+                    type="button"
+                    class="table-actions__edit"
+                    title="Editar producto"
+                    (click)="edit(product)">
+                    
+                    <svg lucidePencil></svg>
+                    <span>Editar</span>
+
+                  </button>
+
+                  <button
+                    type="button"
+                    class="table-actions__delete"
+                    [class.table-actions__delete--disabled]="product.estado === Estado.INACTIVO"
+                    [disabled]="product.estado === Estado.INACTIVO"
+                    [title]="product.estado === Estado.ACTIVO ? 'Desactivar producto' : 'Producto inactivo'"
+                    (click)="delete(product)">
+                    <svg lucideTrash2></svg>
+                    <span>Desactivar</span>
+                  </button>
+
+                </div>
+              </td>
             </tr>
 
           }

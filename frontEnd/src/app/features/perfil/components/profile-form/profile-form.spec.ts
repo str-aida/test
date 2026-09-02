@@ -1,17 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ProfileFormComponent } from './profile-form';
 
-import { ProfileForm } from './profile-form';
-
-describe('ProfileForm', () => {
-  let component: ProfileForm;
-  let fixture: ComponentFixture<ProfileForm>;
+describe('ProfileFormComponent', () => {
+  let component: ProfileFormComponent;
+  let fixture: ComponentFixture<ProfileFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProfileForm],
+      imports: [ProfileFormComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ProfileForm);
+    fixture = TestBed.createComponent(ProfileFormComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
@@ -20,3 +19,4 @@ describe('ProfileForm', () => {
     expect(component).toBeTruthy();
   });
 });
+

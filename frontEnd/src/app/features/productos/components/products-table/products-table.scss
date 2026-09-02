@@ -1,203 +1,297 @@
 @use 'abstracts/index' as *;
 
 .products-table {
-
   width: 100%;
-  max-width: 1100px;
+  max-width: 100%;
   margin: 2rem auto;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
+}
 
-  &__wrapper {
-    overflow-x: auto;
-    background: $color-white;
-    border: 1px solid $color-border;
-    border-radius: 12px;
-  }
+/* CONTENEDOR DE LA TABLA */
+.table-wrapper {
+  width: 100%;
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: 12px;
+}
 
-  &__table {
+/* TABLA */
+.table {
+  width: 100%;
+  margin: 0;
+  table-layout: auto;
+  border-collapse: collapse;
+  font-family: $font-body;
 
-    width: 100%;
-    table-layout: fixed;
-
-    thead {
-
-      background: $color-primary;
-
-      th {
-
-        text-align: center;
-        color: $color-white;
-        font-weight: 600;
-        border: none;
-        padding: 1rem;
-
-      }
-
-    }
-
-    tbody {
-
-      tr {
-
-        transition: background .2s;
-
-        &:hover {
-          background: rgba($color-primary, .04);
-        }
-
-      }
-
-      td {
-
-        text-align: center;
-        padding: 1rem;
-        vertical-align: middle;
-        border-color: $color-border;
-
-      }
-
-    }
-
-  }
-
-  &__empty {
-
-    padding: 3rem;
-    text-align: center;
-    background: $color-surface;
-    border: 1px solid $color-border;
-    border-radius: 12px;
-
-  }
-
-  &__filters {
-
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto 2rem;
-
-  }
-
-  /* ===========================
-   Toolbar
-  =========================== */
-
-  &__toolbar {
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-
-    width: 100%;
-    margin: 2rem auto 2.5rem;
-
-  }
-
-  &__search {
-
-    flex: 1;
-    max-width: 520px;
-
-  }
-
-  &__filter {
-
-    width: 200px;
-
-  }
-
-  &__search input,
-  &__filter select {
-
-    width: 100%;
-    height: 48px;
-
-    padding: 0 1rem;
-
-    border: 1px solid $color-border;
-    border-radius: 12px;
-
-    background: $color-white;
-
-    font-family: $font-body;
-    font-size: .95rem;
-
-    transition: all .2s ease;
-
-  }
-
-  &__search input::placeholder {
-
-    font-family: $font-body;
-    color: #888;
-
-  }
-
-  &__search input:focus,
-  &__filter select:focus {
-
-    border-color: $color-primary;
-    box-shadow: 0 0 0 .15rem rgba($color-primary, .15);
-    outline: none;
-
-  }
-
-  &__button {
-
-    width: 100px;
-    height: 48px;
-
-    border: none;
-    border-radius: 12px;
-
+  thead {
     background: $color-primary;
-    color: $color-white;
-
-    font-family: $font-heading;
-    font-size: 1.05rem;
-    font-weight: 600;
-
-    transition: .2s ease;
-
+    th {
+        padding: .5rem .85rem;
+        color: $color-white;
+        font-size: $fs-caption;
+        font-weight: $fw-semibold;
+        text-align: left;
+        border: none;
+        white-space: nowrap;
+    }
+    th:last-child {
+        text-align: center;
+    }
   }
 
-  &__button:hover {
-
-    background: $color-primary-dark;
-    color: $color-white;
-
+  tbody {
+    tr {
+        transition: background-color .2s ease;
+        &:hover {
+            background: rgba($color-primary, .04);
+        }
+    }
+    td {
+        padding: .65rem .85rem;
+        color: $color-text;
+        font-size: $fs-caption;
+        vertical-align: middle;
+        border-bottom: 1px solid $color-border;
+    }
   }
-
 }
 
-
-.products-table__image,
-.products-table__image-placeholder {
-    width: 48px;
-    height: 48px;
-    border-radius: 6px;
+/* PRODUCTO */
+.table-product {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  font-weight: $fw-semibold;
 }
 
-.products-table__image {
-    display: block;
-    object-fit: cover;
+/* IMAGEN */
+.table-product__image,
+.table-product__image-placeholder {
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
 }
 
-.products-table__image-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px dashed #d8c5c5;
-    background-color: #faf8f8;
-    color: #9a8585;
+.table-product__image {
+  display: block;
+  object-fit: cover;
 }
 
-.products-table__image-placeholder svg {
+.table-product__image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #d8c5c5;
+  background-color: #faf8f8;
+  color: #9a8585;
+  
+  svg {
     width: 20px;
     height: 20px;
+  }
+}
+
+/* DESCRIPCIÓN */
+.table-description {
+  color: $color-text-light;
+  line-height: $lh-body; // antes 1.4
+}
+
+/* ESTADO */
+.table-status {
+  display: inline-flex;
+  align-items: center;
+  padding: .35rem .7rem;
+  border-radius: 999px;
+  font-size: $fs-small;
+  font-weight: $fw-semibold;
+}
+
+.table-status--active {
+  background: rgba(34, 197, 94, .1);
+  color: #15803d;
+}
+
+.table-status--inactive {
+  background: rgba(107, 114, 128, .12);
+  color: #4b5563;
+}
+
+/* CELDA DE ACCIONES */
+.table-actions-cell {
+  width: 1%;
+  white-space: nowrap;
+}
+
+/* ACCIONES */
+.table-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.table-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  height: 32px;
+  padding: 0 .55rem;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  font-family: $font-body;
+  font-size: $fs-small;
+  font-weight: $fw-semibold;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  transition:
+    background-color .2s ease,
+    color .2s ease;
+}
+
+.table-actions svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Editar */
+.table-actions__edit {
+  color: $color-primary;
+
+  &:hover {
+    background: rgba($color-primary, .15);
+  }
+}
+
+/* Activar / Desactivar */
+.table-actions__toggle {
+  border: none;
+  background: transparent;
+
+  &--active {
+    color: #b91c1c;
+
+    &:hover {
+      background: rgba(185, 28, 28, .1);
+    }
+  }
+
+  &--inactive {
+    color: #15803d;
+
+    &:hover {
+      background: rgba(21, 128, 61, .1);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* Desactivar (= Eliminar en categorías) */
+.table-actions__delete {
+  color: $color-danger;
+
+  &:hover {
+    background: rgba($color-danger, .12);
+  }
+
+  &--disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+
+    &:hover {
+      background: transparent;
+    }
+  }
+}
+
+/* ESTADO VACÍO */
+.table-empty {
+  padding: 3rem;
+  text-align: center;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: 12px;
+  color: $color-text-light;
+}
+
+
+/* Toolbar */
+.products-table__filters {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 2rem;
+}
+
+.products-table__toolbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  margin: 2rem auto 2.5rem;
+}
+
+.products-table__search {
+  flex: 1;
+  max-width: 520px;
+}
+
+.products-table__filter {
+  width: 200px;
+}
+
+.products-table__search input,
+.products-table__filter select {
+  width: 100%;
+  height: 48px;
+  padding: 0 1rem;
+  border: 1px solid $color-border;
+  border-radius: 12px;
+  background: $color-white;
+  font-family: $font-body;
+  font-size: $fs-caption;
+  transition: all .2s ease;
+}
+
+.products-table__search input::placeholder {
+  font-family: $font-body;
+  color: #888;
+}
+
+.products-table__search input:focus,
+.products-table__filter select:focus {
+  border-color: $color-primary;
+  box-shadow: 0 0 0 .15rem rgba($color-primary, .15);
+  outline: none;
+}
+
+.products-table__button {
+  width: 100px;
+  height: 48px;
+  border: none;
+  border-radius: 12px;
+  background: $color-primary;
+  color: $color-white;
+  font-family: $font-heading;
+  font-size: $fs-body;
+  font-weight: $fw-semibold;
+  transition: .2s ease;
+
+  &:hover {
+    background: $color-primary-dark;
+    color: $color-white;
+  }
 }
 
 

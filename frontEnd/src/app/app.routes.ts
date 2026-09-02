@@ -14,6 +14,7 @@ import { CategoryFormComponent } from './features/categorias/components/category
 import { ProductsListComponent } from './features/productos/pages/products-list/products-list';
 import { ProductFormComponent } from './features/productos/components/product-form/product-form';
 import { CatalogoComponent } from './features/cliente/pages/catalogo/catalogo.component';
+import { InicioClienteComponent } from './features/cliente/pages/inicio/inicio.component';
 import { CarritoComponent } from './features/cliente/pages/carrito/carrito.component';
 import { CheckoutComponent } from './features/cliente/pages/checkout/checkout.component';
 import { PedidosComponent } from './features/cliente/pages/pedidos/pedidos.component';
@@ -24,6 +25,7 @@ import { MisCuponesComponent } from './features/cliente/pages/mis-cupones/mis-cu
 import { PedidosListComponent } from './features/pedidos/pages/pedidos-list/pedidos-list';
 import { PedidoDetalleAdminComponent } from './features/pedidos/pages/pedido-detalle-admin/pedido-detalle-admin';
 import { PedidosEnCursoComponent } from './features/pedidos/pages/pedidos-en-curso/pedidos-en-curso';
+import { ConfiguracionComponent } from './features/configuracion/configuracion';
 
 export const routes: Routes = [
 
@@ -48,20 +50,14 @@ export const routes: Routes = [
     children: [
       { path: 'personal', component: EmployeesListComponent, data: { title: 'Personal' } },
       { path: 'perfil', component: ProfileComponent, data: { title: 'Perfil' } },
-      {
-        path: 'categorias',
-        data: { title: 'Categorías' },
-        children: [
-          { path: '', component: CategoriesListComponent },
-          { path: 'nueva', component: CategoryFormComponent }
-        ]
-      },
+      { path: 'categorias', component: CategoriesListComponent, data: { title: 'Categorías' } },
       {
         path: 'productos',
         data: { title: 'Productos' },
         children: [
           { path: '', component: ProductsListComponent },
-          { path: 'nuevo', component: ProductFormComponent }
+          { path: 'nuevo', component: ProductFormComponent },
+          { path: 'editar/:id', component: ProductFormComponent }
         ]
       },
       { path: 'pedidos/en-curso', component: PedidosEnCursoComponent, data: { title: 'Pedidos en Curso' } },
@@ -69,6 +65,7 @@ export const routes: Routes = [
       { path: 'pedidos/:id', component: PedidoDetalleAdminComponent, data: { title: 'Detalle de Pedido' } },
       { path: 'cupones', component: CuponesListComponent, data: { title: 'Gestión de Cupones' } },
       { path: 'auditoria', component: AuditoriaListComponent, data: { title: 'Auditoría' } },
+      { path: 'configuracion', component: ConfiguracionComponent, data: { title: 'Configuración' } },
       { path: '', redirectTo: 'personal', pathMatch: 'full' }
     ]
   },
@@ -90,14 +87,16 @@ export const routes: Routes = [
     path: 'cliente',
     component: AppLayoutComponent,
     children: [
-      { path: 'catalogo', component: CatalogoComponent, data: { title: 'Catálogo de Productos' } },
+      { path: 'inicio', component: InicioClienteComponent, data: { title: 'Bienvenido a Gestia' } },
+      { path: 'productos', component: CatalogoComponent, data: { title: 'Productos' } },
+      { path: 'catalogo', redirectTo: 'productos', pathMatch: 'full' },
       { path: 'carrito', component: CarritoComponent, data: { title: 'Mi Carrito' } },
       { path: 'checkout', component: CheckoutComponent, data: { title: 'Finalizar Compra' } },
       { path: 'pedidos', component: PedidosComponent, data: { title: 'Mis Pedidos' } },
       { path: 'pedidos/:id', component: PedidoDetalleComponent, data: { title: 'Detalle de Pedido' } },
       { path: 'cupones', component: MisCuponesComponent, data: { title: 'Mis Cupones' } },
       { path: 'perfil', component: ProfileComponent, data: { title: 'Perfil' } },
-      { path: '', redirectTo: 'catalogo', pathMatch: 'full' }
+      { path: '', redirectTo: 'inicio', pathMatch: 'full' }
     ]
   },
 

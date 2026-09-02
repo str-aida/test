@@ -1,14 +1,14 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
 import { EmployeesService } from '../../../../core/services/employees.service';
 import { Employee } from '../../../../core/models/user-profile-response';
 import { FormsModule } from '@angular/forms';
 import { UserRole } from '../../../../core/models/enums/user-role.enum';
-import { UpdateEmployeeRequest } from '../../../../core/models/update-user-request';
 import { Estado } from '../../../../core/models/enums/estado.enum';
+import { LucidePencil, LucideShield, LucideTrash2, LucideUserCheck } from '@lucide/angular';
 
 @Component({
   selector: 'app-employees-table',
-  imports: [FormsModule],
+  imports: [FormsModule, LucideShield, LucideUserCheck, LucidePencil, LucideTrash2],
   templateUrl: './employees-table.html',
   styleUrl: './employees-table.scss',
 })
@@ -16,9 +16,11 @@ export class EmployeesTableComponent implements OnInit {
 
   private readonly employeesService = inject(EmployeesService);
   protected readonly Estado = Estado;
-  private readonly cdr = inject(ChangeDetectorRef);
+  protected readonly UserRole = UserRole;
+  @Output() editEmployee = new EventEmitter<Employee>();
+  @Output() deleteEmployee = new EventEmitter<Employee>();
 
-  employees: Employee[] = [];
+  employees = signal<Employee[]>([]);
   texto = '';
   rol: UserRole | '' = '';
 
@@ -27,15 +29,9 @@ export class EmployeesTableComponent implements OnInit {
   }
 
   loadEmployees(): void {
-    this.employeesService
-    .getEmployees(this.texto, this.rol || undefined)
-    .subscribe({
+    this.employeesService.getEmployees(this.texto, this.rol || undefined).subscribe({
       next: employees => {
-        this.employees = employees;
-
-        // Fuerza la actualización de la vista (luego de recibir la respuesta del backend)
-        // PENDIENTE: investigar la causa de la configuracion global
-        this.cdr.detectChanges();
+        this.employees.set(employees);
       },
       error: err => {
         console.error(err);
@@ -43,61 +39,20 @@ export class EmployeesTableComponent implements OnInit {
     });
   }
 
+  edit(employee: Employee): void {
+    this.editEmployee.emit(employee);
+  }
+
+  delete(employee: Employee): void {
+    this.deleteEmployee.emit(employee);  
+  }
+
   search(): void {
     this.loadEmployees();
   }
 
-  
-  editingEmployeeId: number | null = null;
-  editingEmployee?: UpdateEmployeeRequest;
-
-  edit(employee: Employee): void {
-
-    this.editingEmployeeId = employee.id;
-
-    this.editingEmployee = {
-      nombre: employee.nombre,
-      apellido: employee.apellido,
-      telefono: employee.telefono,
-      email: employee.email,
-      estado: employee.estado
-    };
-
-  }
-
-  cancel(): void {
-
-    this.editingEmployeeId = null;
-    this.editingEmployee = undefined;
-
-  }
-
-  save(employee: Employee): void {
-
-    if (!this.editingEmployee) {
-      return;
-    }
-
-    this.employeesService
-      .updateEmployee(employee.id, this.editingEmployee)
-      .subscribe({
-
-        next: () => {
-
-          this.cancel();
-          this.loadEmployees();
-          
-        },
-
-        error: error => {
-
-          console.error('Error al actualizar el empleado.');
-          console.error(error);
-
-        }
-
-      });
-
+  hasActiveFilters(): boolean {
+    return !!this.texto || !!this.rol
   }
 
 }

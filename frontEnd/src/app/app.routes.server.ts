@@ -10,6 +10,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'admin/productos/editar/:id',
+    renderMode: RenderMode.Server
+  },
+  {
     path: 'empleado/pedidos/:id',
     renderMode: RenderMode.Server
   },
@@ -18,4 +22,3 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Prerender
   }
 ];
-

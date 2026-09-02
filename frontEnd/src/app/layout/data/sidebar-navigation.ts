@@ -80,7 +80,12 @@ export const CLIENT_NAVIGATION: NavigationItem[] = [
   {
     id: 'inicio',
     label: 'Inicio',
-    route: '/cliente'
+    route: '/cliente/inicio'
+  },
+  {
+    id: 'productos',
+    label: 'Productos',
+    route: '/cliente/productos'
   },
   {
     id: 'mis-pedidos',

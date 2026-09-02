@@ -40,7 +40,7 @@ export class AuditoriaListComponent implements OnInit {
 
   protected readonly TipoOperacion = TipoOperacion;
   protected readonly UserRole = UserRole;
-  protected readonly rolesDisponibles = Object.values(UserRole);
+  protected readonly rolesDisponibles = [UserRole.ADMIN, UserRole.EMPLEADO];
 
   // Estado
   logs = signal<LogSistemaResponse[]>([]);

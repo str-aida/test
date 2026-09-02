@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
-import { LucideImage } from '@lucide/angular';
+import { Component, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
+import { LucideImage, LucidePencil, LucideTrash2 } from '@lucide/angular';
 import { ProductsService } from '../../../../core/services/products.service';
 import { ProductResponse } from '../../../../core/models/product-response';
 import { environment } from '../../../../../environments/environment';
@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-products-table',
-  imports: [FormsModule, LucideImage, DecimalPipe],
+  imports: [FormsModule, LucideImage, DecimalPipe, LucidePencil, LucideTrash2],
   templateUrl: './products-table.html',
   styleUrl: './products-table.scss',
 })
@@ -19,9 +19,12 @@ export class ProductsTableComponent implements OnInit {
 
   private readonly productService = inject(ProductsService);
   private readonly categoriaService = inject(CategoriaService);
-  private readonly cdr = inject(ChangeDetectorRef);
+  protected readonly Estado = Estado;
 
-  products : ProductResponse[] = [];
+  @Output() editProduct = new EventEmitter<ProductResponse>();
+  @Output() deleteProduct = new EventEmitter<ProductResponse>();
+
+  products = signal<ProductResponse[]>([]);
   texto = '';
   estado: Estado | '' = '';
   categoriaId: number | undefined = undefined;
@@ -37,9 +40,7 @@ export class ProductsTableComponent implements OnInit {
       .listarProductos(this.categoriaId, this.estado || undefined, this.texto)
       .subscribe({
         next: products => {
-          this.products = products;
-
-          this.cdr.detectChanges();
+          this.products.set(products);
         },
         error: error => {
           console.error('Error al cargar los productos', error);
@@ -53,13 +54,19 @@ export class ProductsTableComponent implements OnInit {
       .subscribe({
         next: categorias => {
           this.categorias.set(categorias);
-
-          this.cdr.detectChanges();
         },
         error: error => {
           console.error('Error al cargar los productos', error);
         }
       });
+  }
+
+  edit(product: ProductResponse): void {
+    this.editProduct.emit(product);
+  }
+
+  delete(product: ProductResponse): void {
+    this.deleteProduct.emit(product);
   }
 
   search(): void {
@@ -69,7 +76,7 @@ export class ProductsTableComponent implements OnInit {
   hasActiveFilters(): boolean {
     return this.categoriaId !== undefined ||
           !!this.estado ||
-          !!this.texto
+          !!this.texto;
   }
 
   protected getImageUrl (imagenUrl: string | null): string | null {

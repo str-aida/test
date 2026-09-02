@@ -35,7 +35,6 @@
     background-color: $color-white;
     color: $color-text;
     outline: none;
-
     transition:
         border-color .2s ease,
         box-shadow .2s ease;
@@ -86,4 +85,84 @@
 .form-field__input.ng-invalid.ng-touched:focus,
 .form-field__textarea.ng-invalid.ng-touched:focus {
     box-shadow: 0 0 0 3px rgba(220, 53, 69, .15);
+}
+
+
+/* ESTADO */
+.estado-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: $space-sm;
+}
+
+.estado-toggle__option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: $space-sm;
+    width: 140px;
+    min-height: 40px;
+    padding: .7rem 1rem;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    background-color: $color-white;
+    font-family: $font-body;
+    font-weight: $fw-medium;
+    cursor: pointer;
+    transition:
+        border-color .2s ease,
+        background-color .2s ease,
+        box-shadow .2s ease;
+}
+
+/* Ocultamos el radio nativo */
+.estado-toggle__option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Indicador */
+.estado-toggle__indicator {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: $color-border;
+    transition:
+        background-color .2s ease,
+        box-shadow .2s ease;
+}
+
+/* ACTIVA */
+.estado-toggle__option--active {
+    color: $color-success;
+}
+
+.estado-toggle__option--active.estado-toggle__option--selected {
+    border-color: $color-success;
+    background-color: rgba($color-success, .06);
+}
+
+.estado-toggle__option--active.estado-toggle__option--selected
+.estado-toggle__indicator {
+    background-color: $color-success;
+    box-shadow: 0 0 0 4px rgba($color-success, .12);
+}
+
+/* INACTIVA */
+.estado-toggle__option--inactive {
+    color: $color-danger;
+}
+
+.estado-toggle__option--inactive.estado-toggle__option--selected {
+    border-color: $color-danger;
+    background-color: rgba($color-danger, .06);
+}
+
+.estado-toggle__option--inactive.estado-toggle__option--selected
+.estado-toggle__indicator {
+    background-color: $color-danger;
+    box-shadow: 0 0 0 4px rgba($color-danger, .12);
 }

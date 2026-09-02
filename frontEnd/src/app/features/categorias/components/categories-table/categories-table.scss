@@ -1,25 +1,152 @@
 @use 'abstracts/index' as *;
 
-.categories-table {
+.categories-table-container {
     width: 100%;
     max-width: 1100px;
-    margin: 2rem auto;
-    padding: 0 2rem;
+    margin: 1.5rem auto 2rem;
+    padding: 0 1.5rem;
+}
+
+/* FILTROS Y BÚSQUEDA */
+.table-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-md;
+    margin-bottom: 1.25rem;
+}
+
+.table-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 260px;
+}
+
+.table-search__icon {
+    position: absolute;
+    left: 12px;
+    width: 18px;
+    height: 18px;
+    color: $color-text-light;
+    pointer-events: none;
+}
+
+.table-search__input {
+    width: 100%;
+    height: 42px;
+    padding: 0 36px 0 38px;
+    font-family: $font-body;
+    font-size: $fs-caption;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    background-color: $color-white;
+    color: $color-text;
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+
+    &:focus {
+        border-color: $color-primary;
+        box-shadow: 0 0 0 3px rgba($color-primary, .08);
+    }
+}
+
+.table-search__clear {
+    position: absolute;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: $color-text-light;
+    cursor: pointer;
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    &:hover {
+        background: rgba(0, 0, 0, .06);
+        color: $color-text;
+    }
+}
+
+.table-filter-group {
+    display: flex;
+    align-items: center;
+    gap: $space-sm;
+}
+
+.filter-select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.filter-icon {
+    position: absolute;
+    left: 12px;
+    width: 16px;
+    height: 16px;
+    color: $color-text-light;
+    pointer-events: none;
+}
+
+.filter-select {
+    height: 42px;
+    padding: 0 16px 0 36px;
+    font-family: $font-body;
+    font-size: $fs-caption;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    background-color: $color-white;
+    color: $color-text;
+    outline: none;
+    cursor: pointer;
+    transition: border-color .2s ease;
+
+    &:focus {
+        border-color: $color-primary;
+    }
+}
+
+.btn-clear-filters {
+    height: 42px;
+    padding: 0 14px;
+    border: 1px dashed $color-border;
+    border-radius: 8px;
+    background: transparent;
+    color: $color-text-light;
+    font-family: $font-body;
+    font-size: $fs-caption;
+    font-weight: $fw-medium;
+    cursor: pointer;
+    transition: background-color .2s ease, color .2s ease;
+
+    &:hover {
+        background: rgba(0, 0, 0, .04);
+        color: $color-text;
+    }
 }
 
 /* CONTENEDOR DE LA TABLA */
-
 .table-wrapper {
     width: 100%;
     overflow-x: auto;
     background: $color-white;
     border: 1px solid $color-border;
     border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .02);
 }
 
-
 /* TABLA */
-
 .table {
     width: 100%;
     margin: 0;
@@ -29,7 +156,6 @@
 
     thead {
         background: $color-primary;
-
         th {
             padding: 1rem 1.25rem;
             color: $color-white;
@@ -37,23 +163,20 @@
             font-weight: $fw-semibold;
             text-align: left;
             border: none;
+            letter-spacing: .5px;
         }
-
         th:last-child {
             text-align: center;
         }
     }
 
     tbody {
-
         tr {
             transition: background-color .2s ease;
-
             &:hover {
                 background: rgba($color-primary, .04);
             }
         }
-
         td {
             padding: 1rem 1.25rem;
             color: $color-text;
@@ -64,14 +187,16 @@
     }
 }
 
-
 /* NOMBRE DE CATEGORÍA */
-
 .table-category {
     display: flex;
     align-items: center;
     gap: .75rem;
+}
+
+.table-category__name {
     font-weight: $fw-semibold;
+    color: $color-text;
 }
 
 .table-category__icon {
@@ -91,39 +216,47 @@
     }
 }
 
-
 /* DESCRIPCIÓN */
-
 .table-description {
     color: $color-text-light;
     line-height: 1.4;
+    max-width: 340px;
 }
 
-
 /* ESTADO */
-
 .table-status {
     display: inline-flex;
     align-items: center;
-    padding: .35rem .7rem;
+    gap: 6px;
+    padding: .35rem .75rem;
     border-radius: 999px;
     font-size: $fs-small;
     font-weight: $fw-semibold;
 }
 
+.table-status__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
 .table-status--active {
     background: rgba(34, 197, 94, .1);
     color: #15803d;
+    .table-status__dot {
+        background-color: #22c55e;
+    }
 }
 
 .table-status--inactive {
     background: rgba(107, 114, 128, .12);
     color: #4b5563;
+    .table-status__dot {
+        background-color: #6b7280;
+    }
 }
 
-
 /* ACCIONES */
-
 .table-actions {
     display: flex;
     align-items: center;
@@ -137,17 +270,14 @@
     justify-content: center;
     gap: .4rem;
     min-height: 34px;
-    padding: .4rem .65rem;
+    padding: .4rem .7rem;
     border: 1px solid transparent;
     border-radius: 7px;
     font-family: $font-body;
     font-size: $fs-small;
     font-weight: $fw-semibold;
     cursor: pointer;
-
-    transition:
-        background-color .2s ease,
-        color .2s ease;
+    transition: background-color .2s ease, color .2s ease, opacity .2s ease;
 }
 
 .table-actions svg {
@@ -155,36 +285,100 @@
     height: 16px;
 }
 
-
 /* Editar */
-
 .table-actions__edit {
     color: $color-primary;
+    background: rgba($color-primary, .06);
 
     &:hover {
         background: rgba($color-primary, .15);
     }
 }
 
-
 /* Desactivar */
-
 .table-actions__delete {
     color: $color-danger;
+    background: rgba($color-danger, .06);
 
-    &:hover {
+    &:hover:not(:disabled) {
         background: rgba($color-danger, .15);
     }
 }
 
+.table-actions__delete--disabled {
+    opacity: 0.45;
+    cursor: not-allowed !important;
+}
 
-/* ESTADO VACÍO */
-
-.table-empty {
-    padding: 3rem;
+/* ESTADOS DE CARGA, ERROR Y VACÍO */
+.table-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 3.5rem 1.5rem;
     text-align: center;
-    background: $color-surface;
+    background: $color-white;
     border: 1px solid $color-border;
     border-radius: 12px;
+
+    p {
+        margin: 0;
+        font-family: $font-body;
+        font-size: $fs-body;
+        color: $color-text-light;
+    }
+}
+
+.table-state__spin {
+    width: 32px;
+    height: 32px;
+    color: $color-primary;
+    animation: spin 1s linear infinite;
+}
+
+.table-state__icon-error {
+    width: 40px;
+    height: 40px;
+    color: $color-danger;
+}
+
+.table-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3.5rem 1.5rem;
+    text-align: center;
+    background: $color-white;
+    border: 1px solid $color-border;
+    border-radius: 12px;
+}
+
+.table-empty__icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
+    color: rgba($color-primary, .3);
+}
+
+.table-empty__title {
+    margin: 0 0 .4rem;
+    font-family: $font-heading;
+    font-size: 1.1rem;
+    font-weight: $fw-bold;
+    color: $color-primary;
+}
+
+.table-empty__subtitle {
+    margin: 0 0 1.25rem;
+    font-family: $font-body;
+    font-size: $fs-caption;
     color: $color-text-light;
 }
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

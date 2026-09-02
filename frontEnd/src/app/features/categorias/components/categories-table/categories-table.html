@@ -1,44 +1,106 @@
-<section class="categories-table">
+<section class="categories-table-container">
 
-  @if (categories().length === 0) {
+  <!-- FILTROS Y BÚSQUEDA -->
+  <div class="table-filters">
 
-    <p class="table-empty">
-      No hay categorías registradas.
-    </p>
+    <div class="table-search">
+      <svg lucideSearch class="table-search__icon"></svg>
+      <input
+        type="text"
+        class="table-search__input"
+        placeholder="Buscar categoría por nombre o descripción..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+      />
+      @if (searchTerm()) {
+        <button type="button" class="table-search__clear" (click)="searchTerm.set('')">
+          <svg lucideX></svg>
+        </button>
+      }
+    </div>
 
-  } @else {
+    <div class="table-filter-group">
+      <div class="filter-select-wrapper">
+        <svg lucideFilter class="filter-icon"></svg>
+        <select
+          class="filter-select"
+          [ngModel]="statusFilter()"
+          (ngModelChange)="statusFilter.set($event)">
+          <option value="TODOS">Todos los estados</option>
+          <option [value]="Estado.ACTIVO">Activa</option>
+          <option [value]="Estado.INACTIVO">Inactiva</option>
+        </select>
+      </div>
 
+      @if (hasActiveFilters()) {
+        <button type="button" class="btn-clear-filters" (click)="clearFilters()">
+          Limpiar filtros
+        </button>
+      }
+    </div>
+
+  </div>
+
+  <!-- INDICADOR DE CARGA -->
+  @if (isLoading()) {
+    <div class="table-state table-state--loading">
+      <svg lucideRefreshCw class="table-state__spin"></svg>
+      <p>Cargando categorías...</p>
+    </div>
+  }
+
+  <!-- ERROR EN LA CARGA -->
+  @else if (hasError()) {
+    <div class="table-state table-state--error">
+      <svg lucideAlertTriangle class="table-state__icon-error"></svg>
+      <p>Ocurrió un error al obtener las categorías.</p>
+      <button type="button" class="btn btn--outline" (click)="loadCategories()">
+        <svg lucideRefreshCw></svg>
+        Reintentar
+      </button>
+    </div>
+  }
+
+  <!-- RESULTADOS VACÍOS -->
+  @else if (filteredCategories().length === 0) {
+    <div class="table-empty">
+      <svg lucideShapes class="table-empty__icon"></svg>
+      <p class="table-empty__title">
+        {{ hasActiveFilters() ? 'No se encontraron categorías con los filtros aplicados' : 'No hay categorías registradas' }}
+      </p>
+      <p class="table-empty__subtitle">
+        {{ hasActiveFilters() ? 'Intentá ajustar los términos de búsqueda.' : 'Podés crear una nueva categoría haciendo clic en "Nueva categoría".' }}
+      </p>
+      @if (hasActiveFilters()) {
+        <button type="button" class="btn btn--outline" (click)="clearFilters()">
+          Limpiar filtros
+        </button>
+      }
+    </div>
+  }
+
+  <!-- TABLA DE CATEGORÍAS -->
+  @else {
     <div class="table-wrapper">
-
       <table class="table">
-
         <thead>
-
           <tr>
             <th>NOMBRE</th>
             <th>DESCRIPCIÓN</th>
             <th>ESTADO</th>
             <th>ACCIONES</th>
           </tr>
-
         </thead>
-
         <tbody>
-
-          @for (category of categories(); track category.id) {
-
+          @for (category of filteredCategories(); track category.id) {
             <tr>
-
               <td>
                 <div class="table-category">
-
                   <span class="table-category__icon">
                     <svg lucideShapes></svg>
                   </span>
-                  <span>{{ category.nombre }}</span>
-
+                  <span class="table-category__name">{{ category.nombre }}</span>
                 </div>
-                
               </td>
 
               <td class="table-description">
@@ -50,52 +112,39 @@
                   class="table-status"
                   [class.table-status--active]="category.estado === Estado.ACTIVO"
                   [class.table-status--inactive]="category.estado === Estado.INACTIVO">
-
+                  <span class="table-status__dot"></span>
                   {{ category.estado === Estado.ACTIVO ? 'Activa' : 'Inactiva' }}
-
                 </span>
               </td>
 
               <td>
-
                 <div class="table-actions">
-
                   <button
                     type="button"
                     class="table-actions__edit"
                     title="Editar categoría"
                     (click)="edit(category)">
-                    
                     <svg lucidePencil></svg>
                     <span>Editar</span>
-
                   </button>
 
                   <button
                     type="button"
                     class="table-actions__delete"
-                    title="Desactivar categoría"
+                    [class.table-actions__delete--disabled]="category.estado === Estado.INACTIVO"
+                    [disabled]="category.estado === Estado.INACTIVO"
+                    [title]="category.estado === Estado.ACTIVO ? 'Desactivar categoría' : 'Categoría inactiva'"
                     (click)="delete(category)">
-                    
                     <svg lucideTrash2></svg>
-                    <span>Eliminar</span>
-
+                    <span>Desactivar</span>
                   </button>
-
                 </div>
-
               </td>
-
             </tr>
-
           }
-
         </tbody>
-
       </table>
-
     </div>
-
   }
 
 </section>

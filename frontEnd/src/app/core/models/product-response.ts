@@ -6,6 +6,7 @@ export interface ProductResponse {
     nombre: string;
     descripcion: string;
     precio: number;
+    categoriaId: number;
     categoriaNombre: string;
     estado: Estado;
     stock: number;

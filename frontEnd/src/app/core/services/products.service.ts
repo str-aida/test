@@ -41,6 +41,12 @@ export class ProductsService {
         );
     }
 
+    obtenerProductoPorId(id: number): Observable<ProductResponse> {
+        return this.http.get<ProductResponse>(
+            `${this.apiUrl}/${id}`
+        );
+    }
+
     crearProducto(request: CreateProductRequest, imagen: File | null): Observable<ProductResponse> {
 
         const formData = new FormData();
@@ -64,10 +70,37 @@ export class ProductsService {
 
     }
 
-    editarProducto(id: number, request: UpdateProductRequest): Observable<ProductResponse> {
+    editarProducto(id: number, request: UpdateProductRequest, imagen?: File | null): Observable<ProductResponse> {
+        const formData = new FormData();
+
+        formData.append(
+            'producto',
+            new Blob(
+                [JSON.stringify(request)],
+                { type: 'application/json' }
+            )
+        );
+
+        if (imagen) {
+            formData.append('imagen', imagen);
+        }
+
         return this.http.put<ProductResponse>(
             `${this.apiUrl}/${id}`,
-            request
+            formData
+        );
+    }
+
+    desactivarProducto(id: number): Observable<ProductResponse> {
+        return this.http.patch<ProductResponse>(
+            `${this.apiUrl}/${id}/desactivar`,
+            null
+        );
+    }
+
+    eliminarProducto(id: number): Observable<void> {
+        return this.http.delete<void>(
+            `${this.apiUrl}/${id}`
         );
     }
 
