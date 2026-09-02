@@ -10,6 +10,7 @@ import com.Trabajo_Final_Beltran.dto.response.ValidacionCuponResponse;
 import com.Trabajo_Final_Beltran.entity.Cupon;
 import com.Trabajo_Final_Beltran.entity.DetallePedido;
 import com.Trabajo_Final_Beltran.entity.Direccion;
+import com.Trabajo_Final_Beltran.entity.Establecimiento;
 import com.Trabajo_Final_Beltran.entity.Pedido;
 import com.Trabajo_Final_Beltran.entity.Producto;
 import com.Trabajo_Final_Beltran.entity.Usuario;
@@ -17,6 +18,7 @@ import com.Trabajo_Final_Beltran.enums.EstadoDireccion;
 import com.Trabajo_Final_Beltran.enums.EstadoPedido;
 import com.Trabajo_Final_Beltran.enums.Rol;
 import com.Trabajo_Final_Beltran.enums.TipoEntrega;
+import com.Trabajo_Final_Beltran.enums.TipoServicio;
 import com.Trabajo_Final_Beltran.exception.BusinessException;
 import com.Trabajo_Final_Beltran.mapper.PedidoMapper;
 import com.Trabajo_Final_Beltran.repository.DireccionRepository;
@@ -227,12 +229,24 @@ public class PedidoServiceImpl implements PedidoService {
     Long establecimientoId = usuario.getEstablecimiento().getId();
 
     Direccion direccionSeleccionada = null;
-    String direccionCompleta = null;
+    Establecimiento establecimiento = usuario.getEstablecimiento();
+    if (establecimiento == null) {
+      throw new BusinessException("El usuario no tiene un establecimiento asociado.");
+    }
+
+    if (establecimiento.getTipoServicio() == TipoServicio.DELIVERY && request.getTipoEntrega() != TipoEntrega.DELIVERY) {
+      throw new BusinessException("El establecimiento solo permite pedidos con entrega a delivery.");
+    }
+
+    if (establecimiento.getTipoServicio() == TipoServicio.RETIRO && request.getTipoEntrega() != TipoEntrega.RETIRO) {
+      throw new BusinessException("El establecimiento solo permite pedidos con retiro en local.");
+    }
 
     if (request.getTipoEntrega() == TipoEntrega.DELIVERY && request.getDireccionId() == null) {
       throw new BusinessException("Debe seleccionar una dirección para delivery");
     }
 
+    String direccionCompleta = null;
     if (request.getTipoEntrega() == TipoEntrega.DELIVERY) {
       direccionSeleccionada = direccionRepository
           .findByIdAndUsuarioIdAndEstado(request.getDireccionId(), usuario.getId(), EstadoDireccion.ACTIVA)

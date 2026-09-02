@@ -18,6 +18,7 @@ import {
 import { PedidoService } from '../../../../core/services/pedido.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { TokenService } from '../../../../core/services/token.service';
+import { EstablecimientoService } from '../../../../core/services/establecimiento.service';
 import { PedidoResponse } from '../../../../core/models/pedido-response';
 import { PageResponse } from '../../../../core/models/page-response';
 import { PedidoFiltros } from '../../../../core/models/pedido-filtros';
@@ -25,6 +26,7 @@ import { EstadoPedido } from '../../../../core/models/enums/estado-pedido.enum';
 import { EstadoPago } from '../../../../core/models/enums/estado-pago.enum';
 import { MetodoPago } from '../../../../core/models/enums/metodo-pago.enum';
 import { TipoEntrega } from '../../../../core/models/enums/tipo-entrega.enum';
+import { TipoServicio } from '../../../../core/models/enums/tipo-servicio.enum';
 import { UserRole } from '../../../../core/models/enums/user-role.enum';
 
 interface EstadoCard {
@@ -60,12 +62,16 @@ export class PedidosListComponent implements OnInit {
   private readonly pedidoService = inject(PedidoService);
   private readonly notificationService = inject(NotificationService);
   private readonly tokenService = inject(TokenService);
+  private readonly establecimientoService = inject(EstablecimientoService);
   private readonly router = inject(Router);
 
   protected readonly EstadoPedido = EstadoPedido;
   protected readonly TipoEntrega = TipoEntrega;
+  protected readonly TipoServicio = TipoServicio;
   protected readonly MetodoPago = MetodoPago;
   protected readonly EstadoPago = EstadoPago;
+
+  tipoServicioEstablecimiento: TipoServicio | null = null;
 
   // ─── Estado principal ────────────────────────────────────────
   pageData = signal<PageResponse<PedidoResponse> | null>(null);
@@ -102,7 +108,19 @@ export class PedidosListComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    this.cargarEstablecimiento();
     this.cargarPedidos();
+  }
+
+  cargarEstablecimiento(): void {
+    this.establecimientoService.obtenerEstablecimiento().subscribe({
+      next: (est) => {
+        this.tipoServicioEstablecimiento = est.tipoServicio;
+      },
+      error: () => {
+        this.tipoServicioEstablecimiento = null;
+      }
+    });
   }
 
   // ─── Carga principal ─────────────────────────────────────────

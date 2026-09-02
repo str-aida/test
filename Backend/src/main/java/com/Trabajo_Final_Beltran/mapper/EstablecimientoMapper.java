@@ -1,5 +1,6 @@
 package com.Trabajo_Final_Beltran.mapper;
 
+import com.Trabajo_Final_Beltran.dto.response.EstablecimientoClienteResponse;
 import com.Trabajo_Final_Beltran.dto.response.EstablecimientoResponse;
 import com.Trabajo_Final_Beltran.entity.Establecimiento;
 
@@ -30,4 +31,18 @@ public class EstablecimientoMapper {
         .fechaCreacion(establecimiento.getFechaCreacion())
         .build();
   }
-}
+
+  public static EstablecimientoClienteResponse toClienteResponse(
+      Establecimiento establecimiento
+  ) {
+    if (establecimiento == null) {
+      return null;
+    }
+
+    return EstablecimientoClienteResponse.builder()
+        .id(establecimiento.getId())
+        .nombre(establecimiento.getNombre())
+        .tipoServicio(establecimiento.getTipoServicio())
+        .build();
+  }
+}

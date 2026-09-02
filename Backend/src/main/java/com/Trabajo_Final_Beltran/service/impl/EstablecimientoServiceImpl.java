@@ -1,6 +1,7 @@
 package com.Trabajo_Final_Beltran.service.impl;
 
 import com.Trabajo_Final_Beltran.dto.request.UpdateEstablecimientoRequest;
+import com.Trabajo_Final_Beltran.dto.response.EstablecimientoClienteResponse;
 import com.Trabajo_Final_Beltran.dto.response.EstablecimientoResponse;
 import com.Trabajo_Final_Beltran.entity.Direccion;
 import com.Trabajo_Final_Beltran.entity.Establecimiento;
@@ -37,6 +38,20 @@ public class EstablecimientoServiceImpl implements EstablecimientoService {
     return EstablecimientoMapper.toResponse(
         establecimiento
     );
+  }
+
+  @Override
+  public EstablecimientoClienteResponse obtenerInfoCliente(Long id) {
+    Establecimiento establecimiento = establecimientoRepository.findById(id)
+        .orElseThrow(() -> new BusinessException("Establecimiento no encontrado."));
+
+    return EstablecimientoMapper.toClienteResponse(establecimiento);
+  }
+
+  @Override
+  public EstablecimientoClienteResponse obtenerInfoClienteActual() {
+    Establecimiento establecimiento = obtenerEstablecimientoAutenticado();
+    return EstablecimientoMapper.toClienteResponse(establecimiento);
   }
 
   @Override

@@ -81,8 +81,12 @@
           <label class="filtros-panel__label" for="filtro-entrega">Tipo de entrega</label>
           <select id="filtro-entrega" class="filtros-panel__select" [(ngModel)]="filtroTipoEntrega">
             <option value="">Todos</option>
-            <option [value]="TipoEntrega.DELIVERY">Delivery</option>
-            <option [value]="TipoEntrega.RETIRO">Retiro en local</option>
+            @if (tipoServicioEstablecimiento === TipoServicio.DELIVERY || tipoServicioEstablecimiento === TipoServicio.AMBOS || !tipoServicioEstablecimiento) {
+              <option [value]="TipoEntrega.DELIVERY">Delivery</option>
+            }
+            @if (tipoServicioEstablecimiento === TipoServicio.RETIRO || tipoServicioEstablecimiento === TipoServicio.AMBOS || !tipoServicioEstablecimiento) {
+              <option [value]="TipoEntrega.RETIRO">Retiro en local</option>
+            }
           </select>
         </div>
 

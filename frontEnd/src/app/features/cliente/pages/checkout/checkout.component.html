@@ -30,45 +30,49 @@
         </div>
 
         <div class="delivery-options">
-          <label
-            class="delivery-option"
-            [class.delivery-option--selected]="tipoEntrega === TipoEntrega.DELIVERY">
-            <input
-              type="radio"
-              name="tipoEntrega"
-              [value]="TipoEntrega.DELIVERY"
-              [(ngModel)]="tipoEntrega"
-              class="delivery-option__radio">
-            <div class="delivery-option__content">
-              <div class="delivery-option__icon-wrapper">
-                <svg lucideTruck class="delivery-option__icon"></svg>
+          @if (tipoServicioEstablecimiento === TipoServicio.DELIVERY || tipoServicioEstablecimiento === TipoServicio.AMBOS || !tipoServicioEstablecimiento) {
+            <label
+              class="delivery-option"
+              [class.delivery-option--selected]="tipoEntrega === TipoEntrega.DELIVERY">
+              <input
+                type="radio"
+                name="tipoEntrega"
+                [value]="TipoEntrega.DELIVERY"
+                [(ngModel)]="tipoEntrega"
+                class="delivery-option__radio">
+              <div class="delivery-option__content">
+                <div class="delivery-option__icon-wrapper">
+                  <svg lucideTruck class="delivery-option__icon"></svg>
+                </div>
+                <div class="delivery-option__text">
+                  <span class="delivery-option__label">Envío a domicilio (Delivery)</span>
+                  <span class="delivery-option__desc">Recibí tu pedido en la dirección que elijas</span>
+                </div>
               </div>
-              <div class="delivery-option__text">
-                <span class="delivery-option__label">Envío a domicilio (Delivery)</span>
-                <span class="delivery-option__desc">Recibí tu pedido en la dirección que elijas</span>
-              </div>
-            </div>
-          </label>
+            </label>
+          }
 
-          <label
-            class="delivery-option"
-            [class.delivery-option--selected]="tipoEntrega === TipoEntrega.RETIRO">
-            <input
-              type="radio"
-              name="tipoEntrega"
-              [value]="TipoEntrega.RETIRO"
-              [(ngModel)]="tipoEntrega"
-              class="delivery-option__radio">
-            <div class="delivery-option__content">
-              <div class="delivery-option__icon-wrapper">
-                <svg lucideStore class="delivery-option__icon"></svg>
+          @if (tipoServicioEstablecimiento === TipoServicio.RETIRO || tipoServicioEstablecimiento === TipoServicio.AMBOS || !tipoServicioEstablecimiento) {
+            <label
+              class="delivery-option"
+              [class.delivery-option--selected]="tipoEntrega === TipoEntrega.RETIRO">
+              <input
+                type="radio"
+                name="tipoEntrega"
+                [value]="TipoEntrega.RETIRO"
+                [(ngModel)]="tipoEntrega"
+                class="delivery-option__radio">
+              <div class="delivery-option__content">
+                <div class="delivery-option__icon-wrapper">
+                  <svg lucideStore class="delivery-option__icon"></svg>
+                </div>
+                <div class="delivery-option__text">
+                  <span class="delivery-option__label">Retiro en local</span>
+                  <span class="delivery-option__desc">Retirá tu pedido directamente en nuestra sucursal</span>
+                </div>
               </div>
-              <div class="delivery-option__text">
-                <span class="delivery-option__label">Retiro en local</span>
-                <span class="delivery-option__desc">Retirá tu pedido directamente en nuestra sucursal</span>
-              </div>
-            </div>
-          </label>
+            </label>
+          }
         </div>
 
         <!-- Selección de Dirección (Solo si DELIVERY) -->
