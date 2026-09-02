@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BaseFormComponent } from '../../../../shared/base/base-form.component';
 import { CuponService } from '../../../../core/services/cupon.service';
@@ -34,6 +34,7 @@ export class CuponAsignarModalComponent extends BaseFormComponent implements OnI
   private readonly employeesService = inject(EmployeesService);
   private readonly notificationService = inject(NotificationService);
   private readonly elementRef = inject(ElementRef);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   @Input() initialCuponId: number | null = null;
   @Input() cuponesList: CuponResponse[] = [];
@@ -120,6 +121,13 @@ export class CuponAsignarModalComponent extends BaseFormComponent implements OnI
       next: (results) => {
         this.searchResults = results || [];
         this.isSearching = false;
+        // Mostrar el dropdown si el query sigue siendo válido
+        const currentVal = this.busquedaControl.value?.trim() ?? '';
+        if (currentVal.length >= 2) {
+          this.showDropdown = true;
+        }
+        // Forzar detección de cambios para que Angular refresque el dropdown
+        this.cdr.detectChanges();
       }
     });
   }
