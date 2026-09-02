@@ -5,14 +5,14 @@
         <div class="product-list__header-title">
 
             <div class="product-list__icon-wrapper">
-                <svg lucidePackage class="product-list__icon"></svg>
+                <svg lucideShapes class="product-list__icon"></svg>
             </div>
             <div>
                 <h1 class="product-list__title">
                     Gestión de productos
                 </h1>
                 <p class="product-list__subtitle">
-                    Administrá los productos y stock de tu establecimiento.
+                    Administrá los productos de tu establecimiento.
                 </p>
             </div>
 
@@ -21,7 +21,7 @@
         <button
             type="button"
             class="btn btn--primary product-list__add-btn"
-            routerLink="/admin/productos/nuevo">
+            (click)="openCreateModal()">
 
             <svg lucidePlus class="btn__icon"></svg>
             <span>Nuevo producto</span>
@@ -31,54 +31,118 @@
     </header>
 
     <app-products-table
-        (editProduct)="onEditProduct($event)"
-        (toggleStatusProduct)="openStatusModal($event)" />
+        (editProduct)="openEditModal($event)">
+    </app-products-table>
 
-    <!-- MODAL DE CAMBIO DE ESTADO -->
-    @if (showStatusModal && selectedProduct) {
+    <!-- MODAL DE NUEVO PRODUCTO -->
+    @if (showCreateModal) {
         <div
             class="modal-overlay"
-            (click)="closeStatusModal()">
+            (click)="closeCreateModal()">
 
             <div
                 class="modal-card"
-                [class.modal-card--danger]="selectedProduct.estado === Estado.ACTIVO"
                 (click)="$event.stopPropagation()">
 
-                <div class="modal-card__header-icon">
-                    <svg lucideAlertTriangle></svg>
-                </div>
+                <!-- HEADER DEL MODAL -->
+                <header class="modal-card__header">
 
-                <div class="modal-card__confirm-content">
-                    <h3>
-                        {{ selectedProduct.estado === Estado.ACTIVO ? '¿Desactivar producto?' : '¿Activar producto?' }}
-                    </h3>
-                    <p>
-                        Vas a cambiar el estado del producto
-                        <strong>"{{ selectedProduct.nombre }}"</strong>
-                        a <strong>{{ selectedProduct.estado === Estado.ACTIVO ? 'INACTIVO' : 'ACTIVO' }}</strong>.
-                    </p>
-                </div>
+                    <div class="modal-card__header-info">
 
-                <footer class="modal-card__footer">
+                        <div class="modal-card__header-icon">
+                            <svg lucideShapes></svg>
+                        </div>
 
-                    <button
-                        type="button"
-                        class="btn btn--outline"
-                        (click)="closeStatusModal()">
-                        Cancelar
-                    </button>
+                        <div>
+                            <h2 class="modal-card__title">
+                                Nuevo producto
+                            </h2>
+                            <p class="modal-card__subtitle">
+                                Completá los datos para registrar un nuevo producto.
+                            </p>
+                        </div>
+
+                    </div>
 
                     <button
                         type="button"
-                        class="btn"
-                        [class.btn--danger]="selectedProduct.estado === Estado.ACTIVO"
-                        [class.btn--primary]="selectedProduct.estado === Estado.INACTIVO"
-                        (click)="confirmToggleStatus()">
-                        {{ selectedProduct.estado === Estado.ACTIVO ? 'Sí, desactivar' : 'Sí, activar' }}
+                        class="modal-card__close"
+                        aria-label="Cerrar modal"
+                        (click)="closeCreateModal()">
+
+                        <svg lucideX></svg>
+
                     </button>
 
-                </footer>
+                </header>
+
+                <!-- FORMULARIO -->
+                <div class="modal-card__body">
+
+                    <app-product-form
+                        (productCreated)="onProductCreate()"
+                        (cancel)="closeCreateModal()">
+                    </app-product-form>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+    <!-- MODAL DE EDITAR PRODUCTO -->
+    @if (showEditModal && selectedProduct) {
+        <div
+            class="modal-overlay"
+            (click)="closeEditModal()">
+
+            <div
+                class="modal-card"
+                (click)="$event.stopPropagation()">
+
+                <!-- HEADER DEL MODAL -->
+                <header class="modal-card__header">
+
+                    <div class="modal-card__header-info">
+
+                        <div class="modal-card__header-icon">
+                            <svg lucideShapes></svg>
+                        </div>
+
+                        <div>
+                            <h2 class="modal-card__title">
+                                Editar producto
+                            </h2>
+                            <p class="modal-card__subtitle">
+                                Modificá los datos del producto seleccionada.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="modal-card__close"
+                        aria-label="Cerrar modal"
+                        (click)="closeEditModal()">
+
+                        <svg lucideX></svg>
+
+                    </button>
+
+                </header>
+
+                <!-- FORMULARIO -->
+                <div class="modal-card__body">
+
+                    <app-product-form
+                        [editingProduct]="selectedProduct"
+                        (productUpdated)="onProductUpdated()"
+                        (cancel)="closeEditModal()">
+                    </app-product-form>
+
+                </div>
 
             </div>
 

@@ -1,5 +1,176 @@
-@use '../../../onboarding/styles/form-layout' as *;
 @use 'abstracts/index' as *;
+
+.product-form{
+    width: 100%;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $form-row-gap;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: $space-sm;
+}
+
+.form-field__label {
+    margin-bottom: $space-xs;
+    font-family: $font-body;
+    font-size: $fs-caption;
+    font-weight: $fw-semibold;
+    color: $color-text;
+}
+
+.form-field__required {
+    color: $color-danger;
+    font-weight: $fw-bold;
+}
+
+.form-field__input,
+.form-field__textarea {
+    width: 100%;
+    padding: .75rem .9rem;
+    font-family: $font-body;
+    font-size: $fs-caption;
+    border: 1px solid $color-border;
+    border-radius: 8px; // antes .75rem
+    background-color: $color-white;
+    color: $color-text;
+    outline: none;
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+//REVISAR SI DEJAR O NO***
+.form-field__input:focus,
+.form-field__textarea:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.08);
+}
+
+.form-field__input {
+    height: 44px;
+}
+
+.form-field__textarea {
+    min-height: 100px; // antes 8rem
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: $space-sm;
+    width: 100%;
+    margin-top: $space-md;
+}
+
+.form-actions .btn {
+    min-width: 100px;
+}
+
+.form-field__error {
+    margin-top: $space-xs; // antes .25rem
+    color: $color-danger;
+    font-family: $font-body;
+    font-size: $fs-caption; // antes .85rem
+    font-weight: $fw-medium;
+}
+
+//borde rojo para los mensajes
+.form-field__input.ng-invalid.ng-touched,
+.form-field__textarea.ng-invalid.ng-touched {
+    border-color: $color-danger;
+}
+
+.form-field__input.ng-invalid.ng-touched:focus,
+.form-field__textarea.ng-invalid.ng-touched:focus {
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, .15);
+}
+
+/* ESTADO */
+.estado-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: $space-sm;
+}
+
+.estado-toggle__option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: $space-sm;
+    width: 140px;
+    min-height: 40px;
+    padding: .7rem 1rem;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    background-color: $color-white;
+    font-family: $font-body;
+    font-weight: $fw-medium;
+    cursor: pointer;
+    transition:
+        border-color .2s ease,
+        background-color .2s ease,
+        box-shadow .2s ease;
+}
+
+/* Ocultamos el radio nativo */
+.estado-toggle__option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Indicador */
+.estado-toggle__indicator {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: $color-border;
+    transition:
+        background-color .2s ease,
+        box-shadow .2s ease;
+}
+
+/* ACTIVA */
+.estado-toggle__option--active {
+    color: $color-success;
+}
+
+.estado-toggle__option--active.estado-toggle__option--selected {
+    border-color: $color-success;
+    background-color: rgba($color-success, .06);
+}
+
+.estado-toggle__option--active.estado-toggle__option--selected
+.estado-toggle__indicator {
+    background-color: $color-success;
+    box-shadow: 0 0 0 4px rgba($color-success, .12);
+}
+
+/* INACTIVA */
+.estado-toggle__option--inactive {
+    color: $color-danger;
+}
+
+.estado-toggle__option--inactive.estado-toggle__option--selected {
+    border-color: $color-danger;
+    background-color: rgba($color-danger, .06);
+}
+
+.estado-toggle__option--inactive.estado-toggle__option--selected
+.estado-toggle__indicator {
+    background-color: $color-danger;
+    box-shadow: 0 0 0 4px rgba($color-danger, .12);
+}
 
 
 .product-image {
@@ -11,15 +182,15 @@
 
 /* HEADER */
 .product-image__header {
-    padding: 24px 32px;
+    padding: .75rem 1rem;
     border-bottom: 1px solid #eee5e5;
 }
 
 .product-image__title {
     margin: 0;
     font-family: $font-heading;
-    font-size: 18px;
-    font-weight: 500;
+    font-size: $fs-body;
+    font-weight: $fw-medium;
     color: $color-primary;
     text-transform: uppercase;
 }
@@ -29,15 +200,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    padding: 32px;
+    gap: $space-sm;
+    padding: 1.25rem; //antes 32px
+}
+
+.product-image__preview,
+.product-image__empty {
+    width: 160px;
+    height: 160px;
 }
 
 /* PREVIEW */
 .product-image__preview {
-    width: 100%;
-    max-width: 250px;
-    aspect-ratio: 1 / 1;
     overflow: hidden;
     border: 1px solid #e4dada;
     border-radius: 8px;
@@ -58,41 +232,52 @@
     align-items: center;
     justify-content: center;
     gap: 12px;
-    width: 100%;
-    max-width: 250px;
-    aspect-ratio: 1 / 1;
     border: 1px dashed #d8c5c5;
     border-radius: 8px;
     background-color: #faf8f8;
     color: #9a8585;
-    font-size: 14px;
+    font-size: $fs-small;
     text-align: center;
 }
 
 .product-image__empty svg {
-    display: block;
     width: 22px;
     height: 22px;
-    flex-shrink: 0;
 }
 
-/* BOTÓN SUBIR */
-.product-image__upload {
+
+/* ACCIONES DE IMAGEN */
+.product-image__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-sm;
+}
+
+/* BOTÓN SUBIR/CAMBIAR Y ELIMINAR */
+.product-image__upload,
+.product-image__remove {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 2px;
-    width: 80px;
-    height: 80px;
+    width: 64px;
+    height: 64px;
     border: 1px dashed #d8c5c5;
     border-radius: 6px;
     color: $color-primary;
-    background-color: #fff;
+    background-color: $color-background;
     cursor: pointer;
     transition:
         background-color 0.2s ease,
         border-color 0.2s ease
+}
+
+.product-image__upload svg,
+.product-image__remove svg {
+    width: 18px;
+    height: 18px;
 }
 
 .product-image__upload:hover {
@@ -100,15 +285,18 @@
     background-color: #faf5f5;
 }
 
-.product-image__plus {
-    font-size: 32px;
-    font-weight: 300;
-    line-height: 1;
+.product-image__remove {
+    color: $color-danger;
+
+    &:hover {
+        border-color: $color-danger;
+        background-color: rgba($color-danger, .06);
+    }
 }
 
 .product-image__text {
     font-size: 12px;
-    font-weight: 500;
+    font-weight: $fw-medium;
 }
 
 /* INPUT REAL OCULTO */
@@ -116,101 +304,12 @@
     display: none;
 }
 
-/* HELP */
+/* AYUDA */
 .product-image__help {
     margin: 0;
     color: #8c7a7a;
     font-family: $font-body;
     font-size: 12px;
-    line-height: 1.6;
+    line-height: $lh-body;
     text-align: center;
 }
-
-.btn-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: $color-primary;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-    transition: color 0.2s ease;
-
-    svg {
-        width: 18px;
-        height: 18px;
-    }
-
-    &:hover {
-        color: $color-primary-dark;
-    }
-}
-
-.btn-remove-image {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin-top: 0.5rem;
-    padding: 0.4rem 0.8rem;
-    background: #fee2e2;
-    color: #dc2626;
-    border: 1px solid #fca5a5;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    svg {
-        width: 14px;
-        height: 14px;
-    }
-
-    &:hover {
-        background: #fecaca;
-        color: #b91c1c;
-    }
-}
-
-.onboarding-form__subtitle {
-    color: #6b7280;
-    font-size: 0.95rem;
-    margin-top: 0.25rem;
-}
-
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 2rem;
-
-    .btn {
-        padding: 0.75rem 1.5rem;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    .btn--outline {
-        background: transparent;
-        border: 1px solid $color-border;
-        color: #374151;
-
-        &:hover {
-            background: #f3f4f6;
-        }
-    }
-
-    .btn--primary {
-        background: $color-primary;
-        border: 1px solid $color-primary;
-        color: $color-white;
-
-        &:hover {
-            background: $color-primary-dark;
-        }
-    }
-}

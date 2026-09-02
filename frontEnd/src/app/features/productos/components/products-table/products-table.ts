@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
-import { LucideImage, LucidePencil, LucidePower } from '@lucide/angular';
+import { Component, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
+import { LucideImage, LucidePencil } from '@lucide/angular';
 import { ProductsService } from '../../../../core/services/products.service';
 import { ProductResponse } from '../../../../core/models/product-response';
 import { environment } from '../../../../../environments/environment';
@@ -8,11 +8,10 @@ import { CategoriaResponse } from '../../../../core/models/categoria-response';
 import { CategoriaService } from '../../../../core/services/categoria.service';
 import { Estado } from '../../../../core/models/enums/estado.enum';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-products-table',
-  imports: [FormsModule, RouterLink, LucideImage, LucidePencil, LucidePower, DecimalPipe],
+  imports: [FormsModule, LucideImage, DecimalPipe, LucidePencil],
   templateUrl: './products-table.html',
   styleUrl: './products-table.scss',
 })
@@ -20,17 +19,14 @@ export class ProductsTableComponent implements OnInit {
 
   private readonly productService = inject(ProductsService);
   private readonly categoriaService = inject(CategoriaService);
-  private readonly cdr = inject(ChangeDetectorRef);
-
   protected readonly Estado = Estado;
-  products: ProductResponse[] = [];
+  @Output() editProduct = new EventEmitter<ProductResponse>();
+
+  products = signal<ProductResponse[]>([]);
   texto = '';
   estado: Estado | '' = '';
   categoriaId: number | undefined = undefined;
   categorias = signal<CategoriaResponse[]>([]);
-
-  @Output() editProduct = new EventEmitter<ProductResponse>();
-  @Output() toggleStatusProduct = new EventEmitter<ProductResponse>();
 
   ngOnInit(): void {
     this.loadProducts();
@@ -42,8 +38,7 @@ export class ProductsTableComponent implements OnInit {
       .listarProductos(this.categoriaId, this.estado || undefined, this.texto)
       .subscribe({
         next: products => {
-          this.products = products;
-          this.cdr.detectChanges();
+          this.products.set(products);
         },
         error: error => {
           console.error('Error al cargar los productos', error);
@@ -57,12 +52,15 @@ export class ProductsTableComponent implements OnInit {
       .subscribe({
         next: categorias => {
           this.categorias.set(categorias);
-          this.cdr.detectChanges();
         },
         error: error => {
-          console.error('Error al cargar las categorías', error);
+          console.error('Error al cargar los productos', error);
         }
       });
+  }
+
+  edit(product: ProductResponse): void {
+    this.editProduct.emit(product);
   }
 
   search(): void {
@@ -72,24 +70,14 @@ export class ProductsTableComponent implements OnInit {
   hasActiveFilters(): boolean {
     return this.categoriaId !== undefined ||
           !!this.estado ||
-          !!this.texto.trim();
+          !!this.texto
   }
 
-  edit(product: ProductResponse): void {
-    this.editProduct.emit(product);
-  }
-
-  toggleStatus(product: ProductResponse): void {
-    this.toggleStatusProduct.emit(product);
-  }
-
-  protected getImageUrl(imagenUrl: string | null): string | null {
+  protected getImageUrl (imagenUrl: string | null): string | null {
     if (!imagenUrl) {
       return null;
     }
-    if (imagenUrl.startsWith('http://') || imagenUrl.startsWith('https://')) {
-      return imagenUrl;
-    }
+
     return `${environment.baseUrl}${imagenUrl}`;
   }
 

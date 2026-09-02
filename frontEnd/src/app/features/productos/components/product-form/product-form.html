@@ -1,325 +1,342 @@
-<section class="onboarding-form">
-
-    <div class="container">
-
-        <header class="onboarding-form__header">
-
-            <a routerLink="/admin/productos" class="btn-back">
-                <svg lucideArrowLeft></svg>
-                <span>Volver a la lista</span>
-            </a>
-
-            <div class="header-title-container">
-                <h1 class="onboarding-form__title">
-                    {{ isEditMode() ? 'Editar Producto' : 'Nuevo Producto' }}
-                </h1>
-                <p class="onboarding-form__subtitle">
-                    {{ isEditMode() ? 'Actualizá la información y stock de tu producto.' : 'Completá los datos requeridos para publicar un nuevo producto.' }}
-                </p>
-            </div>
-
-        </header>
-
-        <form
-            class="onboarding-form__form"
-            [formGroup]="productForm"
-            (ngSubmit)="onSubmit()">
-
-            <section class="form-section form-section--personal">
-
-                <div class="form-field">
-
-                    <label
-                        class="form-field__label"
-                        for="name">
-                        Nombre del producto
-
-                        <span class="form-field__required">*</span>
-                    </label>
-
-                    <input
-                        id="name"
-                        class="form-field__input"
-                        type="text"
-                        formControlName="nombre"
-                        placeholder="Torta Chocolate Premium">
-
-                    @if (hasError('nombre', 'required')) {
-                        <small class="form-field__error">
-                            El nombre es obligatorio.
-                        </small>
-                    } @else if (hasError('nombre', 'minlength') || hasError('nombre', 'maxlength')) {
-                        <small class="form-field__error">
-                            El nombre debe tener entre 3 y 150 caracteres.
-                        </small>
-                    }
-
-                </div>
-
-                <div class="form-field">
-
-                    <label
-                        class="form-field__label"
-                        for="description">
-                        Descripción
-                    </label>
-
-                    <textarea
-                        id="description"
-                        class="form-field__textarea"
-                        rows="3"
-                        formControlName="descripcion"
-                        placeholder="Torta de chocolate con relleno cremoso y cobertura de ganache amargo"></textarea>
-
-                    @if (hasError('descripcion', 'maxlength')) {
-                        <small class="form-field__error">
-                            La descripción no puede superar los 500 caracteres.
-                        </small>
-                    }
-
-                </div>
-
-                <div class="form-row">
-
-                    <div class="form-field">
-
-                        <label
-                            class="form-field__label"
-                            for="price">
-                            Precio (ARS)
-
-                            <span class="form-field__required">*</span>
-                        </label>
-
-                        <input
-                            id="price"
-                            class="form-field__input"
-                            type="number"
-                            inputmode="decimal"
-                            step="0.01"
-                            min="0.01"
-                            formControlName="precio"
-                            placeholder="8500">
-
-                            @if (hasError('precio', 'required')) {
-
-                                <small class="form-field__error">
-                                    El precio es obligatorio.
-                                </small>
-
-                            } @else if (hasError('precio', 'min')) {
-
-                                <small class="form-field__error">
-                                    El precio debe ser mayor a 0.
-                                </small>
-
-                            }
-
-                    </div>
-
-                    <div class="form-field">
-
-                        <label
-                            class="form-field__label"
-                            for="category">
-                            Categoría
-
-                            <span class="form-field__required">*</span>
-                        </label>
-
-                        <select
-                            id="category"
-                            class="form-field__input"
-                            formControlName="categoriaId">
-
-                            <option [ngValue]="null" disabled>
-                                Seleccionar categoría
-                            </option>
-
-                            @for (categoria of categorias(); track categoria.id) {
-                                <option [ngValue]="categoria.id">
-                                    {{ categoria.nombre }}
-                                </option>
-                            }
-
-                        </select>
-
-                        @if (hasError('categoriaId', 'required')) {
-                            <small class="form-field__error">
-                                La categoría es obligatoria.
-                            </small>
-                        }
-
-                    </div>
-
-                </div>
-
-                <div class="form-row">
-
-                    <div class="form-field">
-
-                        <label
-                            class="form-field__label"
-                            for="stock">
-                            Stock disponible
-
-                            <span class="form-field__required">*</span>
-                        </label>
-
-                        <input
-                            id="stock"
-                            class="form-field__input"
-                            type="number"
-                            inputmode="numeric"
-                            min="0"
-                            step="1"
-                            formControlName="stock"
-                            placeholder="12">
-
-                            @if (hasError('stock', 'required')) {
-                                <small class="form-field__error">
-                                    El stock es obligatorio.
-                                </small>
-                            } @else if (hasError('stock', 'min')) {
-                                <small class="form-field__error">
-                                    El stock no puede ser negativo.
-                                </small>
-                            }
-
-                    </div>
-
-                    <div class="form-field">
-
-                        <label
-                            class="form-field__label"
-                            for="code">
-                            Código
-
-                            <span class="form-field__required">*</span>
-                        </label>
-
-                        <input
-                            id="code"
-                            class="form-field__input"
-                            type="text"
-                            formControlName="codigo"
-                            placeholder="PROD-001">
-
-                            @if (hasError('codigo', 'required')) {
-                                <small class="form-field__error">
-                                    El código es obligatorio.
-                                </small>
-                            } @else if (hasError('codigo', 'maxlength')) {
-                                <small class="form-field__error">
-                                    El código no puede superar los 50 caracteres.
-                                </small>
-                            }
-
-                    </div>
-
-                </div>
-
-                @if (isEditMode()) {
-                    <div class="form-row">
-                        <div class="form-field">
-                            <label
-                                class="form-field__label"
-                                for="estado">
-                                Estado del Producto
-                                <span class="form-field__required">*</span>
-                            </label>
-
-                            <select
-                                id="estado"
-                                class="form-field__input"
-                                formControlName="estado">
-                                <option [ngValue]="Estado.ACTIVO">Activo</option>
-                                <option [ngValue]="Estado.INACTIVO">Inactivo</option>
-                            </select>
-                        </div>
-                    </div>
-                }
-
-            </section>
-
-            <section class="product-image">
-
-                <header class="product-image__header">
-                    <h2 class="product-image__title">
-                        Imagen del producto
-                    </h2>
-                </header>
-
-                <div class="product-image__content">
-
-                    @if (imagePreviewUrl()) {
-                        <div class="product-image__preview">
-                            <img
-                                [src]="imagePreviewUrl()"
-                                alt="Vista previa del producto">
-                            
-                            <button
-                                type="button"
-                                class="btn-remove-image"
-                                (click)="removeImage()"
-                                title="Eliminar imagen">
-                                <svg lucideTrash2></svg>
-                                <span>Eliminar imagen</span>
-                            </button>
-                        </div>
-                    } @else {
-                        <div class="product-image__empty">
-
-                            <svg lucideImage></svg>
-                            <span>No hay una imagen seleccionada</span>
-
-                        </div>
-                    }
-
-                    <label
-                        class="product-image__upload"
-                        for="product-image">
-
-                        <span class="product-image__plus"> + </span>
-                        <span class="product-image__text">{{ imagePreviewUrl() ? 'Cambiar' : 'Subir' }}</span>
-
-                    </label>
-
-                    <input
-                        id="product-image"
-                        class="product-image__input"
-                        type="file"
-                        accept="image/jpeg,image/png"
-                        (change)="onImageSelected($event)">
-
-                    <p class="product-image__help">
-                        Formatos: JPG, JPEG, PNG · Máx. 2MB.<br>
-                        Dimensiones: entre 300x300 y 3000x3000 px.
-                    </p>
-
-                </div>
-
-            </section>
-
-            <div class="form-actions">
-
-                <button
-                    type="button"
-                    class="btn btn--outline"
-                    (click)="onCancel()">
-                    Cancelar
-                </button>
-
-                <button
-                    type="submit"
-                    class="btn btn--primary">
-                    {{ isEditMode() ? 'Guardar Cambios' : 'Guardar Producto' }}
-                </button>
-
-            </div>
-
-        </form>
+<form
+    class="product-form"
+    [formGroup]="productForm"
+    (ngSubmit)="onSubmit()">
+
+    <!-- NOMBRE -->
+    <div class="form-field">
+
+        <label
+            class="form-field__label"
+            for="name">
+            Nombre del producto
+
+            <span class="form-field__required">*</span>
+        </label>
+
+        <input
+            id="name"
+            class="form-field__input"
+            type="text"
+            formControlName="nombre"
+            placeholder="Torta Chocolate Premium">
+
+            @if (hasError('nombre', 'required')) {
+                <small class="form-field__error">
+                    El nombre es obligatorio.
+                </small>
+            } @else if (hasError('nombre', 'minlength') || hasError('nombre', 'maxlength')) {
+                <small class="form-field__error">
+                    El nombre debe tener entre 3 y 150 caracteres.
+                </small>
+            }
 
     </div>
 
-</section>
+    <!-- DESCRIPCIÓN -->
+    <div class="form-field">
+
+        <label
+            class="form-field__label"
+            for="description">
+            Descripción
+        </label>
+
+        <textarea
+            id="description"
+            class="form-field__textarea"
+            rows="3"
+            formControlName="descripcion"
+            placeholder="Torta de chocolate con relleno cremoso y cobertura de ganache amargo"></textarea>
+
+        @if (hasError('descripcion', 'maxlength')) {
+            <small class="form-field__error">
+                La descripción no puede superar los 500 caracteres.
+            </small>
+        }
+
+    </div>
+
+    <div class="form-row">
+
+        <!-- PRECIO -->
+        <div class="form-field">
+
+            <label
+                class="form-field__label"
+                for="price">
+                Precio (ARS)
+
+                <span class="form-field__required">*</span>
+            </label>
+
+            <input
+                id="price"
+                class="form-field__input"
+                type="number"
+                inputmode="decimal"
+                step="0.01"
+                min="0.01"
+                formControlName="precio"
+                placeholder="8500">
+
+                @if (hasError('precio', 'required')) {
+
+                    <small class="form-field__error">
+                        El precio es obligatorio.
+                    </small>
+
+                } @else if (hasError('precio', 'min')) {
+
+                    <small class="form-field__error">
+                       El precio debe ser mayor a 0.
+                    </small>
+
+                }
+
+        </div>
+
+        <!-- CATEGORÍA -->
+        <div class="form-field">
+
+            <label
+                class="form-field__label"
+                for="category">
+                Categoría
+
+                <span class="form-field__required">*</span>
+            </label>
+
+            <select
+                id="category"
+                class="form-field__input"
+                formControlName="categoriaId">
+
+                <option [ngValue]="null" disabled>
+                    Seleccionar categoría
+                </option>
+
+                @for (categoria of categorias(); track categoria.id) {
+                    <option [ngValue]="categoria.id">
+                        {{ categoria.nombre }}
+                    </option>
+                }
+
+            </select>
+
+            @if (hasError('categoriaId', 'required')) {
+                <small class="form-field__error">
+                    La categoría es obligatoria.
+                </small>
+            }
+
+        </div>
+
+    </div>
+
+    <div class="form-row">
+
+        <!-- STOCK -->
+        <div class="form-field">
+
+            <label
+                class="form-field__label"
+                for="stock">
+                Stock disponible
+            </label>
+
+            <input
+                id="stock"
+                class="form-field__input"
+                type="number"
+                inputmode="numeric"
+                min="0"
+                step="1"
+                formControlName="stock"
+                placeholder="12">
+
+                @if (hasError('stock', 'min')) {
+
+                    <small class="form-field__error">
+                        El stock no puede ser negativo.
+                    </small>
+
+                }
+
+        </div>
+
+        <!-- CÓDIGO -->
+        <div class="form-field">
+
+            <label
+                class="form-field__label"
+                for="code">
+                Código
+            </label>
+
+            <input
+                id="code"
+                class="form-field__input"
+                type="text"
+                formControlName="codigo"
+                placeholder="PROD-001">
+
+                @if (hasError('codigo', 'maxlength')) {
+
+                    <small class="form-field__error">
+                        El código no puede superar los 50 caracteres.
+                    </small>
+
+                }
+
+        </div>
+
+    </div>
+
+    <!-- ESTADO -->
+    @if (isEditMode) {
+
+        <div class="form-field">
+
+            <label class="form-field__label">
+                Estado
+
+                <span class="form-field__required">*</span>
+            </label>
+
+            <div class="estado-toggle">
+
+                <label
+                    class="estado-toggle__option estado-toggle__option--active"
+                    [class.estado-toggle__option--selected]="
+                        productForm.get('estado')?.value === Estado.ACTIVO
+                    ">
+
+                    <input
+                        type="radio"
+                        formControlName="estado"
+                        [value]="Estado.ACTIVO">
+
+                    <span class="estado-toggle__indicator"></span>
+
+                    <span>
+                        Activo
+                    </span>
+
+                </label>
+
+
+                <label
+                    class="estado-toggle__option estado-toggle__option--inactive"
+                    [class.estado-toggle__option--selected]="
+                        productForm.get('estado')?.value === Estado.INACTIVO
+                    ">
+
+                    <input
+                        type="radio"
+                        formControlName="estado"
+                        [value]="Estado.INACTIVO">
+
+                    <span class="estado-toggle__indicator"></span>
+
+                    <span>
+                        Inactivo
+                    </span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+    }
+
+    <!-- IMAGEN -->
+    <section class="product-image">
+
+        <header class="product-image__header">
+            <h2 class="product-image__title">
+                Imagen del producto
+            </h2>
+        </header>
+
+        <div class="product-image__content">
+
+            @if (imagePreviewUrl()) {
+                <div class="product-image__preview">
+                    <img
+                        [src]="imagePreviewUrl()"
+                        alt="Vista previa del producto">
+                </div>
+            } @else {
+                <div class="product-image__empty">
+
+                    <svg lucideImage></svg>
+                    <span>No hay una imagen seleccionada</span>
+
+                </div>
+            }
+
+            <!-- ACCIONES DE IMAGEN -->
+            <div class="product-image__actions">
+
+                <!-- ELIMINAR IMAGEN -->
+                @if (isEditMode && imagePreviewUrl()) {
+                    <button
+                        type="button"
+                        class="product-image__remove"
+                        (click)="onRemoveImage()">
+                        
+                        <svg lucideTrash2></svg>
+                        <span class="product-image__text">Eliminar</span>
+
+                    </button>
+                }
+
+                <!-- SUBIR / CAMBIAR -->
+                <label
+                    class="product-image__upload"
+                    for="product-image">
+
+                    <svg lucidePlus></svg>
+                    <span class="product-image__text">
+                        {{ isEditMode ? 'Cambiar' : 'Subir' }}
+                    </span>
+
+                </label>
+            </div>
+
+            <input
+                id="product-image"
+                class="product-image__input"
+                type="file"
+                accept="image/jpeg,image/png"
+                (change)="onImageSelected($event)">
+
+            <p class="product-image__help">
+                Formatos: JPG, JPEG, PNG · Máx. 2MB.<br>
+                Dimensiones: entre 300x300 y 3000x3000 px.
+            </p>
+
+        </div>
+
+    </section>
+
+    <!-- ACCIONES -->
+    <div class="form-actions">
+
+        <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onCancel()">
+            Cancelar
+        </button>
+        <button
+            type="submit"
+            class="btn btn--primary">
+            {{ isEditMode ? 'Guardar cambios' : 'Crear producto' }}
+        </button>
+
+    </div>
+
+</form>

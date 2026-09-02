@@ -1,113 +1,143 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, signal } from '@angular/core';
 import { BaseFormComponent } from '../../../../shared/base/base-form.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductsService } from '../../../../core/services/products.service';
 import { CreateProductRequest } from '../../../../core/models/create-product-request';
-import { UpdateProductRequest } from '../../../../core/models/update-product-request';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CategoriaResponse } from '../../../../core/models/categoria-response';
 import { CategoriaService } from '../../../../core/services/categoria.service';
-import { NotificationService } from '../../../../core/services/notification.service';
+import { LucideImage, LucidePlus, LucideTrash2, } from '@lucide/angular';
+import { ProductResponse } from '../../../../core/models/product-response';
+import { UpdateProductRequest } from '../../../../core/models/update-product-request';
 import { Estado } from '../../../../core/models/enums/estado.enum';
 import { environment } from '../../../../../environments/environment';
-import { LucideImage, LucideArrowLeft, LucideTrash2 } from '@lucide/angular';
 
 @Component({
   selector: 'app-product-form',
-  imports: [ReactiveFormsModule, RouterLink, LucideImage, LucideArrowLeft, LucideTrash2],
+  imports: [ReactiveFormsModule, LucideImage, LucideTrash2, LucidePlus],
   templateUrl: './product-form.html',
   styleUrl: './product-form.scss',
 })
-export class ProductFormComponent extends BaseFormComponent implements OnInit {
+export class ProductFormComponent extends BaseFormComponent implements OnInit, OnChanges {
 
   protected override get form(): FormGroup {
     return this.productForm;
   }
 
-  private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly productService = inject(ProductsService);
   private readonly categoriaService = inject(CategoriaService);
-  private readonly notificationService = inject(NotificationService);
-
+  protected readonly Estado = Estado;
   protected categorias = signal<CategoriaResponse[]>([]);
-  protected isEditMode = signal<boolean>(false);
-  protected productId: number | null = null;
 
   protected selectedImage: File | null = null;
   protected imagePreviewUrl = signal<string | null>(null);
-  protected eliminarImagen = signal<boolean>(false);
-  protected readonly Estado = Estado;
+  protected removeImage = signal(false);
+
+  @Input() editingProduct: ProductResponse | null = null;
+  @Output() productCreated = new EventEmitter<void>();
+  @Output() productUpdated = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
 
   /* FORMULARIO */
   readonly productForm = this.fb.group({
+
     nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(150)]],
     descripcion: ['', Validators.maxLength(500)],
-    precio: [null as number | null, [Validators.required, Validators.min(0.01)]],
-    categoriaId: [null as number | null, Validators.required],
-    stock: [0, [Validators.required, Validators.min(0)]],
-    codigo: ['', [Validators.required, Validators.maxLength(50)]],
-    estado: [Estado.ACTIVO, Validators.required]
+    precio: this.fb.control<number | null>(null, [Validators.required, Validators.min(0.01)]),
+    categoriaId: this.fb.control<number | null>(null, Validators.required),
+    estado: [Estado.ACTIVO, Validators.required],
+    stock: [0, Validators.min(0)],
+    codigo: ['', [Validators.required, Validators.maxLength(50)]]
+
   });
 
-  ngOnInit(): void {
-    this.cargarCategorias();
-    
-    const idParam = this.route.snapshot.paramMap.get('id');
-    if (idParam) {
-      this.isEditMode.set(true);
-      this.productId = Number(idParam);
-      this.cargarProducto(this.productId);
+  get isEditMode(): boolean {
+    return this.editingProduct !== null;
+  }
+
+  ngOnChanges(): void {
+    if (!this.editingProduct) {
+      return;
+    }
+
+    this.productForm.patchValue({
+      nombre: this.editingProduct.nombre,
+      descripcion: this.editingProduct.descripcion,
+      precio: this.editingProduct.precio,
+      categoriaId: this.editingProduct.categoriaId,
+      estado: this.editingProduct.estado,
+      stock: this.editingProduct.stock,
+      codigo: this.editingProduct.codigo,
+    });
+
+    //Al abrir la edición comenzamos conservando la imagen actual
+    this.selectedImage = null;
+    this.removeImage.set(false);
+
+    if (this.editingProduct.imagenUrl) {
+      this.imagePreviewUrl.set(
+        this.getImageUrl(this.editingProduct.imagenUrl)
+      );
+    } else {
+      this.imagePreviewUrl.set(null);
     }
   }
 
+  private getImageUrl(imagenUrl: string): string {
+    return `${environment.baseUrl}${imagenUrl}`;
+  }
+
+  onCancel(): void {
+    this.cancel.emit();
+  }
+
+  ngOnInit(): void {
+    this.cargarCategorias();
+  }
+
   private cargarCategorias(): void {
-    this.categoriaService.listarCategorias().subscribe({
+    this.categoriaService.listarCategorias().subscribe ({
       next: (categorias) => {
         this.categorias.set(categorias);
       },
       error: (error) => {
         console.error("Error al cargar las categorías: ", error);
-        this.notificationService.error("Error al cargar las categorías.");
       }
-    });
+    })
   }
 
-  private cargarProducto(id: number): void {
-    this.productService.obtenerProductoPorId(id).subscribe({
-      next: (producto) => {
-        this.productForm.patchValue({
-          nombre: producto.nombre,
-          descripcion: producto.descripcion || '',
-          precio: producto.precio,
-          categoriaId: this.findCategoriaId(producto.categoriaNombre),
-          stock: producto.stock,
-          codigo: producto.codigo,
-          estado: producto.estado
-        });
+  onSubmit(): void {
 
-        if (producto.imagenUrl) {
-          const fullUrl = producto.imagenUrl.startsWith('http://') || producto.imagenUrl.startsWith('https://')
-            ? producto.imagenUrl
-            : `${environment.baseUrl}${producto.imagenUrl}`;
-          this.imagePreviewUrl.set(fullUrl);
-        }
+    if (this.form.invalid) {
+      this.markFormAsTouched();
+      return;
+    }
+
+    if (this.isEditMode) {
+      this.updateProduct();
+      return;
+    }
+
+    this.createProduct();
+
+  }
+
+  private createProduct(): void {
+
+    const request = this.buildRequest();
+
+    this.productService.crearProducto(request, this.selectedImage).subscribe({
+      next: () => {
+        this.productCreated.emit();
       },
       error: (error) => {
-        console.error("Error al cargar el producto: ", error);
-        this.notificationService.error("No se pudo cargar el producto.");
-        this.router.navigate(['/admin/productos']);
+        console.error('Error al crear el producto: ', error);
       }
     });
+
   }
 
-  private findCategoriaId(categoriaNombre: string): number | null {
-    const found = this.categorias().find(c => c.nombre.toLowerCase() === categoriaNombre.toLowerCase());
-    return found ? found.id : null;
-  }
-
-  private buildCreateRequest(): CreateProductRequest {
+  private buildRequest(): CreateProductRequest {
     return {
       nombre: this.productForm.controls.nombre.value!,
       descripcion: this.productForm.controls.descripcion.value!,
@@ -115,7 +145,26 @@ export class ProductFormComponent extends BaseFormComponent implements OnInit {
       categoriaId: this.productForm.controls.categoriaId.value!,
       stock: this.productForm.controls.stock.value!,
       codigo: this.productForm.controls.codigo.value!
-    };
+    }
+  }
+
+  private updateProduct(): void {
+
+    if (!this.editingProduct) {
+      return;
+    }
+
+    const request = this.buildUpdateRequest();
+
+    this.productService.editarProducto(this.editingProduct.id, request, this.selectedImage).subscribe({
+      next: () => {
+        this.productUpdated.emit();
+      },
+      error: (error) => {
+        console.error('Error al editar el producto: ', error);
+      }
+    });
+
   }
 
   private buildUpdateRequest(): UpdateProductRequest {
@@ -126,58 +175,13 @@ export class ProductFormComponent extends BaseFormComponent implements OnInit {
       categoriaId: this.productForm.controls.categoriaId.value!,
       estado: this.productForm.controls.estado.value!,
       stock: this.productForm.controls.stock.value!,
-      eliminarImagen: this.eliminarImagen(),
-      codigo: this.productForm.controls.codigo.value!
-    };
-  }
-
-  onSubmit(): void {
-    if (this.form.invalid) {
-      this.markFormAsTouched();
-      return;
+      codigo: this.productForm.controls.codigo.value!,
+      eliminarImagen: this.removeImage()
     }
-
-    if (this.isEditMode() && this.productId) {
-      const updateRequest = this.buildUpdateRequest();
-      this.productService.editarProducto(this.productId, updateRequest, this.selectedImage).subscribe({
-        next: () => {
-          this.notificationService.success('Producto actualizado correctamente.');
-          this.router.navigate(['/admin/productos']);
-        },
-        error: (error) => {
-          console.error('Error al actualizar el producto: ', error);
-          this.notificationService.error('Error al actualizar el producto.');
-        }
-      });
-    } else {
-      const createRequest = this.buildCreateRequest();
-      this.productService.crearProducto(createRequest, this.selectedImage).subscribe({
-        next: () => {
-          this.notificationService.success('Producto registrado correctamente.');
-          this.router.navigate(['/admin/productos']);
-        },
-        error: (error) => {
-          console.error('Error al crear el producto: ', error);
-          this.notificationService.error('Error al crear el producto.');
-        }
-      });
-    }
-  }
-
-  onCancel(): void {
-    this.router.navigate(['/admin/productos']);
-  }
-
-  protected removeImage(): void {
-    if (this.imagePreviewUrl() && this.imagePreviewUrl()!.startsWith('blob:')) {
-      URL.revokeObjectURL(this.imagePreviewUrl()!);
-    }
-    this.selectedImage = null;
-    this.imagePreviewUrl.set(null);
-    this.eliminarImagen.set(true);
   }
 
   protected onImageSelected(event: Event): void {
+
     const input = event.target as HTMLInputElement;
 
     if (!input.files || input.files.length === 0) {
@@ -185,23 +189,33 @@ export class ProductFormComponent extends BaseFormComponent implements OnInit {
     }
 
     const file = input.files[0];
-    const allowedTypes = ['image/jpeg', 'image/png'];
+
+    /* VALIDAR FORMATO */
+    const allowedTypes = ['image/jpeg','image/png'];
 
     if (!allowedTypes.includes(file.type)) {
-      this.notificationService.error('Formato no permitido. Solo JPG y PNG.');
       return;
     }
 
+    /* VALIDAR TAMAÑO */
     const maxSize = 2 * 1024 * 1024;
+
+    console.log('Tamaño MB:', file.size / (1024 * 1024));
+    
     if (file.size > maxSize) {
-      this.notificationService.error('La imagen no puede superar los 2MB.');
       return;
     }
 
+    /* CREAR URL TEMPORAL */
     const objectUrl = URL.createObjectURL(file);
+
+    /* VALIDAR DIMENSIONES */
     const image = new Image();
 
     image.onload = () => {
+
+      console.log('Dimensiones:', image.width, 'x', image.height);
+
       const minWidth = 300;
       const minHeight = 300;
       const maxWidth = 3000;
@@ -214,21 +228,29 @@ export class ProductFormComponent extends BaseFormComponent implements OnInit {
         image.height > maxHeight
       ) {
         URL.revokeObjectURL(objectUrl);
-        this.notificationService.error(`Las dimensiones deben estar entre ${minWidth}x${minHeight}px y ${maxWidth}x${maxHeight}px.`);
         return;
       }
 
+      /* IMAGEN VÁLIDA */
       this.selectedImage = file;
-      this.eliminarImagen.set(false);
+      this.removeImage.set(false);
 
-      if (this.imagePreviewUrl() && this.imagePreviewUrl()!.startsWith('blob:')) {
+      if (this.imagePreviewUrl()) {
         URL.revokeObjectURL(this.imagePreviewUrl()!);
       }
 
       this.imagePreviewUrl.set(objectUrl);
+
     };
 
     image.src = objectUrl;
+
+  }
+
+  protected onRemoveImage(): void {
+    this.selectedImage = null;
+    this.removeImage.set(true);
+    this.imagePreviewUrl.set(null);
   }
 
 }

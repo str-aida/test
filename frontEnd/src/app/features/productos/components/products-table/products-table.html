@@ -55,9 +55,9 @@
   </div>
 
 
-  @if (products.length === 0) {
+  @if (products().length === 0) {
 
-    <div class="products-table__empty">
+    <div class="table-empty">
 
       @if (hasActiveFilters()) {
         <p>No se encontraron productos con los filtros seleccionados.</p>
@@ -69,77 +69,72 @@
 
   } @else {
 
-    <div class="products-table__wrapper">
+    <div class="table-wrapper">
 
-      <table class="table products-table__table">
+      <table class="table">
 
         <thead>
 
           <tr>
-            <th class="th-code">Código</th>
-            <th class="th-image">Imagen</th>
-            <th class="th-name">Nombre</th>
-            <th class="th-desc">Descripción</th>
-            <th class="th-cat">Categoría</th>
-            <th class="th-price">Precio</th>
-            <th class="th-stock">Stock</th>
-            <th class="th-status">Estado</th>
-            <th class="th-actions">Acciones</th>
+            <th>CÓDIGO</th>
+            <th>PRODUCTO</th>
+            <th>DESCRIPCIÓN</th>
+            <th>CATEGORÍA</th>
+            <th>PRECIO</th>
+            <th>STOCK</th>
+            <th>ESTADO</th>
+            <th>ACCIONES</th>
           </tr>
 
         </thead>
 
         <tbody>
 
-          @for (product of products; track product.id) {
+          @for (product of products(); track product.id) {
 
             <tr>
-              <td class="td-code"> {{ product.codigo }} </td>
-              <td class="td-image">
-                @if (product.imagenUrl) {
-                    <img
-                        class="products-table__image"
-                        [src]="getImageUrl(product.imagenUrl)"
-                        [alt]="product.nombre">
-                } @else {
-                    <div class="products-table__image-placeholder">
-                        <svg lucideImage></svg>
-                    </div>
-                }
+              <td> {{ product.codigo }} </td>
+              <td>
+                <div class="table-product">
+                  @if (product.imagenUrl) {
+                      <img
+                          class="table-product__image"
+                          [src]="getImageUrl(product.imagenUrl)"
+                          [alt]="product.nombre">
+                  } @else {
+                      <div class="table-product__image-placeholder">
+                          <svg lucideImage></svg>
+                      </div>
+                  }
+                  <span> {{ product.nombre }} </span>
+                </div>
               </td>
-              <td class="td-name"> {{ product.nombre }} </td>
-              <td class="td-desc" [title]="product.descripcion || ''"> {{ product.descripcion || 'Sin descripción' }} </td>
-              <td class="td-cat"> {{ product.categoriaNombre }} </td>
-              <td class="td-price"> ${{ product.precio | number:'1.2-2' }} </td>
-              <td class="td-stock"> {{ product.stock }} </td>
-              <td class="td-status">
+              <td> {{ product.descripcion || 'Sin descripción' }} </td>
+              <td> {{ product.categoriaNombre }} </td>
+              <td> ${{ product.precio | number:'1.2-2' }} </td>
+              <td> {{ product.stock }} </td>
+              <td> 
                 <span
                   class="table-status"
                   [class.table-status--active]="product.estado === Estado.ACTIVO"
                   [class.table-status--inactive]="product.estado === Estado.INACTIVO">
-                  {{ product.estado === Estado.ACTIVO ? 'Activo' : 'Inactivo' }}
+
+                  {{ product.estado === Estado.ACTIVO ? 'Activa' : 'Inactiva' }}
+
                 </span>
               </td>
-              <td class="td-actions">
+              <td>
                 <div class="table-actions">
-
-                  <a
-                    [routerLink]="['/admin/productos/editar', product.id]"
-                    class="table-actions__edit"
-                    title="Editar producto">
-                    <svg lucidePencil></svg>
-                    <span>Editar</span>
-                  </a>
 
                   <button
                     type="button"
-                    class="table-actions__toggle"
-                    [class.table-actions__toggle--deactivate]="product.estado === Estado.ACTIVO"
-                    [class.table-actions__toggle--activate]="product.estado === Estado.INACTIVO"
-                    [title]="product.estado === Estado.ACTIVO ? 'Desactivar producto' : 'Activar producto'"
-                    (click)="toggleStatus(product)">
-                    <svg lucidePower></svg>
-                    <span>{{ product.estado === Estado.ACTIVO ? 'Desactivar' : 'Activar' }}</span>
+                    class="table-actions__edit"
+                    title="Editar producto"
+                    (click)="edit(product)">
+                    
+                    <svg lucidePencil></svg>
+                    <span>Editar</span>
+
                   </button>
 
                 </div>
