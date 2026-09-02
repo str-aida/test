@@ -10,7 +10,6 @@ import com.Trabajo_Final_Beltran.enums.MetodoPago;
 import com.Trabajo_Final_Beltran.enums.TipoEntrega;
 import com.Trabajo_Final_Beltran.service.PedidoService;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

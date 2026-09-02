@@ -1,9 +1,7 @@
 package com.Trabajo_Final_Beltran.controller;
 
-import com.Trabajo_Final_Beltran.dto.request.CreatePagoRequest;
 import com.Trabajo_Final_Beltran.dto.response.PagoResponse;
 import com.Trabajo_Final_Beltran.service.PagoService;
-import jakarta.validation.Valid;
 import lombok.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

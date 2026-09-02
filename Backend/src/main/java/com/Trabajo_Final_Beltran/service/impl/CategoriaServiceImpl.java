@@ -12,7 +12,6 @@ import com.Trabajo_Final_Beltran.repository.CategoriaRepository;
 import com.Trabajo_Final_Beltran.repository.EstablecimientoRepository;
 import com.Trabajo_Final_Beltran.service.CategoriaService;
 import com.Trabajo_Final_Beltran.service.LogSistemaService;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.Trabajo_Final_Beltran.mapper.CategoriaMapper;

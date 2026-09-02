@@ -8,7 +8,6 @@ import com.Trabajo_Final_Beltran.dto.response.UsuarioPerfilResponse;
 import com.Trabajo_Final_Beltran.entity.Direccion;
 import com.Trabajo_Final_Beltran.entity.Usuario;
 import lombok.Builder;
-import com.Trabajo_Final_Beltran.enums.Estado;
 
 @Builder
 public class UsuarioMapper {
