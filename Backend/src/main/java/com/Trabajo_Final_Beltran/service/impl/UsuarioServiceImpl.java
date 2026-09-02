@@ -14,6 +14,7 @@ import com.Trabajo_Final_Beltran.security.SecurityUtils;
 import com.Trabajo_Final_Beltran.service.LogSistemaService;
 import com.Trabajo_Final_Beltran.service.UsuarioService;
 import com.Trabajo_Final_Beltran.specification.UsuarioSpecification;
+import com.Trabajo_Final_Beltran.util.TextNormalizerUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
@@ -36,10 +37,15 @@ public class UsuarioServiceImpl implements UsuarioService {
     public UsuarioPerfilResponse editarUsuario(
             Long id,
             UpdateUsuarioRequest request
-    ) {
+    ){
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Usuario no encontrado"));
 
+            request.setNombre(TextNormalizerUtil.normalizarTexto(request.getNombre()));
+            request.setApellido(TextNormalizerUtil.normalizarTexto(request.getApellido()));
+            request.setEmail(request.getEmail().trim().toLowerCase());
+
+        
         if (usuario.getId().equals(SecurityUtils.obtenerUsuarioAutenticado().getId())
                 && request.getEstado() == Estado.INACTIVO) {
             throw new BusinessException("No podés desactivar tu propia cuenta");

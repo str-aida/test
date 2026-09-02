@@ -49,10 +49,12 @@ public class AsignacionCuponServiceImpl implements AsignacionCuponService {
     private Usuario resolverUsuario(AsignarCuponRequest request) {
         boolean porId = request.getUsuarioId() != null;
         boolean porEmail = request.getEmail() != null && !request.getEmail().isBlank();
+        boolean porNombre = request.getNombreCompleto() != null && !request.getNombreCompleto().isBlank();
 
-        if (porId == porEmail) {
+        int cantidad = (porId ? 1 : 0) + (porEmail ? 1 : 0) + (porNombre ? 1 : 0);
+        if (cantidad != 1) {
             throw new BusinessException(
-                    "Debés indicar exactamente uno: usuarioId o email"
+                    "Debés indicar exactamente uno: usuarioId, email o nombreCompleto"
             );
         }
 
@@ -61,7 +63,26 @@ public class AsignacionCuponServiceImpl implements AsignacionCuponService {
                     .orElseThrow(() -> new BusinessException("Usuario no encontrado"));
         }
 
-        return usuarioRepository.findByEmailIgnoreCase(request.getEmail().trim())
-                .orElseThrow(() -> new BusinessException("No existe un usuario con ese email"));
+        if (porEmail) {
+            return usuarioRepository.findByEmailIgnoreCase(request.getEmail().trim())
+                    .orElseThrow(() -> new BusinessException("No existe un usuario con ese email"));
+        }
+
+        List<Usuario> usuarios = usuarioRepository
+                .findByNombreCompletoIgnoreCase(normalizarNombre(request.getNombreCompleto()));
+
+        if (usuarios.isEmpty()) {
+            throw new BusinessException("No existe un usuario con ese nombre y apellido");
+        }
+        if (usuarios.size() > 1) {
+            throw new BusinessException(
+                    "Hay varios usuarios con ese nombre y apellido. Identificalo con el email"
+            );
+        }
+        return usuarios.get(0);
+    }
+
+    private String normalizarNombre(String texto) {
+        return texto.trim().replaceAll("\\s+", " ");
     }
 }

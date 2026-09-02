@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.Trabajo_Final_Beltran.entity.Pago;
 import com.Trabajo_Final_Beltran.entity.Pedido;
 import com.Trabajo_Final_Beltran.enums.EstadoPago;
-import com.Trabajo_Final_Beltran.enums.EstadoPedido;
 import com.Trabajo_Final_Beltran.exception.BusinessException;
 import com.Trabajo_Final_Beltran.repository.PedidoRepository;
 import com.Trabajo_Final_Beltran.service.CanjeCuponService;

@@ -29,6 +29,10 @@ public class PedidoResponse {
 
   private BigDecimal total;
 
+  private BigDecimal montoDescuento;
+
+  private BigDecimal totalConDescuento;
+
   private EstadoPedido estado;
 
   private TipoEntrega tipoEntrega;

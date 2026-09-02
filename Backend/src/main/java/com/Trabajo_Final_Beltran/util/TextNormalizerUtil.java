@@ -10,15 +10,15 @@ public final class TextNormalizerUtil {
             return null;
         }
 
-        String limpio = texto.trim().replaceAll("\\s+", " ");
+        String soloAlfabetico = texto.replaceAll("[^\\p{L}\\p{M}\\s'\\-]", "");
 
+        String limpio = soloAlfabetico.trim().replaceAll("\\s+", " ");
         if (limpio.isEmpty()) {
             return limpio;
         }
 
-        String[] palabras = limpio.split(" ");
         StringBuilder resultado = new StringBuilder();
-
+        String[] palabras = limpio.split(" ");
         for (int i = 0; i < palabras.length; i++) {
             String palabra = palabras[i];
             if (!palabra.isEmpty()) {
@@ -31,17 +31,21 @@ public final class TextNormalizerUtil {
                 resultado.append(" ");
             }
         }
-
         return resultado.toString();
+    }
+
+    public static String normalizarEmail(String email) {
+        if (email == null) {
+            return null;
+        }
+        return email.trim().toLowerCase();
     }
 
     public static String normalizarNumero(String numero) {
         if (numero == null) {
             return null;
         }
-
         String limpio = numero.trim().replaceAll("\\s+", " ");
-
         return limpio.toUpperCase();
     }
 }

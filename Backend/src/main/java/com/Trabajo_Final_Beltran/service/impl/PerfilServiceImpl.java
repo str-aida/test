@@ -14,6 +14,7 @@ import com.Trabajo_Final_Beltran.security.SecurityUtils;
 import com.Trabajo_Final_Beltran.service.AuthService;
 import com.Trabajo_Final_Beltran.service.PerfilService;
 import com.Trabajo_Final_Beltran.util.NumeroUtils;
+import com.Trabajo_Final_Beltran.util.TextNormalizerUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +53,8 @@ public class PerfilServiceImpl implements PerfilService {
         Usuario usuario = SecurityUtils.obtenerUsuarioAutenticado();
 
         request.setTelefono(NumeroUtils.limpiarNumero(request.getTelefono())); 
+        request.setNombre(TextNormalizerUtil.normalizarTexto(request.getNombre()));
+        request.setApellido(TextNormalizerUtil.normalizarTexto(request.getApellido()));
 
         
         UsuarioMapper.updateUsuarioFromRequest(usuario, request);

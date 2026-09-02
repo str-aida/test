@@ -1,4 +1,4 @@
-package com.Trabajo_Final_Beltran.event.listener;
+package com.Trabajo_Final_Beltran.listener;
 
 import com.Trabajo_Final_Beltran.event.PedidoFinalizadoEvent;
 import com.Trabajo_Final_Beltran.service.AsignacionCuponService;
