@@ -14,4 +14,6 @@ public class AsignarCuponRequest {
 
     @Email(message = "El email no tiene un formato válido")
     private String email;
+
+    private String nombreCompleto;
 }

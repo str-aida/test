@@ -23,7 +23,7 @@ import com.Trabajo_Final_Beltran.service.ProductoCacheService;
 import com.Trabajo_Final_Beltran.service.ProductoService;
 import com.Trabajo_Final_Beltran.specification.ProductoSpecification;
 import org.springframework.cache.annotation.Cacheable;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -35,6 +35,7 @@ import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import lombok.extern.slf4j.Slf4j;
 import java.math.RoundingMode;
+import com.Trabajo_Final_Beltran.enums.EstadoCategoria;
 
 @Slf4j
 @Service
@@ -68,18 +69,11 @@ public class ProductoServiceImpl implements ProductoService {
         Establecimiento establecimiento =
                 usuario.getEstablecimiento();
 
-        Categoria categoria =
-                categoriaRepository
-                        .findByIdAndEstablecimientoId(
-                                request.getCategoriaId(),
-                                establecimiento.getId()
-                        )
-                        .orElseThrow(() ->
-                                new BusinessException(
-                                        "La categoría no existe o"
-                                            + " no pertenece al establecimiento"
-                                )
-                        );
+      Categoria categoria =
+          obtenerCategoriaActiva(
+              request.getCategoriaId(),
+              establecimiento.getId()
+          );
 
         validarCodigoUnico(request);
 
@@ -265,17 +259,11 @@ public class ProductoServiceImpl implements ProductoService {
                             )
                     );
 
-    Categoria categoria =
-            categoriaRepository
-                    .findByIdAndEstablecimientoId(
-                            request.getCategoriaId(),
-                            establecimiento.getId()
-                    )
-                    .orElseThrow(() ->
-                            new BusinessException(
-                                    "La categoría no existe o no pertenece al establecimiento"
-                            )
-                    );
+      Categoria categoria =
+          obtenerCategoriaActiva(
+              request.getCategoriaId(),
+              establecimiento.getId()
+          );
 
     validarCodigoUnicoEdicion(
             request,
@@ -493,6 +481,7 @@ public class ProductoServiceImpl implements ProductoService {
 
   
     @Override
+    @Transactional(readOnly = true)
     public List<ProductoResponse> listarProductos(
             Long categoriaId,
             EstadoProducto estado,
@@ -505,55 +494,45 @@ public class ProductoServiceImpl implements ProductoService {
         Long establecimientoId =
                 usuario.getEstablecimiento().getId();
 
-
-        EstadoProducto estadoFiltro = estado;
-        if (usuario.getRol() == Rol.CLIENTE) {
-            estadoFiltro = EstadoProducto.ACTIVO;
-        }
+        boolean esCliente = usuario.getRol() == Rol.CLIENTE;
+        EstadoProducto estadoFiltro = esCliente ? EstadoProducto.ACTIVO : estado;
 
         return productoCacheService.buscarProductosFiltrados(
                 establecimientoId,
                 categoriaId,
                 estadoFiltro,
-                texto
+                texto,
+                esCliente
         );
     }
 
-    @Cacheable(
-        value = "productos",
-        key = "#establecimientoId + '-' + #categoriaId + '-' + #estado + '-' + #texto"
-    )
-    public List<ProductoResponse> buscarProductosFiltrados(
-            Long establecimientoId,
-            Long categoriaId,
-            EstadoProducto estado,
-            String texto
+  private Categoria obtenerCategoriaActiva(
+      Long categoriaId,
+      Long establecimientoId
+  ) {
+
+    Categoria categoria =
+        categoriaRepository
+            .findByIdAndEstablecimientoId(
+                categoriaId,
+                establecimientoId
+            )
+            .orElseThrow(() ->
+                new BusinessException(
+                    "La categoría no existe o no pertenece al establecimiento"
+                )
+            );
+
+    if (
+        categoria.getEstado()
+            != EstadoCategoria.ACTIVO
     ) {
-
-        Specification<Producto> spec = Specification
-                .where(
-                        ProductoSpecification.establecimientoId(establecimientoId)
-                );
-
-        if (categoriaId != null) {
-            spec = spec.and(ProductoSpecification.categoriaId(categoriaId));
-        }
-
-        if (estado != null) {
-            spec = spec.and(ProductoSpecification.estado(estado));
-        }
-
-        if (texto != null && !texto.isBlank()) {
-            spec = spec.and(ProductoSpecification.texto(texto));
-        }
-
-        List<Producto> productos =
-                productoRepository.findAll(spec);
-
-        return productos.stream()
-                .map(ProductoMapper::toResponse)
-                .toList();
+      throw new BusinessException(
+          "No se puede asignar un producto a una categoría inactiva"
+      );
     }
 
+    return categoria;
+  }
 
 }

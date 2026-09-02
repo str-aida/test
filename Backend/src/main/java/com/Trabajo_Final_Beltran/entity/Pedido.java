@@ -108,4 +108,15 @@ public class Pedido {
   @Column(
       name = "numero_pedido", unique = true, length = 20)
   private String numeroPedido;
+  
+  public BigDecimal getTotalConDescuento() {
+    if (montoDescuento == null) {
+      return total;
+    }
+    if (total == null) {
+      return null;
+    }
+    return total.subtract(montoDescuento);
+  }
+  
 }

@@ -32,6 +32,12 @@ public class NotificacionMapper {
         .tipo(
             notificacion.getTipo()
         )
+        .tipoReferencia(
+            notificacion.getTipoReferencia()
+        )
+        .referenciaId(
+            notificacion.getReferenciaId()
+        )
         .build();
   }
 

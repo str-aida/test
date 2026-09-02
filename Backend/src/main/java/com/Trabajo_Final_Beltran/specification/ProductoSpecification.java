@@ -1,12 +1,18 @@
 package com.Trabajo_Final_Beltran.specification;
 
 import com.Trabajo_Final_Beltran.entity.Producto;
+import com.Trabajo_Final_Beltran.enums.EstadoCategoria;
 import com.Trabajo_Final_Beltran.enums.EstadoProducto;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ProductoSpecification {
 
     private ProductoSpecification() {
+    }
+
+    public static Specification<Producto> categoriaActiva() {
+        return (root, query, cb) ->
+                cb.equal(root.get("categoria").get("estado"), EstadoCategoria.ACTIVO);
     }
 
     public static Specification<Producto> establecimientoId(

@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import com.Trabajo_Final_Beltran.enums.TipoReferencia;
 
 @Getter
 @Setter
@@ -29,6 +30,13 @@ public class Notificacion {
       nullable = false
   )
   private Usuario usuario;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "tipo_referencia")
+  private TipoReferencia tipoReferencia;
+
+  @Column(name = "referencia_id")
+  private Long referenciaId;
 
   @Column(nullable = false, length = 100)
   private String titulo;

@@ -73,7 +73,10 @@ public class AuthServiceImpl implements AuthService {
     @Transactional(rollbackFor = Exception.class)
     public String createPersonal(RegisterRequest request) {
         normalizarRequest(request);
-
+        
+        request.setNombre(TextNormalizerUtil.normalizarTexto(request.getNombre()));
+        request.setApellido(TextNormalizerUtil.normalizarTexto(request.getApellido()));
+        
         if (usuarioRepository.existsByEmail(request.getEmail())) {
             throw new BusinessException("El email ya existe");
         }
@@ -176,6 +179,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public AuthResponse registerAdmin(RegisterRequest request) {
+        
+        request.setNombre(TextNormalizerUtil.normalizarTexto(request.getNombre()));
+        request.setApellido(TextNormalizerUtil.normalizarTexto(request.getApellido()));
+        
         if (usuarioRepository.existsByRol(Rol.ADMIN)) {
             throw new BusinessException("Ya existe un administrador registrado");
         }
@@ -186,6 +193,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public AuthResponse registerCliente(RegisterRequest request) {
+        
+        request.setNombre(TextNormalizerUtil.normalizarTexto(request.getNombre()));
+        request.setApellido(TextNormalizerUtil.normalizarTexto(request.getApellido()));
+        
         Usuario usuario = crearUsuarioAutoregistro(request, Rol.CLIENTE);
         return new AuthResponse(jwtService.generateToken(usuario));
     }
