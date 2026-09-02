@@ -35,6 +35,7 @@ import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import lombok.extern.slf4j.Slf4j;
 import java.math.RoundingMode;
+import com.Trabajo_Final_Beltran.enums.EstadoCategoria;
 
 @Slf4j
 @Service
@@ -68,18 +69,11 @@ public class ProductoServiceImpl implements ProductoService {
         Establecimiento establecimiento =
                 usuario.getEstablecimiento();
 
-        Categoria categoria =
-                categoriaRepository
-                        .findByIdAndEstablecimientoId(
-                                request.getCategoriaId(),
-                                establecimiento.getId()
-                        )
-                        .orElseThrow(() ->
-                                new BusinessException(
-                                        "La categoría no existe o"
-                                            + " no pertenece al establecimiento"
-                                )
-                        );
+      Categoria categoria =
+          obtenerCategoriaActiva(
+              request.getCategoriaId(),
+              establecimiento.getId()
+          );
 
         validarCodigoUnico(request);
 
@@ -265,17 +259,11 @@ public class ProductoServiceImpl implements ProductoService {
                             )
                     );
 
-    Categoria categoria =
-            categoriaRepository
-                    .findByIdAndEstablecimientoId(
-                            request.getCategoriaId(),
-                            establecimiento.getId()
-                    )
-                    .orElseThrow(() ->
-                            new BusinessException(
-                                    "La categoría no existe o no pertenece al establecimiento"
-                            )
-                    );
+      Categoria categoria =
+          obtenerCategoriaActiva(
+              request.getCategoriaId(),
+              establecimiento.getId()
+          );
 
     validarCodigoUnicoEdicion(
             request,
@@ -518,4 +506,32 @@ public class ProductoServiceImpl implements ProductoService {
         );
     }
 
+  private Categoria obtenerCategoriaActiva(
+      Long categoriaId,
+      Long establecimientoId
+  ) {
+
+    Categoria categoria =
+        categoriaRepository
+            .findByIdAndEstablecimientoId(
+                categoriaId,
+                establecimientoId
+            )
+            .orElseThrow(() ->
+                new BusinessException(
+                    "La categoría no existe o no pertenece al establecimiento"
+                )
+            );
+
+    if (
+        categoria.getEstado()
+            != EstadoCategoria.ACTIVO
+    ) {
+      throw new BusinessException(
+          "No se puede asignar un producto a una categoría inactiva"
+      );
+    }
+
+    return categoria;
+  }
 }
