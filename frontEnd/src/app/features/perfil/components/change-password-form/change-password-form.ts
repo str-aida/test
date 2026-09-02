@@ -5,6 +5,7 @@ import { UpdatePasswordRequest } from '../../../../core/models/update-password-r
 import { ProfileService } from '../../../../core/services/profile.service';
 import { BaseFormComponent } from '../../../../shared/base/base-form.component';
 import { LucideCircle, LucideCircleCheck, LucideEye, LucideEyeOff } from '@lucide/angular';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-change-password-form',
@@ -19,7 +20,7 @@ export class ChangePasswordFormComponent extends BaseFormComponent implements On
   }
   private readonly fb = inject(FormBuilder);
   private readonly profileService = inject(ProfileService);
-
+  private readonly notificationService = inject(NotificationService);
   readonly passwordForm = this.fb.group({
     passwordActual: ['', Validators.required],
     passwordNueva: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(20), Validators.pattern(/^(?=.*[A-Z])(?=.*\d).+$/)]],
@@ -35,8 +36,8 @@ export class ChangePasswordFormComponent extends BaseFormComponent implements On
       passwordNueva: this.passwordForm.value.passwordNueva!
     };
     this.profileService.changePassword(request).subscribe({
-      next: (response) => {
-        console.log(response);
+      next: () => {
+        console.log(); //Contraseña actualizada correctamente
         this.passwordForm.reset();
         this.passwordRequirements.forEach(requirement => {
           requirement.valid = false;

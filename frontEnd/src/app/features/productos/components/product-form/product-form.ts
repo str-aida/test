@@ -10,6 +10,7 @@ import { ProductResponse } from '../../../../core/models/product-response';
 import { UpdateProductRequest } from '../../../../core/models/update-product-request';
 import { Estado } from '../../../../core/models/enums/estado.enum';
 import { environment } from '../../../../../environments/environment';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-product-form',
@@ -26,6 +27,7 @@ export class ProductFormComponent extends BaseFormComponent implements OnInit, O
   private readonly fb = inject(FormBuilder);
   private readonly productService = inject(ProductsService);
   private readonly categoriaService = inject(CategoriaService);
+  private readonly notificationService = inject(NotificationService);
   protected readonly Estado = Estado;
   protected categorias = signal<CategoriaResponse[]>([]);
 
@@ -158,6 +160,7 @@ export class ProductFormComponent extends BaseFormComponent implements OnInit, O
 
     this.productService.editarProducto(this.editingProduct.id, request, this.selectedImage).subscribe({
       next: () => {
+        this.notificationService.success(`Producto actualizado exitosamente.`);
         this.productUpdated.emit();
       },
       error: (error) => {

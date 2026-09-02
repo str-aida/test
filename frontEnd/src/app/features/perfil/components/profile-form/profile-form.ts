@@ -8,6 +8,7 @@ import { Employee } from '../../../../core/models/user-profile-response';
 import { UpdateProfileRequest } from '../../../../core/models/update-profile-request';
 import { Direccion } from '../../../../core/models/direccion.model';
 import { pastDateValidator } from '../../../../shared/validators/past-date.validator';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-profile-form',
@@ -22,6 +23,7 @@ export class ProfileFormComponent extends BaseFormComponent implements OnInit {
   }
   private readonly fb = inject(FormBuilder);
   private readonly profileService = inject(ProfileService);
+  private readonly notificationService = inject(NotificationService);
   protected profile?: Employee;
   protected isEditing = false;
 
@@ -95,6 +97,7 @@ export class ProfileFormComponent extends BaseFormComponent implements OnInit {
     }
     this.profileService.updateProfile(this.buildRequest()).subscribe({
       next: (profile) => {
+        this.notificationService.success(`Perfil actualizado exitosamente.`);
         this.fillForm(profile);
       },
       error: (error) => {

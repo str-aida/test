@@ -93,7 +93,7 @@ export class CategoryFormComponent extends BaseFormComponent implements OnChange
       .subscribe({
         next: () => {
           this.isSaving = false;
-          this.notificationService.success('Categoría creada exitosamente.');
+          console.log(); //Categoría creada correctamente
           this.categoryCreated.emit();
         },
         error: (error) => {

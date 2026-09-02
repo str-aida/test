@@ -14,6 +14,7 @@ import { UpdateEmployeeRequest } from '../../../../core/models/update-user-reque
 import { EmployeesService } from '../../../../core/services/employees.service';
 import { Estado } from '../../../../core/models/enums/estado.enum';
 import { USER_ROLES } from '../../data/user-roles';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 
 @Component({
@@ -37,6 +38,7 @@ export class EmployeeFormComponent extends BaseFormComponent implements OnInit,O
   private readonly fb = inject(FormBuilder);
   private readonly employeeService = inject(EmployeesService);
   private readonly authService = inject(AuthService);
+  private readonly notificationService = inject(NotificationService);
   protected readonly userRoles = USER_ROLES;
   protected readonly Estado = Estado;
 
@@ -129,6 +131,7 @@ export class EmployeeFormComponent extends BaseFormComponent implements OnInit,O
   
     this.authService.crearPersonal(employee).subscribe({
       next: () => {
+        this.notificationService.success(`Personal creado correctamente.`);
         this.employeeCreated.emit();
       },
       error: (error) => {
@@ -152,6 +155,7 @@ export class EmployeeFormComponent extends BaseFormComponent implements OnInit,O
           
     this.employeeService.updateEmployee(this.editingEmployee.id, employee).subscribe({
       next: () => {
+        this.notificationService.success(`Personal actualizado exitosamente.`);
         this.employeeUpdated.emit();
       },
       error: (error) => {
