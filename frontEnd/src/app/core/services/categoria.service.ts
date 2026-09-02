@@ -20,6 +20,12 @@ export class CategoriaService {
     );
   }
 
+  obtenerCategoriaPorId(id: number): Observable<CategoriaResponse> {
+    return this.http.get<CategoriaResponse>(
+      `${this.apiUrl}/${id}`
+    );
+  }
+
   crearCategoria(request: CreateCategoriaRequest): Observable<CategoriaResponse> {
     return this.http.post<CategoriaResponse>(
       this.apiUrl,

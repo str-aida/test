@@ -91,6 +91,64 @@
         </div>
     }
 
+    <!-- MODAL DE EDITAR CATEGORÍA -->
+    @if (showEditModal && selectedCategory) {
+        <div
+            class="modal-overlay"
+            (click)="closeEditModal()">
+
+            <div
+                class="modal-card"
+                (click)="$event.stopPropagation()">
+
+                <!-- HEADER DEL MODAL -->
+                <header class="modal-card__header">
+
+                    <div class="modal-card__header-info">
+
+                        <div class="modal-card__header-icon">
+                            <svg lucideShapes></svg>
+                        </div>
+
+                        <div>
+                            <h2 class="modal-card__title">
+                                Editar categoría
+                            </h2>
+                            <p class="modal-card__subtitle">
+                                Modificá los datos de la categoría seleccionada.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="modal-card__close"
+                        aria-label="Cerrar modal"
+                        (click)="closeEditModal()">
+
+                        <svg lucideX></svg>
+
+                    </button>
+
+                </header>
+
+                <!-- FORMULARIO -->
+                <div class="modal-card__body">
+
+                    <app-category-form
+                        [editingCategory]="selectedCategory"
+                        (categoryUpdated)="onCategoryUpdated()"
+                        (cancel)="closeEditModal()">
+                    </app-category-form>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
     <!-- MODAL DE ELIMINAR CATEGORÍA -->
     @if (showDeleteModal && selectedCategory) {
         <div
@@ -119,6 +177,7 @@
                     <button
                         type="button"
                         class="btn btn--outline"
+                        [disabled]="isDeactivating"
                         (click)="closeDeleteModal()">
                         
                         Cancelar
@@ -126,10 +185,16 @@
                     </button>
                     <button
                         type="button"
-                        class="btn btn--primary"
+                        class="btn btn--primary btn--danger-action"
+                        [disabled]="isDeactivating"
                         (click)="confirmDelete()">
                         
-                        Sí, desactivar
+                        @if (isDeactivating) {
+                            <svg lucideRefreshCw class="btn__spin-icon"></svg>
+                            <span>Desactivando...</span>
+                        } @else {
+                            <span>Sí, desactivar</span>
+                        }
 
                     </button>
 

@@ -49,14 +49,7 @@ export const routes: Routes = [
     children: [
       { path: 'personal', component: EmployeesListComponent, data: { title: 'Personal' } },
       { path: 'perfil', component: ProfileComponent, data: { title: 'Perfil' } },
-      {
-        path: 'categorias',
-        data: { title: 'Categorías' },
-        children: [
-          { path: '', component: CategoriesListComponent },
-          { path: 'nueva', component: CategoryFormComponent }
-        ]
-      },
+      { path: 'categorias', component: CategoriesListComponent, data: { title: 'Categorías' } },
       {
         path: 'productos',
         data: { title: 'Productos' },
