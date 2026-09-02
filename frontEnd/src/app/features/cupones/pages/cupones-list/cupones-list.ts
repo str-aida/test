@@ -83,20 +83,20 @@ export class CuponesListComponent implements OnInit {
   loadCupones(): void {
     this.isLoading = true;
     this.hasError = false;
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
 
     this.cuponService.listarCupones().subscribe({
       next: (data) => {
         this.cupones = data || [];
         this.applyFilter();
         this.isLoading = false;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('Error al cargar cupones:', err);
         this.isLoading = false;
         this.hasError = true;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       }
     });
   }
@@ -130,6 +130,7 @@ export class CuponesListComponent implements OnInit {
   closeFormModal(): void {
     this.showFormModal = false;
     this.selectedCupon = null;
+    this.cdr.markForCheck();
   }
 
   onFormSubmitted(): void {
@@ -140,11 +141,13 @@ export class CuponesListComponent implements OnInit {
   openAssignModal(cupon?: CuponResponse): void {
     this.selectedCupon = cupon || null;
     this.showAssignModal = true;
+    this.cdr.markForCheck();
   }
 
   closeAssignModal(): void {
     this.showAssignModal = false;
     this.selectedCupon = null;
+    this.cdr.markForCheck();
   }
 
   onAssigned(): void {
@@ -155,11 +158,13 @@ export class CuponesListComponent implements OnInit {
   openDeactivateModal(cupon: CuponResponse): void {
     this.selectedCupon = cupon;
     this.showDeactivateModal = true;
+    this.cdr.markForCheck();
   }
 
   closeDeactivateModal(): void {
     this.showDeactivateModal = false;
     this.selectedCupon = null;
+    this.cdr.markForCheck();
   }
 
   confirmDeactivate(): void {
@@ -188,5 +193,54 @@ export class CuponesListComponent implements OnInit {
       return `${cupon.valor}%`;
     }
     return `$${cupon.valor}`;
+  }
+
+  /**
+   * Determina si un cupón puede ser asignado a un usuario.
+   * Solo UX: la autoridad real es el backend.
+   */
+  esCuponAsignable(cupon: CuponResponse): boolean {
+    if (cupon.estado !== EstadoCupon.ACTIVO) return false;
+
+    if (cupon.usoMaximo != null) {
+      const usosActuales = cupon.usosActuales ?? 0;
+      if (usosActuales >= cupon.usoMaximo) return false;
+    }
+
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    if (cupon.fechaInicio) {
+      const inicio = new Date(cupon.fechaInicio);
+      if (inicio > hoy) return false;
+    }
+
+    if (cupon.fechaFin) {
+      const fin = new Date(cupon.fechaFin);
+      if (fin < hoy) return false;
+    }
+
+    return true;
+  }
+
+  getTooltipAsignar(cupon: CuponResponse): string {
+    if (cupon.estado !== EstadoCupon.ACTIVO) return 'El cupón está inactivo';
+
+    if (cupon.usoMaximo != null && (cupon.usosActuales ?? 0) >= cupon.usoMaximo) {
+      return 'El cupón alcanzó su límite máximo de usos';
+    }
+
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    if (cupon.fechaFin && new Date(cupon.fechaFin) < hoy) {
+      return 'El cupón está vencido';
+    }
+
+    if (cupon.fechaInicio && new Date(cupon.fechaInicio) > hoy) {
+      return 'El cupón aún no está vigente';
+    }
+
+    return 'Asignar cupón a usuario';
   }
 }

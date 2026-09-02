@@ -189,7 +189,7 @@
               </td>
 
               <td class="tabla-pedidos__total">
-                ${{ pedido.total | number:'1.0-0' }}
+                ${{ (pedido.totalConDescuento ?? pedido.total) | number:'1.2-2' }}
               </td>
 
               <td>
