@@ -61,7 +61,7 @@ export const routes: Routes = [
         ]
       },
       { path: 'pedidos/en-curso', component: PedidosEnCursoComponent, data: { title: 'Pedidos en Curso' } },
-      { path: 'pedidos', component: PedidosListComponent, data: { title: 'Todos los Pedidos' } },
+      { path: 'pedidos', component: PedidosListComponent, data: { title: 'Pedidos' } },
       { path: 'pedidos/:id', component: PedidoDetalleAdminComponent, data: { title: 'Detalle de Pedido' } },
       { path: 'cupones', component: CuponesListComponent, data: { title: 'Gestión de Cupones' } },
       { path: 'auditoria', component: AuditoriaListComponent, data: { title: 'Auditoría' } },
@@ -76,7 +76,7 @@ export const routes: Routes = [
     children: [
       { path: 'perfil', component: ProfileComponent, data: { title: 'Perfil' } },
       { path: 'pedidos/en-curso', component: PedidosEnCursoComponent, data: { title: 'Pedidos en Curso' } },
-      { path: 'pedidos', component: PedidosListComponent, data: { title: 'Todos los Pedidos' } },
+      { path: 'pedidos', component: PedidosListComponent, data: { title: 'Pedidos' } },
       { path: 'pedidos/:id', component: PedidoDetalleAdminComponent, data: { title: 'Detalle de Pedido' } },
       { path: 'productos', component: ProductsListComponent, data: { title: 'Productos' } },
       { path: '', redirectTo: 'pedidos/en-curso', pathMatch: 'full' }

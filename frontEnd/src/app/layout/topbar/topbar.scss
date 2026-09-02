@@ -14,11 +14,38 @@
     justify-content: space-between;
 }
 
+.topbar__left {
+    display: flex;
+    align-items: center;
+    gap: $space-md;
+    min-width: 0;
+}
+
 .topbar__title {
+    margin: 0;
     font-family: $font-heading;
     font-size: $fs-section-title;
     font-weight: $fw-bold;
     color: $color-primary;
+}
+
+.topbar__menu {
+    display: none;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: none;
+    background: transparent;
+    border-radius: .5rem;
+    color: $color-primary;
+    cursor: pointer;
+    transition: background-color .2s ease;
+}
+
+.topbar__menu:hover {
+    background-color: $color-surface;
 }
 
 .topbar__actions {
@@ -80,4 +107,19 @@
     background-color: $color-primary;
     color: $color-white;
     font-weight: $fw-bold;
+}
+
+@media (max-width: $bp-tablet) {
+    .topbar__menu {
+        display: flex;
+    }
+    .topbar__content {
+        padding: 0 $space-md;
+    }
+    .topbar__actions {
+        gap: $space-sm;
+    }
+    .topbar__user-info {
+        display: none;
+    }
 }

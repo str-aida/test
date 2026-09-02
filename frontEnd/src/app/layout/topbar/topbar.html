@@ -1,50 +1,25 @@
 <header class="topbar">
-
     <div class="topbar__content">
-
-        <h1 class="topbar__title">
-            {{ title }}
-        </h1>
-
+        <div class="topbar__left">
+            <button type="button" class="topbar__menu" (click)="menuToggle.emit()" aria-label="Abrir menú">
+                <svg lucideMenu class="topbar__icon"></svg>
+            </button>
+            <h1 class="topbar__title">{{ title }}</h1>
+        </div>
         <div class="topbar__actions">
-
-            <button
-                type="button"
-                class="topbar__notification">
-
-                <svg
-                    lucideBell
-                    class="topbar__icon">
-                </svg>
-
+            <button type="button" class="topbar__notification">
+                <svg lucideBell class="topbar__icon"></svg>
             </button>
 
-            @if (user) {
-
+            @if (user(); as currentUser) {
                 <div class="topbar__user">
-
                     <div class="topbar__user-info">
-
-                        <span class="topbar__user-name">
-                            {{ user.name }}
-                        </span>
-
-                        <span class="topbar__user-role">
-                            {{ user.role }}
-                        </span>
-
+                        <span class="topbar__user-name">{{ currentUser.name }}</span>
+                        <span class="topbar__user-role">{{ currentUser.role }}</span>
                     </div>
-
-                    <div class="topbar__avatar">
-                        {{ initials }}
-                    </div>
-
+                    <div class="topbar__avatar">{{ initials }}</div>
                 </div>
-
             }
-
         </div>
-
     </div>
-
 </header>

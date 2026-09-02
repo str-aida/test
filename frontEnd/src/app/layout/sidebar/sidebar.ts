@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ADMIN_NAVIGATION, CLIENT_NAVIGATION, EMPLOYEE_NAVIGATION } from '../data/sidebar-navigation';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { BrandComponent } from '../../shared/components/brand/brand';
@@ -47,22 +47,26 @@ import { NavigationItem } from '../models/navigation-item.model';
 })
 export class SidebarComponent {
 
+  @Input() isOpen = false;
+  @Output() closeMenu = new EventEmitter<void>();
   private authService = inject(AuthService);
   private tokenService = inject(TokenService);
   private router = inject(Router);
   protected navigationItems: NavigationItem[] = [];
 
+  closeSidebar(): void {
+    this.closeMenu.emit();
+  }
+
   logout(): void {
     this.authService.logout().subscribe({
       next: () => {
         console.log(); // "Sesión cerrada correctamente"
-
         this.tokenService.removeToken();
         this.router.navigate(['/login']);
       },
       error: () => {
-        // Si el backend responde con error,
-        // igual se cierra la sesión local.
+        // Si el backend responde con error, igual se cierra la sesión local.
         this.tokenService.removeToken();
         this.router.navigate(['/login']);
       }
@@ -71,26 +75,19 @@ export class SidebarComponent {
 
   // Método para determinar la navegación según el rol del usuario
   constructor() {
-
     switch (this.tokenService.getRole()) {
-
       case UserRole.ADMIN:
         this.navigationItems = ADMIN_NAVIGATION;
         break;
-
       case UserRole.EMPLEADO:
         this.navigationItems = EMPLOYEE_NAVIGATION;
         break;
-
       case UserRole.CLIENTE:
         this.navigationItems = CLIENT_NAVIGATION;
         break;
-
       default:
         this.navigationItems = [];
-
     }
-
   }
 
 }

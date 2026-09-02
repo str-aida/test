@@ -13,7 +13,7 @@ export const ADMIN_NAVIGATION: NavigationItem[] = [
   },
   {
     id: 'pedidos',
-    label: 'Todos los Pedidos',
+    label: 'Pedidos',
     route: '/admin/pedidos'
   },
   {

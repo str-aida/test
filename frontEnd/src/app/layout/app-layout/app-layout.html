@@ -1,19 +1,15 @@
 <div class="app-layout">
-
-    <app-sidebar />
+    @if (isSidebarOpen()) {
+        <div class="app-layout__overlay" (click)="closeSidebar()"></div>
+    }
+    
+    <app-sidebar [isOpen]="isSidebarOpen()" (closeMenu)="closeSidebar()" />
 
     <div class="app-layout__content">
-
-        <app-topbar />
-
+        <app-topbar  (menuToggle)="toggleSidebar()" />
         <main class="app-layout__main">
-
             <router-outlet />
-
         </main>
-
     </div>
-
 </div>
-
 <app-notification />
