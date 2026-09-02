@@ -2,15 +2,14 @@
 
 .products-table {
   width: 100%;
-  max-width: 1100px;
+  max-width: 100%;
   margin: 2rem auto;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
 }
 
 /* CONTENEDOR DE LA TABLA */
 .table-wrapper {
   width: 100%;
-  overflow-x: auto;
   background: $color-white;
   border: 1px solid $color-border;
   border-radius: 12px;
@@ -27,12 +26,13 @@
   thead {
     background: $color-primary;
     th {
-        padding: .5rem 1.25rem;
+        padding: .5rem .85rem;
         color: $color-white;
         font-size: $fs-caption;
         font-weight: $fw-semibold;
         text-align: left;
         border: none;
+        white-space: nowrap;
     }
     th:last-child {
         text-align: center;
@@ -47,7 +47,7 @@
         }
     }
     td {
-        padding: 1rem 1.25rem;
+        padding: .65rem .85rem;
         color: $color-text;
         font-size: $fs-caption;
         vertical-align: middle;
@@ -117,27 +117,37 @@
   color: #4b5563;
 }
 
+/* CELDA DE ACCIONES */
+.table-actions-cell {
+  width: 1%;
+  white-space: nowrap;
+}
+
 /* ACCIONES */
 .table-actions {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: .5rem;
+  gap: .35rem;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .table-actions button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: .4rem;
-  min-height: 34px;
-  padding: .4rem .65rem;
+  gap: .35rem;
+  height: 32px;
+  padding: 0 .55rem;
   border: 1px solid transparent;
   border-radius: 7px;
   font-family: $font-body;
   font-size: $fs-small;
   font-weight: $fw-semibold;
   cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
 
   transition:
     background-color .2s ease,
@@ -155,6 +165,51 @@
 
   &:hover {
     background: rgba($color-primary, .15);
+  }
+}
+
+/* Activar / Desactivar */
+.table-actions__toggle {
+  border: none;
+  background: transparent;
+
+  &--active {
+    color: #b91c1c;
+
+    &:hover {
+      background: rgba(185, 28, 28, .1);
+    }
+  }
+
+  &--inactive {
+    color: #15803d;
+
+    &:hover {
+      background: rgba(21, 128, 61, .1);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* Desactivar (= Eliminar en categorías) */
+.table-actions__delete {
+  color: $color-danger;
+
+  &:hover {
+    background: rgba($color-danger, .12);
+  }
+
+  &--disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+
+    &:hover {
+      background: transparent;
+    }
   }
 }
 

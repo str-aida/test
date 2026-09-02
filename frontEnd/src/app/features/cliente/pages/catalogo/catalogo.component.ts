@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   LucideSearch,
   LucideShoppingCart,
@@ -44,6 +44,7 @@ export class CatalogoComponent implements OnInit {
   private readonly categoriaService = inject(CategoriaService);
   protected readonly cartService = inject(CartService);
   private readonly notificationService = inject(NotificationService);
+  private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
 
   // Estados de datos
@@ -57,7 +58,14 @@ export class CatalogoComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarCategorias();
-    this.cargarProductos();
+    this.route.queryParamMap.subscribe(params => {
+      const catParam = params.get('categoriaId');
+      const searchParam = params.get('search') || params.get('texto');
+      
+      this.categoriaSeleccionadaId = catParam ? Number(catParam) : undefined;
+      this.textoBusqueda = searchParam || '';
+      this.cargarProductos();
+    });
   }
 
   cargarCategorias(): void {

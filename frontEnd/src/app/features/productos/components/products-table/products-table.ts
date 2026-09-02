@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
-import { LucideImage, LucidePencil } from '@lucide/angular';
+import { LucideImage, LucidePencil, LucideTrash2 } from '@lucide/angular';
 import { ProductsService } from '../../../../core/services/products.service';
 import { ProductResponse } from '../../../../core/models/product-response';
 import { environment } from '../../../../../environments/environment';
@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-products-table',
-  imports: [FormsModule, LucideImage, DecimalPipe, LucidePencil],
+  imports: [FormsModule, LucideImage, DecimalPipe, LucidePencil, LucideTrash2],
   templateUrl: './products-table.html',
   styleUrl: './products-table.scss',
 })
@@ -20,7 +20,9 @@ export class ProductsTableComponent implements OnInit {
   private readonly productService = inject(ProductsService);
   private readonly categoriaService = inject(CategoriaService);
   protected readonly Estado = Estado;
+
   @Output() editProduct = new EventEmitter<ProductResponse>();
+  @Output() deleteProduct = new EventEmitter<ProductResponse>();
 
   products = signal<ProductResponse[]>([]);
   texto = '';
@@ -63,6 +65,10 @@ export class ProductsTableComponent implements OnInit {
     this.editProduct.emit(product);
   }
 
+  delete(product: ProductResponse): void {
+    this.deleteProduct.emit(product);
+  }
+
   search(): void {
     this.loadProducts();
   }
@@ -70,7 +76,7 @@ export class ProductsTableComponent implements OnInit {
   hasActiveFilters(): boolean {
     return this.categoriaId !== undefined ||
           !!this.estado ||
-          !!this.texto
+          !!this.texto;
   }
 
   protected getImageUrl (imagenUrl: string | null): string | null {

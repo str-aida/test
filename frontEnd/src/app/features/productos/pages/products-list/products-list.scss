@@ -173,3 +173,106 @@
     overflow-y: auto; //*combinacion
     min-height: 0; //*combinacion
 }
+
+/* ANIMACIÓN */
+@keyframes modal-enter {
+
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+/* ESPECÍFICOS DE "DESACTIVAR" PRODUCTO */
+.modal-card--danger {
+    max-width: 400px;
+    padding: $space-md;
+    text-align: center;
+}
+
+/* ÍCONO DE ALERTA */
+.modal-card__alert-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 1.25rem;
+    border-radius: 12px;
+    background: rgba($color-danger, .1);
+    color: $color-danger;
+
+    svg {
+        width: 26px;
+        height: 26px;
+    }
+}
+
+/* CONTENIDO */
+.modal-card__confirm-content {
+    h3 {
+        margin: 0;
+        font-family: $font-heading;
+        font-size: 1.35rem;
+        font-weight: $fw-bold;
+        color: $color-primary;
+    }
+
+    p {
+        margin: .75rem 0 0;
+        font-family: $font-body;
+        font-size: $fs-body;
+        line-height: $lh-body;
+        color: $color-text-light;
+    }
+
+    strong {
+        color: $color-text;
+        font-weight: $fw-semibold;
+    }
+}
+
+/* FOOTER */
+.modal-card__footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: $space-sm;
+    margin-top: 1.75rem;
+}
+
+/* BOTÓN CANCELAR */
+.modal-card__footer .btn--outline {
+    min-width: 140px;
+}
+
+/* BOTÓN DESACTIVAR */
+.modal-card__footer .btn--primary {
+    min-width: 200px;
+}
+
+.modal-card__footer .btn--danger-action {
+    background-color: $color-danger;
+
+    &:hover:not(:disabled) {
+        filter: brightness(0.9);
+    }
+}
+
+.btn__spin-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

@@ -1,0 +1,192 @@
+<div class="inicio-container">
+
+  <!-- HERO BANNER SECTION -->
+  <section class="hero-banner">
+    <div class="hero-banner__overlay"></div>
+    <div class="hero-banner__content">
+      <span class="hero-banner__tag">¡NUEVA TEMPORADA!</span>
+      <h1 class="hero-banner__title">
+        ¡Bienvenido a tu espacio dulce, donde cada sabor cuenta una historia!
+      </h1>
+      <button type="button" class="hero-banner__btn" (click)="onVerProductos()">
+        <span>Ver productos</span>
+        <svg lucideArrowRight class="hero-banner__btn-icon"></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- SEARCH & FILTERS TOOLBAR -->
+  <section class="toolbar-section">
+    <div class="search-input-wrapper">
+      <svg lucideSearch class="search-input-icon"></svg>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Buscar productos, categorías..."
+        [(ngModel)]="textoBusqueda"
+        (keyup.enter)="onSearch()" />
+    </div>
+
+    <button type="button" class="toolbar-btn toolbar-btn--filters" (click)="onVerProductos()">
+      <svg lucideSlidersHorizontal class="toolbar-btn__icon"></svg>
+      <span>Filtros</span>
+    </button>
+
+    <button type="button" class="toolbar-btn toolbar-btn--search" (click)="onSearch()">
+      Buscar
+    </button>
+  </section>
+
+  <!-- CATEGORIES GRID SECTION -->
+  @if (categorias().length > 0) {
+    <section class="categories-section">
+      <div class="categories-grid">
+        @for (cat of categorias(); track cat.id) {
+          <div class="category-card" (click)="onCategoryClick(cat.id)">
+            <div class="category-card__icon-box">
+              <ng-container [ngSwitch]="cat.nombre.toLowerCase()">
+                <svg *ngSwitchCase="'tortas'" lucideCake class="category-card__icon"></svg>
+                <svg *ngSwitchCase="'catering'" lucideUtensils class="category-card__icon"></svg>
+                <svg *ngSwitchCase="'box dulce'" lucideGift class="category-card__icon"></svg>
+                <svg *ngSwitchCase="'eventos'" lucidePartyPopper class="category-card__icon"></svg>
+                <svg *ngSwitchCase="'cafetería'" lucideCoffee class="category-card__icon"></svg>
+                <svg *ngSwitchCase="'promos'" lucideTag class="category-card__icon"></svg>
+                <svg *ngSwitchDefault lucideShapes class="category-card__icon"></svg>
+              </ng-container>
+            </div>
+            <h3 class="category-card__name">{{ cat.nombre }}</h3>
+            <span class="category-card__count">
+              {{ getCategoryProductCount(cat.id) }} PRODUCTOS
+            </span>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- PRODUCTOS DESTACADOS SECTION -->
+  <section class="featured-section">
+    <div class="featured-section__header">
+      <h2 class="featured-section__title">Productos destacados</h2>
+      <button type="button" class="ver-todos-link" (click)="onVerProductos()">
+        <span>Ver todos</span>
+        <svg lucideArrowRight class="ver-todos-icon"></svg>
+      </button>
+    </div>
+
+    <!-- ESTADO DE CARGA -->
+    @if (isLoading()) {
+      <div class="section-state section-state--loading">
+        <svg lucideRefreshCw class="state-spinner"></svg>
+        <p>Cargando productos destacados...</p>
+      </div>
+    }
+
+    <!-- ESTADO DE ERROR -->
+    @else if (hasError()) {
+      <div class="section-state section-state--error">
+        <p>No se pudieron cargar los productos destacados.</p>
+        <button type="button" class="btn-retry" (click)="cargarDatos()">Reintentar</button>
+      </div>
+    }
+
+    <!-- ESTADO VACÍO -->
+    @else if (destacados().length === 0) {
+      <div class="section-state section-state--empty">
+        <svg lucideInbox class="state-icon"></svg>
+        <p>No hay productos disponibles por el momento.</p>
+      </div>
+    }
+
+    <!-- GRID DE PRODUCTOS -->
+    @else {
+      <div class="products-grid">
+        @for (product of destacados(); track product.id) {
+          <div class="product-card" (click)="onVerProductos()">
+            <!-- IMAGEN Y BADGES -->
+            <div class="product-card__image-container">
+              @if (product.categoriaNombre) {
+                <span class="product-card__category-tag">
+                  {{ product.categoriaNombre | uppercase }}
+                </span>
+              }
+
+              <button
+                type="button"
+                class="product-card__fav-btn"
+                title="Favorito"
+                (click)="$event.stopPropagation()">
+                <svg lucideHeart class="fav-icon"></svg>
+              </button>
+
+              @if (getImageUrl(product.imagenUrl)) {
+                <img
+                  [src]="getImageUrl(product.imagenUrl)!"
+                  [alt]="product.nombre"
+                  class="product-card__image" />
+              } @else {
+                <div class="product-card__image-placeholder">
+                  <svg lucideImage class="placeholder-icon"></svg>
+                  <span>SABOR ARTESANAL</span>
+                </div>
+              }
+            </div>
+
+            <!-- CONTENIDO DE LA TARJETA -->
+            <div class="product-card__body">
+              <h3 class="product-card__title">{{ product.nombre }}</h3>
+              <p class="product-card__description">
+                {{ product.descripcion || 'Elaborado con insumos frescos de alta calidad para deleitar tu paladar.' }}
+              </p>
+
+              <div class="product-card__footer">
+                <div class="product-card__price">
+                  $ {{ product.precio | number:'1.0-0' }}
+                </div>
+
+                <button
+                  type="button"
+                  class="product-card__add-btn"
+                  [disabled]="product.stock <= 0"
+                  (click)="agregarAlCarrito(product, $event)">
+                  <svg lucidePlus class="add-icon"></svg>
+                  <span>Agregar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- BARRA FLOTANTE DE CARRITO -->
+  @if (cartService.totalItems() > 0) {
+    <aside class="floating-cart-bar" aria-label="Resumen del carrito">
+      <div class="floating-cart-bar__content">
+        <div class="floating-cart-bar__info">
+          <div class="floating-cart-bar__badge">
+            <svg lucideShoppingCart class="floating-cart-bar__icon"></svg>
+            <span class="floating-cart-bar__count">{{ cartService.totalItems() }}</span>
+          </div>
+          <div class="floating-cart-bar__totals">
+            <span class="floating-cart-bar__items-label">
+              {{ cartService.totalItems() }} {{ cartService.totalItems() === 1 ? 'producto' : 'productos' }}
+            </span>
+            <span class="floating-cart-bar__subtotal">
+              Subtotal: <strong>${{ cartService.subtotal() | number:'1.2-2' }}</strong>
+            </span>
+          </div>
+        </div>
+
+        <a
+          routerLink="/cliente/carrito"
+          class="floating-cart-bar__checkout-btn">
+          <span>Ver mi pedido</span>
+          <svg lucideShoppingCart class="floating-cart-bar__btn-icon"></svg>
+        </a>
+      </div>
+    </aside>
+  }
+
+</div>

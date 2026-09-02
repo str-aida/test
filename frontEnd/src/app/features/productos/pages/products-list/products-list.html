@@ -31,7 +31,8 @@
     </header>
 
     <app-products-table
-        (editProduct)="openEditModal($event)">
+        (editProduct)="openEditModal($event)"
+        (deleteProduct)="openDeleteModal($event)">
     </app-products-table>
 
     <!-- MODAL DE NUEVO PRODUCTO -->
@@ -115,7 +116,7 @@
                                 Editar producto
                             </h2>
                             <p class="modal-card__subtitle">
-                                Modificá los datos del producto seleccionada.
+                                Modificá los datos del producto seleccionado.
                             </p>
                         </div>
 
@@ -143,6 +144,62 @@
                     </app-product-form>
 
                 </div>
+
+            </div>
+
+        </div>
+    }
+
+    <!-- MODAL DE DESACTIVAR PRODUCTO -->
+    @if (showDeleteModal && selectedProduct) {
+        <div
+            class="modal-overlay"
+            (click)="closeDeleteModal()">
+
+            <div
+                class="modal-card modal-card--danger"
+                (click)="$event.stopPropagation()">
+
+                <div class="modal-card__alert-icon">
+                    <svg lucideAlertTriangle></svg>
+                </div>
+
+                <div class="modal-card__confirm-content">
+                    <h3>¿Desactivar producto?</h3>
+                    <p>
+                        Vas a cambiar el estado del producto
+                        <strong> "{{ selectedProduct.nombre }}" </strong>
+                        a <strong>INACTIVO</strong>.
+                    </p>
+                </div>
+
+                <footer class="modal-card__footer">
+
+                    <button
+                        type="button"
+                        class="btn btn--outline"
+                        [disabled]="isDeactivating"
+                        (click)="closeDeleteModal()">
+                        
+                        Cancelar
+
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn--primary btn--danger-action"
+                        [disabled]="isDeactivating"
+                        (click)="confirmDelete()">
+                        
+                        @if (isDeactivating) {
+                            <svg lucideRefreshCw class="btn__spin-icon"></svg>
+                            <span>Desactivando...</span>
+                        } @else {
+                            <span>Sí, desactivar</span>
+                        }
+
+                    </button>
+
+                </footer>
 
             </div>
 
