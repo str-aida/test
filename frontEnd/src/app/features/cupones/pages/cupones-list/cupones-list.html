@@ -142,8 +142,17 @@
 
                   <!-- USOS -->
                   <td class="col-usos">
-                    {{ cupon.usosActuales !== null && cupon.usosActuales !== undefined ? cupon.usosActuales : 0 }} /
-                    {{ cupon.usoMaximo ? cupon.usoMaximo : 'Ilimitado' }}
+                    <span title="Canjes realizados / máximo de canjes">
+                      {{ cupon.usosActuales !== null && cupon.usosActuales !== undefined ? cupon.usosActuales : 0 }} /
+                      {{ cupon.usoMaximo ? cupon.usoMaximo : 'Ilimitado' }}
+                    </span>
+                    @if (cupon.usoMaximo !== null) {
+                      <small class="cupos-tag"
+                             [class.cupos-tag--agotado]="cupon.cuposDisponibles === 0"
+                             title="Cupos disponibles para asignar a usuarios">
+                        ({{ cupon.cuposDisponibles === 0 ? 'Agotado' : cupon.cuposDisponibles + ' cupos' }})
+                      </small>
+                    }
                   </td>
 
                   <!-- ESTADO -->

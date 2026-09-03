@@ -198,14 +198,13 @@ export class CuponesListComponent implements OnInit {
   /**
    * Determina si un cupón puede ser asignado a un usuario.
    * Solo UX: la autoridad real es el backend.
+   * Usa cuposDisponibles (calculado por el backend) para no reimplementar la lógica de cupos.
    */
   esCuponAsignable(cupon: CuponResponse): boolean {
     if (cupon.estado !== EstadoCupon.ACTIVO) return false;
 
-    if (cupon.usoMaximo != null) {
-      const usosActuales = cupon.usosActuales ?? 0;
-      if (usosActuales >= cupon.usoMaximo) return false;
-    }
+    // cuposDisponibles === 0 → agotado; null → sin límite (permitir)
+    if (cupon.cuposDisponibles !== null && cupon.cuposDisponibles === 0) return false;
 
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
@@ -224,11 +223,12 @@ export class CuponesListComponent implements OnInit {
   }
 
   getTooltipAsignar(cupon: CuponResponse): string {
-    if (cupon.estado !== EstadoCupon.ACTIVO) return 'El cupón está inactivo';
-
-    if (cupon.usoMaximo != null && (cupon.usosActuales ?? 0) >= cupon.usoMaximo) {
-      return 'El cupón alcanzó su límite máximo de usos';
+    // cuposDisponibles === 0 → agotado para asignación
+    if (cupon.cuposDisponibles !== null && cupon.cuposDisponibles === 0) {
+      return 'El cupón no tiene cupos disponibles para asignar';
     }
+
+    if (cupon.estado !== EstadoCupon.ACTIVO) return 'El cupón está inactivo';
 
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);

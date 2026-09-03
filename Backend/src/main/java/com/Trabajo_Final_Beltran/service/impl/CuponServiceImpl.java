@@ -9,6 +9,7 @@ import com.Trabajo_Final_Beltran.enums.TipoDescuento;
 import com.Trabajo_Final_Beltran.exception.BusinessException;
 import com.Trabajo_Final_Beltran.mapper.CuponMapper;
 import com.Trabajo_Final_Beltran.repository.CuponRepository;
+import com.Trabajo_Final_Beltran.repository.CuponUsuarioRepository;
 import com.Trabajo_Final_Beltran.service.CuponService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,15 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CuponServiceImpl implements CuponService {
 
     private final CuponRepository cuponRepository;
+    private final CuponUsuarioRepository cuponUsuarioRepository;
 
     @Override
     @Transactional
@@ -35,7 +39,8 @@ public class CuponServiceImpl implements CuponService {
 
         Cupon cuponGuardado = cuponRepository.save(cupon);
 
-        return CuponMapper.toResponse(cuponGuardado);
+        // Recién creado: 0 asignaciones → cuposDisponibles = usoMaximo (o null si sin límite)
+        return CuponMapper.toResponse(cuponGuardado, 0L);
     }
 
     @Override
@@ -60,9 +65,13 @@ public class CuponServiceImpl implements CuponService {
 
         CuponMapper.updateFromRequest(cupon, request);
 
-        Cupon cuponActualizado = cuponRepository.save(cupon);
+        long totalAsignaciones = cuponUsuarioRepository.countByCuponId(cupon.getId());
+        if (cupon.getUsoMaximo() != null && totalAsignaciones >= cupon.getUsoMaximo()) {
+            cupon.setEstado(EstadoCupon.INACTIVO);
+        }
 
-        return CuponMapper.toResponse(cuponActualizado);
+        Cupon cuponActualizado = cuponRepository.save(cupon);
+        return CuponMapper.toResponse(cuponActualizado, totalAsignaciones);
     }
 
     @Override
@@ -73,15 +82,34 @@ public class CuponServiceImpl implements CuponService {
                         new BusinessException("Cupón no encontrado")
                 );
 
-        return CuponMapper.toResponse(cupon);
+        long totalAsignaciones = cuponUsuarioRepository.countByCuponId(cupon.getId());
+        return CuponMapper.toResponse(cupon, totalAsignaciones);
     }
 
     @Override
     public List<CuponResponse> listarCupones() {
 
-        return cuponRepository.findAll()
+        List<Cupon> cupones = cuponRepository.findAll();
+
+        if (cupones.isEmpty()) {
+            return List.of();
+        }
+
+        // Una sola query agregada para todos los cupones (evita N+1)
+        List<Long> ids = cupones.stream().map(Cupon::getId).toList();
+        Map<Long, Long> conteosPorCupon = cuponUsuarioRepository
+                .contarAsignacionesPorCupones(ids)
                 .stream()
-                .map(CuponMapper::toResponse)
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],
+                        row -> (Long) row[1]
+                ));
+
+        return cupones.stream()
+                .map(c -> {
+                    long total = conteosPorCupon.getOrDefault(c.getId(), 0L);
+                    return CuponMapper.toResponse(c, total);
+                })
                 .toList();
     }
 

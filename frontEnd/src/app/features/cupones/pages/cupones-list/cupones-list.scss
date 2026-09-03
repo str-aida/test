@@ -630,3 +630,16 @@ $stitch-text-muted: #6b7280;
   }
 }
 
+/* Etiqueta de cupos disponibles en la columna USOS */
+.cupos-tag {
+  display: block;
+  font-size: 0.7rem;
+  color: $stitch-text-muted;
+  margin-top: 2px;
+
+  &--agotado {
+    color: $color-danger;
+    font-weight: 600;
+  }
+}
+

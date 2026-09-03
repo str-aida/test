@@ -8,6 +8,7 @@ import com.Trabajo_Final_Beltran.enums.EstadoCupon;
 import com.Trabajo_Final_Beltran.event.CuponAsignadoEvent;
 import com.Trabajo_Final_Beltran.exception.BusinessException;
 import com.Trabajo_Final_Beltran.mapper.CuponUsuarioMapper;
+import com.Trabajo_Final_Beltran.repository.CuponRepository;
 import com.Trabajo_Final_Beltran.repository.CuponUsuarioRepository;
 import com.Trabajo_Final_Beltran.service.CuponUsuarioService;
 import jakarta.transaction.Transactional;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 public class CuponUsuarioServiceImpl implements CuponUsuarioService {
 
     private final CuponUsuarioRepository cuponUsuarioRepository;
+    private final CuponRepository cuponRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
@@ -34,30 +36,41 @@ public class CuponUsuarioServiceImpl implements CuponUsuarioService {
         }
 
         try {
-            validarCuponAsignable(cupon);
-        } catch (ObjectOptimisticLockingFailureException e) {
-            throw new BusinessException(
-                "El cupón se agotó mientras se procesaba. Reintentá la operación."
-            );
-        }
+            // Re-bloquear el cupón con lock pesimista de escritura.
+            // Serializa asignaciones concurrentes sobre el mismo cupón:
+            // dos hilos no pueden pasar el "contar → insertar" simultáneamente.
+            Cupon cuponBloqueado = cuponRepository.findByIdForUpdate(cupon.getId())
+                    .orElseThrow(() -> new BusinessException("El cupón no existe"));
 
-        boolean tieneSinUsar = cuponUsuarioRepository
-                .existsByUsuarioIdAndCuponIdAndUsadoFalse(usuario.getId(), cupon.getId());
-        if (tieneSinUsar) {
-            throw new BusinessException(
-                "El usuario ya tiene este cupón disponible y sin utilizar"
-            );
-        }
+            validarCuponAsignable(cuponBloqueado);
 
-        try {
+            boolean tieneSinUsar = cuponUsuarioRepository
+                    .existsByUsuarioIdAndCuponIdAndUsadoFalse(usuario.getId(), cuponBloqueado.getId());
+            if (tieneSinUsar) {
+                throw new BusinessException(
+                    "El usuario ya tiene este cupón disponible y sin utilizar"
+                );
+            }
+
             CuponUsuario cuponUsuario = CuponUsuario.builder()
                     .usuario(usuario)
-                    .cupon(cupon)
+                    .cupon(cuponBloqueado)
                     .usado(false)
                     .build();
             cuponUsuarioRepository.save(cuponUsuario);
 
-            eventPublisher.publishEvent(new CuponAsignadoEvent(this, usuario, cupon));
+            // Si al asignar se agotaron los cupos disponibles, pasar el cupón de ACTIVO a INACTIVO
+            if (cuponBloqueado.getUsoMaximo() != null) {
+                cuponUsuarioRepository.flush();
+                long totalAsignaciones = cuponUsuarioRepository.countByCuponId(cuponBloqueado.getId());
+                if (totalAsignaciones >= cuponBloqueado.getUsoMaximo()) {
+                    cuponBloqueado.setEstado(EstadoCupon.INACTIVO);
+                    cuponRepository.save(cuponBloqueado);
+                }
+            }
+
+            eventPublisher.publishEvent(new CuponAsignadoEvent(this, usuario, cuponBloqueado));
+
         } catch (ObjectOptimisticLockingFailureException e) {
             throw new BusinessException(
                 "El cupón se agotó mientras se procesaba. Reintentá la operación."
@@ -67,25 +80,20 @@ public class CuponUsuarioServiceImpl implements CuponUsuarioService {
 
     /**
      * Valida que un cupón cumple todas las condiciones para ser asignable:
-     * estado ACTIVO, dentro de la vigencia y sin superar el uso máximo.
+     * estado ACTIVO, dentro de la vigencia y con cupos disponibles (por COUNT de asignaciones).
      * Todos los campos opcionales son null-safe.
+     *
+     * IMPORTANTE: este método recibe el cupón ya bloqueado con PESSIMISTIC_WRITE,
+     * por lo que el COUNT que se hace a continuación está protegido contra la race condition.
      */
     private void validarCuponAsignable(Cupon cupon) {
 
         // 1. Estado activo
         if (cupon.getEstado() != EstadoCupon.ACTIVO) {
-            throw new BusinessException("El cupón no está activo y no puede ser asignado");
+            throw new BusinessException("El cupón no está activo");
         }
 
-        // 2. Usos disponibles (null-safe: null en usoMaximo = sin límite)
-        if (cupon.getUsoMaximo() != null) {
-            int usosActuales = cupon.getUsosActuales() != null ? cupon.getUsosActuales() : 0;
-            if (usosActuales >= cupon.getUsoMaximo()) {
-                throw new BusinessException("El cupón alcanzó su límite máximo de usos");
-            }
-        }
-
-        // 3. Vigencia de fechas (null-safe: null = sin restricción de fecha)
+        // 2. Vigencia de fechas (null-safe: null = sin restricción de fecha)
         LocalDate hoy = LocalDate.now();
 
         if (cupon.getFechaInicio() != null && hoy.isBefore(cupon.getFechaInicio())) {
@@ -94,6 +102,18 @@ public class CuponUsuarioServiceImpl implements CuponUsuarioService {
 
         if (cupon.getFechaFin() != null && hoy.isAfter(cupon.getFechaFin())) {
             throw new BusinessException("El cupón ya no está vigente (venció)");
+        }
+
+        // 3. Cupos disponibles: se cuenta el TOTAL de asignaciones (usadas + pendientes + reservadas).
+        //    El cupo se consume al ASIGNAR, no al usar.
+        //    usoMaximo == null → sin límite → no se valida.
+        if (cupon.getUsoMaximo() != null) {
+            long totalAsignaciones = cuponUsuarioRepository.countByCuponId(cupon.getId());
+            if (totalAsignaciones >= cupon.getUsoMaximo()) {
+                throw new BusinessException(
+                    "El cupón ya no tiene cupos disponibles (llegó a su límite de usuarios)"
+                );
+            }
         }
     }
 
