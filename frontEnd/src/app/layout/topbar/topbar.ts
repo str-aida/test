@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { LucideBell } from '@lucide/angular';
+import { NotificacionesBellComponent } from './components/notificaciones-bell/notificaciones-bell';
 import { ProfileService } from '../../core/services/profile.service';
 import { TopbarUser } from '../models/topbar-user.model';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -7,7 +7,7 @@ import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-topbar',
-  imports: [LucideBell],
+  imports: [NotificacionesBellComponent],
   templateUrl: './topbar.html',
   styleUrl: './topbar.scss',
 })
