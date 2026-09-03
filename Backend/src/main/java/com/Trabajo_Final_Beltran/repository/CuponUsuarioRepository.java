@@ -29,6 +29,8 @@ public interface CuponUsuarioRepository extends JpaRepository<CuponUsuario, Long
     
     boolean existsByUsuarioIdAndCuponId(Long usuarioId, Long cuponId);
 
+    boolean existsByUsuarioIdAndCuponIdAndUsadoFalse(Long usuarioId, Long cuponId);
+
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("""
         UPDATE CuponUsuario cu

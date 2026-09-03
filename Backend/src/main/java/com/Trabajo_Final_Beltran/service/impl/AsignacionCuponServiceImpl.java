@@ -30,7 +30,11 @@ public class AsignacionCuponServiceImpl implements AsignacionCuponService {
     public void asignarCupones(Usuario usuario) {
         for (AsignacionCuponStrategy strategy : strategies) {
             for (Cupon cupon : strategy.obtenerCupones(usuario)) {
-                cuponUsuarioService.asignarCupon(usuario, cupon);
+                try {
+                    cuponUsuarioService.asignarCupon(usuario, cupon);
+                } catch (BusinessException e) {
+                    // Si ya lo tiene disponible o el cupón no es asignable, se omite silenciosamente en procesos automáticos
+                }
             }
         }
     }

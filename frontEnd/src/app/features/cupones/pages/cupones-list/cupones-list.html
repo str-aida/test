@@ -171,8 +171,10 @@
                       <button
                         type="button"
                         class="action-btn action-btn--assign"
-                        title="Asignar cupón a usuario"
-                        (click)="openAssignModal(cupon)">
+                        [class.action-btn--disabled]="!esCuponAsignable(cupon)"
+                        [disabled]="!esCuponAsignable(cupon)"
+                        [title]="getTooltipAsignar(cupon)"
+                        (click)="esCuponAsignable(cupon) && openAssignModal(cupon)">
                         <svg lucideUserCheck></svg>
                       </button>
 

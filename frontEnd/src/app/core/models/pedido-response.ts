@@ -13,5 +13,7 @@ export interface PedidoResponse {
     tipoEntrega: TipoEntrega;
     metodoPago: MetodoPago;
     estadoPago: EstadoPago;
+    montoDescuento?: number | null;
+    totalConDescuento?: number | null;
     numeroPedido: string;
 }

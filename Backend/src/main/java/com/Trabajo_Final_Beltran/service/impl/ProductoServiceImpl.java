@@ -21,13 +21,10 @@ import com.Trabajo_Final_Beltran.security.SecurityUtils;
 import com.Trabajo_Final_Beltran.service.LogSistemaService;
 import com.Trabajo_Final_Beltran.service.ProductoCacheService;
 import com.Trabajo_Final_Beltran.service.ProductoService;
-import com.Trabajo_Final_Beltran.specification.ProductoSpecification;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import com.Trabajo_Final_Beltran.service.ImageStorageService;
 import org.springframework.web.multipart.MultipartFile;
@@ -534,5 +531,4 @@ public class ProductoServiceImpl implements ProductoService {
 
     return categoria;
   }
-
 }

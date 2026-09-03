@@ -24,6 +24,13 @@
 
     <!-- BODY FORM -->
     <div class="modal-card__body">
+      @if (errorMessage) {
+        <div class="modal-card__error-banner">
+          <svg lucideAlertCircle class="error-banner-icon"></svg>
+          <span>{{ errorMessage }}</span>
+        </div>
+      }
+
       <form class="asignar-form" [formGroup]="asignarForm" (ngSubmit)="onSubmit()">
         <!-- SELECTOR DE MODO DE ASIGNACIÓN -->
         <div class="form-field">
@@ -156,9 +163,13 @@
             class="form-field__input"
             formControlName="cuponId">
             <option [ngValue]="null" disabled>-- Selecciona un cupón --</option>
-            @for (c of cuponesList; track c.id) {
+            @if (cuponesAsignables.length === 0) {
+              <option disabled>No hay cupones activos disponibles para asignar</option>
+            }
+            @for (c of cuponesAsignables; track c.id) {
               <option [value]="c.id">
-                {{ c.codigo }} - {{ c.tipoDescuento === 'PORCENTAJE' ? c.valor + '%' : '$' + c.valor }} (Vence: {{ c.fechaFin }})
+                {{ c.codigo }} - {{ c.tipoDescuento === 'PORCENTAJE' ? c.valor + '%' : '$' + c.valor }}
+                (Usos: {{ c.usosActuales }}{{ c.usoMaximo ? '/' + c.usoMaximo : '/∞' }} · Vence: {{ c.fechaFin }})
               </option>
             }
           </select>

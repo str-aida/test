@@ -292,7 +292,12 @@
 .table-actions__delete {
   color: $color-danger;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: rgba($color-danger, .15);
   }
+}
+
+.table-actions__delete--disabled {
+  opacity: 0.45;
+  cursor: not-allowed !important;
 }

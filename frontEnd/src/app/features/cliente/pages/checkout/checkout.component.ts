@@ -23,6 +23,8 @@ import { CuponService } from '../../../../core/services/cupon.service';
 import { DireccionService } from '../../../../core/services/direccion.service';
 import { PagoService } from '../../../../core/services/pago.service';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { EstablecimientoService } from '../../../../core/services/establecimiento.service';
+import { TipoServicio } from '../../../../core/models/enums/tipo-servicio.enum';
 import { TipoEntrega } from '../../../../core/models/enums/tipo-entrega.enum';
 import { MetodoPago } from '../../../../core/models/enums/metodo-pago.enum';
 import { DireccionResponse } from '../../../../core/models/direccion-response';
@@ -63,6 +65,7 @@ export class CheckoutComponent implements OnInit {
   private readonly pedidoService = inject(PedidoService);
   private readonly cuponService = inject(CuponService);
   private readonly direccionService = inject(DireccionService);
+  private readonly establecimientoService = inject(EstablecimientoService);
   private readonly pagoService = inject(PagoService);
   private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
@@ -70,11 +73,13 @@ export class CheckoutComponent implements OnInit {
 
   // Enums para template
   protected readonly TipoEntrega = TipoEntrega;
+  protected readonly TipoServicio = TipoServicio;
   protected readonly MetodoPago = MetodoPago;
   protected readonly TipoDescuento = TipoDescuento;
 
   // Opciones de checkout
   tipoEntrega: TipoEntrega = TipoEntrega.DELIVERY;
+  tipoServicioEstablecimiento: TipoServicio | null = null;
   direccionIdSelected: number | null = null;
   metodoPago: MetodoPago = MetodoPago.EFECTIVO;
 
@@ -118,8 +123,28 @@ export class CheckoutComponent implements OnInit {
       return;
     }
 
+    this.cargarEstablecimiento();
     this.cargarDirecciones();
     this.cargarCupones();
+  }
+
+  cargarEstablecimiento(): void {
+    this.establecimientoService.obtenerInfoClienteActual().subscribe({
+      next: (est) => {
+        this.tipoServicioEstablecimiento = est.tipoServicio;
+        if (est.tipoServicio === TipoServicio.DELIVERY) {
+          this.tipoEntrega = TipoEntrega.DELIVERY;
+        } else if (est.tipoServicio === TipoServicio.RETIRO) {
+          this.tipoEntrega = TipoEntrega.RETIRO;
+        }
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        // Fallback en caso de error de red
+        this.tipoServicioEstablecimiento = null;
+        this.cdr.markForCheck();
+      }
+    });
   }
 
   cargarDirecciones(selectId?: number): void {
@@ -127,7 +152,7 @@ export class CheckoutComponent implements OnInit {
     this.direccionService.listarDirecciones().pipe(
       finalize(() => {
         this.isLoadingDirecciones = false;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       })
     ).subscribe({
       next: (dirs) => {
@@ -172,7 +197,7 @@ export class CheckoutComponent implements OnInit {
         esPrincipal: this.direcciones.length === 0
       };
     }
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
   }
 
   guardarNuevaDireccion(): void {
@@ -190,7 +215,7 @@ export class CheckoutComponent implements OnInit {
     }
 
     this.isSavingDireccion = true;
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
 
     const request: CreateDireccionRequest = {
       nombre: this.nuevaDireccionForm.nombre?.trim() || undefined,
@@ -207,7 +232,7 @@ export class CheckoutComponent implements OnInit {
     this.direccionService.crearDireccion(request).pipe(
       finalize(() => {
         this.isSavingDireccion = false;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       })
     ).subscribe({
       next: (nuevaDir) => {

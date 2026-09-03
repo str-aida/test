@@ -68,7 +68,7 @@
             <div class="pedido-card__right">
               <div class="pedido-card__price-box">
                 <span class="pedido-card__price-label">TOTAL</span>
-                <span class="pedido-card__price-value">${{ pedido.total | number:'1.2-2' }}</span>
+                <span class="pedido-card__price-value">${{ (pedido.totalConDescuento ?? pedido.total) | number:'1.2-2' }}</span>
               </div>
 
               <a [routerLink]="['/cliente/pedidos', pedido.id]" class="pedido-card__btn">
