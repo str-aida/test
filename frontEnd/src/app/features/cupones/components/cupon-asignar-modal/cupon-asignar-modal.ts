@@ -191,6 +191,7 @@ export class CuponAsignarModalComponent extends BaseFormComponent implements OnI
   /**
    * Filtra los cupones que cumplen todas las condiciones de asignabilidad.
    * Solo presentación: la autoridad real es el backend.
+   * Usa cuposDisponibles (calculado por el backend) para evitar reimplementar la lógica de cupos.
    */
   get cuponesAsignables(): CuponResponse[] {
     const hoy = new Date();
@@ -199,10 +200,8 @@ export class CuponAsignarModalComponent extends BaseFormComponent implements OnI
     return this.cuponesList.filter(c => {
       if (c.estado !== EstadoCupon.ACTIVO) return false;
 
-      if (c.usoMaximo != null) {
-        const usosActuales = c.usosActuales ?? 0;
-        if (usosActuales >= c.usoMaximo) return false;
-      }
+      // cuposDisponibles === 0 → agotado; null → sin límite (permitir)
+      if (c.cuposDisponibles !== null && c.cuposDisponibles === 0) return false;
 
       if (c.fechaInicio && new Date(c.fechaInicio) > hoy) return false;
       if (c.fechaFin && new Date(c.fechaFin) < hoy) return false;
@@ -210,6 +209,7 @@ export class CuponAsignarModalComponent extends BaseFormComponent implements OnI
       return true;
     });
   }
+
 
   private loadCupones(): void {
     this.cuponService.listarCupones().subscribe({

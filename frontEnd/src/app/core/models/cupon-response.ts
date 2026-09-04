@@ -11,4 +11,10 @@ export interface CuponResponse {
     usoMaximo: number | null;
     usosActuales: number;
     estado: EstadoCupon;
+    /**
+     * Cupos restantes para asignar a nuevos usuarios.
+     * null = sin límite (usoMaximo es null).
+     * 0   = agotado.
+     */
+    cuposDisponibles: number | null;
 }
