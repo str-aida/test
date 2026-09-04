@@ -1,5 +1,6 @@
 import { Component, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
-import { LucideBell, LucideMenu } from '@lucide/angular';
+import { LucideMenu } from '@lucide/angular';
+import { NotificacionesBellComponent } from './components/notificaciones-bell/notificaciones-bell';
 import { ProfileService } from '../../core/services/profile.service';
 import { TopbarUser } from '../models/topbar-user.model';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -7,7 +8,7 @@ import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-topbar',
-  imports: [LucideBell, LucideMenu],
+  imports: [LucideMenu, NotificacionesBellComponent],
   templateUrl: './topbar.html',
   styleUrl: './topbar.scss',
 })

@@ -142,8 +142,17 @@
 
                   <!-- USOS -->
                   <td class="col-usos">
-                    {{ cupon.usosActuales !== null && cupon.usosActuales !== undefined ? cupon.usosActuales : 0 }} /
-                    {{ cupon.usoMaximo ? cupon.usoMaximo : 'Ilimitado' }}
+                    <span title="Canjes realizados / máximo de canjes">
+                      {{ cupon.usosActuales !== null && cupon.usosActuales !== undefined ? cupon.usosActuales : 0 }} /
+                      {{ cupon.usoMaximo ? cupon.usoMaximo : 'Ilimitado' }}
+                    </span>
+                    @if (cupon.usoMaximo !== null) {
+                      <small class="cupos-tag"
+                             [class.cupos-tag--agotado]="cupon.cuposDisponibles === 0"
+                             title="Cupos disponibles para asignar a usuarios">
+                        ({{ cupon.cuposDisponibles === 0 ? 'Agotado' : cupon.cuposDisponibles + ' cupos' }})
+                      </small>
+                    }
                   </td>
 
                   <!-- ESTADO -->
@@ -171,8 +180,10 @@
                       <button
                         type="button"
                         class="action-btn action-btn--assign"
-                        title="Asignar cupón a usuario"
-                        (click)="openAssignModal(cupon)">
+                        [class.action-btn--disabled]="!esCuponAsignable(cupon)"
+                        [disabled]="!esCuponAsignable(cupon)"
+                        [title]="getTooltipAsignar(cupon)"
+                        (click)="esCuponAsignable(cupon) && openAssignModal(cupon)">
                         <svg lucideUserCheck></svg>
                       </button>
 

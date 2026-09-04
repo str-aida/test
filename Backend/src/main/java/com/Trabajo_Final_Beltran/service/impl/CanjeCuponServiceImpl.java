@@ -25,10 +25,10 @@ public class CanjeCuponServiceImpl implements CanjeCuponService {
     public void canjear(Cupon cupon, Usuario usuario) {
 
         CuponUsuario cuponUsuario = cuponUsuarioRepository
-                .findByUsuarioIdAndCuponId(usuario.getId(), cupon.getId())
+                .findByUsuarioIdAndCuponIdAndUsado(usuario.getId(), cupon.getId(), false)
                 .orElseThrow(() ->
                         new BusinessException(
-                            "No se encontró la asignación del cupón para este usuario"
+                            "No se encontró una asignación disponible de este cupón para este usuario"
                         )
                 );
 

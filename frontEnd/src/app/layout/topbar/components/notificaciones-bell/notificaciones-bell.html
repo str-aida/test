@@ -1,0 +1,104 @@
+<div class="bell-container">
+
+  <!-- Botón Campanita -->
+  <button
+    type="button"
+    class="bell-button"
+    [class.bell-button--active]="isOpen()"
+    (click)="toggleDropdown()"
+    aria-label="Notificaciones"
+    [attr.aria-expanded]="isOpen()">
+
+    <svg lucideBell class="bell-icon"></svg>
+
+    @if (unreadCount() > 0) {
+      <span class="bell-badge">
+        {{ unreadCount() > 99 ? '99+' : unreadCount() }}
+      </span>
+    }
+  </button>
+
+  <!-- Dropdown / Panel de Notificaciones -->
+  @if (isOpen()) {
+    <div class="notifications-dropdown">
+
+      <!-- Header del Panel -->
+      <div class="notifications-dropdown__header">
+        <div class="notifications-dropdown__title-row">
+          <h3 class="notifications-dropdown__title">Notificaciones</h3>
+          @if (unreadCount() > 0) {
+            <span class="notifications-dropdown__unread-pill">
+              {{ unreadCount() }} sin leer
+            </span>
+          }
+        </div>
+      </div>
+
+      <!-- Cuerpo del Panel -->
+      <div class="notifications-dropdown__body">
+
+        @if (isLoading()) {
+          <div class="notifications-loading">
+            <div class="notifications-loading__spinner"></div>
+            <span>Cargando notificaciones...</span>
+          </div>
+        } @else if (notificaciones().length === 0) {
+          <div class="notifications-empty">
+            <div class="notifications-empty__icon-wrapper">
+              <svg lucideInbox class="notifications-empty__icon"></svg>
+            </div>
+            <p class="notifications-empty__text">No tenés notificaciones.</p>
+          </div>
+        } @else {
+          <ul class="notifications-list">
+            @for (item of notificaciones(); track item.id) {
+              <li
+                class="notification-item"
+                [class.notification-item--unread]="!item.leida"
+                (click)="onNotificationClick(item, $event)">
+
+                <!-- Ícono por tipo de notificación -->
+                <div class="notification-item__icon-container" [ngClass]="'notification-item__icon-container--' + item.tipo.toLowerCase()">
+                  @switch (item.tipo) {
+                    @case (TipoNotificacion.PEDIDO) {
+                      <svg lucideShoppingBag class="notification-item__icon"></svg>
+                    }
+                    @case (TipoNotificacion.PAGO) {
+                      <svg lucideCreditCard class="notification-item__icon"></svg>
+                    }
+                    @case (TipoNotificacion.PROMOCION) {
+                      <svg lucideTag class="notification-item__icon"></svg>
+                    }
+                    @default {
+                      <svg lucideInfo class="notification-item__icon"></svg>
+                    }
+                  }
+                </div>
+
+                <!-- Contenido -->
+                <div class="notification-item__content">
+                  <div class="notification-item__header">
+                    <span class="notification-item__title">{{ item.titulo }}</span>
+                    @if (!item.leida) {
+                      <span class="notification-item__unread-dot" title="No leída"></span>
+                    }
+                  </div>
+
+                  <p class="notification-item__message">{{ item.mensaje }}</p>
+
+                  <span class="notification-item__date">
+                    {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
+                  </span>
+                </div>
+
+              </li>
+            }
+          </ul>
+        }
+
+      </div>
+
+    </div>
+  }
+
+</div>

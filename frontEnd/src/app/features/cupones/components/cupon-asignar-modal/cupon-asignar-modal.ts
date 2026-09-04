@@ -8,7 +8,8 @@ import { CuponResponse } from '../../../../core/models/cupon-response';
 import { AsignarCuponRequest } from '../../../../core/models/asignar-cupon-request';
 import { UsuarioPerfilResponse } from '../../../../core/models/usuario-perfil-response';
 import { UserRole } from '../../../../core/models/enums/user-role.enum';
-import { LucideX, LucideUserCheck, LucideMail, LucideUser, LucideSearch, LucideLoader2, LucideCheck } from '@lucide/angular';
+import { EstadoCupon } from '../../../../core/models/enums/estado-cupon.enum';
+import { LucideX, LucideUserCheck, LucideMail, LucideUser, LucideSearch, LucideLoader2, LucideCheck, LucideAlertCircle } from '@lucide/angular';
 import { catchError, debounceTime, distinctUntilChanged, of, Subscription, switchMap, tap } from 'rxjs';
 
 export type TipoAsignacion = 'ID' | 'EMAIL';
@@ -23,7 +24,8 @@ export type TipoAsignacion = 'ID' | 'EMAIL';
     LucideUser,
     LucideSearch,
     LucideLoader2,
-    LucideCheck
+    LucideCheck,
+    LucideAlertCircle
   ],
   templateUrl: './cupon-asignar-modal.html',
   styleUrl: './cupon-asignar-modal.scss',
@@ -49,6 +51,7 @@ export class CuponAsignarModalComponent extends BaseFormComponent implements OnI
   searchError = false;
   showDropdown = false;
   isSubmitting = false;
+  errorMessage: string | null = null;
 
   private searchSubscription?: Subscription;
 
@@ -185,6 +188,29 @@ export class CuponAsignarModalComponent extends BaseFormComponent implements OnI
     emailControl?.updateValueAndValidity();
   }
 
+  /**
+   * Filtra los cupones que cumplen todas las condiciones de asignabilidad.
+   * Solo presentación: la autoridad real es el backend.
+   * Usa cuposDisponibles (calculado por el backend) para evitar reimplementar la lógica de cupos.
+   */
+  get cuponesAsignables(): CuponResponse[] {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    return this.cuponesList.filter(c => {
+      if (c.estado !== EstadoCupon.ACTIVO) return false;
+
+      // cuposDisponibles === 0 → agotado; null → sin límite (permitir)
+      if (c.cuposDisponibles !== null && c.cuposDisponibles === 0) return false;
+
+      if (c.fechaInicio && new Date(c.fechaInicio) > hoy) return false;
+      if (c.fechaFin && new Date(c.fechaFin) < hoy) return false;
+
+      return true;
+    });
+  }
+
+
   private loadCupones(): void {
     this.cuponService.listarCupones().subscribe({
       next: (data) => {
@@ -204,6 +230,7 @@ export class CuponAsignarModalComponent extends BaseFormComponent implements OnI
     }
 
     this.isSubmitting = true;
+    this.errorMessage = null;
     const formVal = this.asignarForm.value;
 
     const req: AsignarCuponRequest = {
@@ -219,13 +246,16 @@ export class CuponAsignarModalComponent extends BaseFormComponent implements OnI
     this.cuponService.asignarCupon(req).subscribe({
       next: () => {
         this.isSubmitting = false;
+        this.errorMessage = null;
         this.notificationService.success('Cupón asignado correctamente.');
         this.assigned.emit();
       },
       error: (err) => {
         this.isSubmitting = false;
         const msg = err?.error?.message || err?.error?.mensaje || 'Error al asignar el cupón';
+        this.errorMessage = msg;
         this.notificationService.error(msg);
+        this.cdr.detectChanges();
       }
     });
   }

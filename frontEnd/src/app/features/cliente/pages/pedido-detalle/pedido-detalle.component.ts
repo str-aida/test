@@ -1,6 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
 import {
   LucideArrowLeft,
   LucideStore,
@@ -56,10 +57,11 @@ interface Step {
   templateUrl: './pedido-detalle.component.html',
   styleUrl: './pedido-detalle.component.scss'
 })
-export class PedidoDetalleComponent implements OnInit {
+export class PedidoDetalleComponent implements OnInit, OnDestroy {
 
   private readonly route = inject(ActivatedRoute);
   private readonly pedidoService = inject(PedidoService);
+  private routeSub?: Subscription;
 
   protected readonly EstadoPedido = EstadoPedido;
   protected readonly TipoEntrega = TipoEntrega;
@@ -79,13 +81,20 @@ export class PedidoDetalleComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    if (idParam) {
-      this.cargarDetalle(+idParam);
-    } else {
-      this.errorMsg.set('ID de pedido inválido');
-      this.isLoading.set(false);
-    }
+    this.routeSub = this.route.paramMap.subscribe(params => {
+      const idParam = params.get('id');
+      if (idParam && !isNaN(+idParam)) {
+        this.errorMsg.set(null);
+        this.cargarDetalle(+idParam);
+      } else {
+        this.errorMsg.set('ID de pedido inválido');
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.routeSub?.unsubscribe();
   }
 
   cargarDetalle(id: number): void {

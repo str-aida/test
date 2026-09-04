@@ -297,6 +297,34 @@
               }
             </tbody>
           </table>
+
+          <!-- Footer de totales -->
+          <div class="items-totals-footer">
+            <div class="items-totals-footer__row">
+              <span class="items-totals-footer__label">Subtotal productos</span>
+              <span class="items-totals-footer__value">
+                ${{ pedido()?.total | number:'1.2-2' }}
+              </span>
+            </div>
+            @if (pedido()?.montoDescuento) {
+              <div class="items-totals-footer__row items-totals-footer__row--descuento">
+                <span class="items-totals-footer__label">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                  Descuento cupón
+                </span>
+                <span class="items-totals-footer__value items-totals-footer__value--descuento">
+                  -${{ pedido()?.montoDescuento | number:'1.2-2' }}
+                </span>
+              </div>
+            }
+            <div class="items-totals-footer__row items-totals-footer__row--total">
+              <span class="items-totals-footer__label">TOTAL DEL PEDIDO</span>
+              <span class="items-totals-footer__value items-totals-footer__value--total">
+                ${{ (pedido()?.totalConDescuento ?? pedido()?.total) | number:'1.2-2' }}
+              </span>
+            </div>
+          </div>
+
         </div>
       </div>
 

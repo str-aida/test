@@ -7,9 +7,8 @@
             <h1 class="topbar__title">{{ title }}</h1>
         </div>
         <div class="topbar__actions">
-            <button type="button" class="topbar__notification">
-                <svg lucideBell class="topbar__icon"></svg>
-            </button>
+
+            <app-notificaciones-bell />
 
             @if (user(); as currentUser) {
                 <div class="topbar__user">

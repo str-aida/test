@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import com.Trabajo_Final_Beltran.enums.TipoReferencia;
 
 @Getter
 @Setter
@@ -26,5 +27,9 @@ public class NotificacionResponse {
   private LocalDateTime fecha;
 
   private TipoNotificacion tipo;
+
+  private TipoReferencia tipoReferencia;
+
+  private Long referenciaId;
 
 }

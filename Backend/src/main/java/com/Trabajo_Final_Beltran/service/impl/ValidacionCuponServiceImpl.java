@@ -38,7 +38,14 @@ public class ValidacionCuponServiceImpl implements ValidacionCuponService {
 
     private void validarEstadoActivo(Cupon cupon) {
         if (cupon.getEstado() != EstadoCupon.ACTIVO) {
-            throw new BusinessException("El cupón no está activo");
+            // Si el cupón quedó INACTIVO porque se agotaron sus cupos de asignación (llegó al límite de usuarios),
+            // los usuarios que ya lo tienen asignado pueden seguir utilizándolo en sus pedidos.
+            boolean agotadoPorCupos = cupon.getUsoMaximo() != null
+                    && cuponUsuarioRepository.countByCuponId(cupon.getId()) >= cupon.getUsoMaximo();
+
+            if (!agotadoPorCupos) {
+                throw new BusinessException("El cupón no está activo");
+            }
         }
     }
 
@@ -64,9 +71,9 @@ public class ValidacionCuponServiceImpl implements ValidacionCuponService {
     private void validarAsignadoYNoUsado(Cupon cupon, Usuario usuario) {
 
         CuponUsuario cuponUsuario = cuponUsuarioRepository
-                .findByUsuarioIdAndCuponId(usuario.getId(), cupon.getId())
+                .findByUsuarioIdAndCuponIdAndUsado(usuario.getId(), cupon.getId(), false)
                 .orElseThrow(() ->
-                        new BusinessException("No tenés este cupón disponible"));
+                        new BusinessException("No tenés este cupón disponible o ya fue utilizado"));
 
         if (Boolean.TRUE.equals(cuponUsuario.getUsado())) {
             throw new BusinessException("Ya utilizaste este cupón anteriormente");

@@ -1,6 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
 import {
   LucideArrowLeft,
   LucideTruck,
@@ -62,13 +63,14 @@ interface StepDef {
   templateUrl: './pedido-detalle-admin.html',
   styleUrl: './pedido-detalle-admin.scss'
 })
-export class PedidoDetalleAdminComponent implements OnInit {
+export class PedidoDetalleAdminComponent implements OnInit, OnDestroy {
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly pedidoService = inject(PedidoService);
   private readonly notificationService = inject(NotificationService);
   private readonly tokenService = inject(TokenService);
+  private routeSub?: Subscription;
 
   protected readonly EstadoPedido = EstadoPedido;
   protected readonly EstadoPago = EstadoPago;
@@ -98,13 +100,20 @@ export class PedidoDetalleAdminComponent implements OnInit {
     const role = this.tokenService.getRole();
     this.backRoute = role === UserRole.EMPLEADO ? '/empleado/pedidos' : '/admin/pedidos';
 
-    const idParam = this.route.snapshot.paramMap.get('id');
-    if (idParam) {
-      this.cargarDetalle(+idParam);
-    } else {
-      this.errorMsg.set('ID de pedido inválido.');
-      this.isLoading.set(false);
-    }
+    this.routeSub = this.route.paramMap.subscribe(params => {
+      const idParam = params.get('id');
+      if (idParam && !isNaN(+idParam)) {
+        this.errorMsg.set(null);
+        this.cargarDetalle(+idParam);
+      } else {
+        this.errorMsg.set('ID de pedido inválido.');
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.routeSub?.unsubscribe();
   }
 
   cargarDetalle(id: number): void {

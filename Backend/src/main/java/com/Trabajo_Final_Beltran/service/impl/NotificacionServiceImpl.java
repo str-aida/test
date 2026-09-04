@@ -6,16 +6,17 @@ import com.Trabajo_Final_Beltran.entity.Pedido;
 import com.Trabajo_Final_Beltran.entity.Usuario;
 import com.Trabajo_Final_Beltran.enums.TipoEntrega;
 import com.Trabajo_Final_Beltran.enums.TipoNotificacion;
+import com.Trabajo_Final_Beltran.enums.TipoReferencia;
 import com.Trabajo_Final_Beltran.exception.BusinessException;
 import com.Trabajo_Final_Beltran.mapper.NotificacionMapper;
 import com.Trabajo_Final_Beltran.repository.NotificacionRepository;
 import com.Trabajo_Final_Beltran.security.SecurityUtils;
 import com.Trabajo_Final_Beltran.service.EmailService;
 import com.Trabajo_Final_Beltran.service.NotificacionService;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +35,9 @@ public class NotificacionServiceImpl implements NotificacionService {
         pedido.getUsuario(),
         "Pedido aceptado",
         "Tu pedido " + pedido.getNumeroPedido() + " fue aceptado.",
-        TipoNotificacion.PEDIDO
+        TipoNotificacion.PEDIDO,
+        TipoReferencia.PEDIDO,
+        pedido.getId()
     );
 
 
@@ -48,7 +51,9 @@ public class NotificacionServiceImpl implements NotificacionService {
         "Pedido rechazado",
         "Tu pedido " + pedido.getNumeroPedido()
             + " fue rechazado.",
-        TipoNotificacion.PEDIDO
+        TipoNotificacion.PEDIDO,
+        TipoReferencia.PEDIDO,
+        pedido.getId()
     );
 
   }
@@ -61,7 +66,9 @@ public class NotificacionServiceImpl implements NotificacionService {
         "Pedido en preparación",
         "Tu pedido " + pedido.getNumeroPedido()
             + " está en preparación.",
-        TipoNotificacion.PEDIDO
+        TipoNotificacion.PEDIDO,
+        TipoReferencia.PEDIDO,
+        pedido.getId()
     );
 
   }
@@ -76,7 +83,9 @@ public class NotificacionServiceImpl implements NotificacionService {
         "Pedido listo",
         "Tu pedido " + pedido.getNumeroPedido()
             + " ya está listo.",
-        TipoNotificacion.PEDIDO
+        TipoNotificacion.PEDIDO,
+        TipoReferencia.PEDIDO,
+        pedido.getId()
     );
 
     if (
@@ -108,7 +117,9 @@ public class NotificacionServiceImpl implements NotificacionService {
         "Pedido entregado",
         "Tu pedido " + pedido.getNumeroPedido()
             + " fue entregado.",
-        TipoNotificacion.PEDIDO
+        TipoNotificacion.PEDIDO,
+        TipoReferencia.PEDIDO,
+        pedido.getId()
     );
   }
 
@@ -120,9 +131,9 @@ public class NotificacionServiceImpl implements NotificacionService {
 
     List<Notificacion> notificaciones =
         notificacionRepository
-            .findAllByUsuarioIdOrderByFechaDesc(
-                usuario.getId()
-            );
+        .findTop10ByUsuarioIdOrderByFechaDesc(
+            usuario.getId()
+        );
 
     return notificaciones.stream()
         .map(NotificacionMapper::toResponse)
@@ -178,7 +189,9 @@ public class NotificacionServiceImpl implements NotificacionService {
       Usuario usuario,
       String titulo,
       String mensaje,
-      TipoNotificacion tipo
+      TipoNotificacion tipo,
+      TipoReferencia tipoReferencia,
+      Long referenciaId
   ) {
 
     Notificacion notificacion =
@@ -189,10 +202,24 @@ public class NotificacionServiceImpl implements NotificacionService {
             .leida(false)
             .fecha(LocalDateTime.now())
             .tipo(tipo)
+            .tipoReferencia(tipoReferencia)
+            .referenciaId(referenciaId)
             .build();
 
     notificacionRepository.save(
         notificacion
     );
+  }
+
+  @Override
+  public void eliminarNotificacionesAntiguas() {
+
+    LocalDateTime fechaLimite =
+        LocalDateTime.now().minusDays(15);
+
+    notificacionRepository
+        .eliminarNotificacionesAnterioresA(
+            fechaLimite
+        );
   }
 }

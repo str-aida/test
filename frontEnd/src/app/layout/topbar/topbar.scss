@@ -1,6 +1,8 @@
 @use 'abstracts/index' as *;
 
 .topbar {
+    position: relative;
+    z-index: 100;
     height: 78px;
     background-color: $color-white;
     border-bottom: 1px solid $color-border;

@@ -29,6 +29,27 @@ public interface CuponUsuarioRepository extends JpaRepository<CuponUsuario, Long
     
     boolean existsByUsuarioIdAndCuponId(Long usuarioId, Long cuponId);
 
+    boolean existsByUsuarioIdAndCuponIdAndUsadoFalse(Long usuarioId, Long cuponId);
+
+    /**
+     * Cantidad total de asignaciones de un cupón (usadas + pendientes + reservadas).
+     * Se usa para validar el cupo disponible al asignar.
+     */
+    long countByCuponId(Long cuponId);
+
+    /**
+     * Devuelve el conteo de asignaciones agrupado por cupón para una lista de IDs.
+     * Evita el problema N+1 al listar cupones: una sola consulta en lugar de una por cupón.
+     * Cada elemento del resultado es un Object[] con [cuponId (Long), count (Long)].
+     */
+    @Query("""
+        SELECT cu.cupon.id, COUNT(cu)
+          FROM CuponUsuario cu
+         WHERE cu.cupon.id IN :cuponIds
+         GROUP BY cu.cupon.id
+    """)
+    List<Object[]> contarAsignacionesPorCupones(@Param("cuponIds") List<Long> cuponIds);
+
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("""
         UPDATE CuponUsuario cu

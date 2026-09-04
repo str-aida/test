@@ -142,11 +142,13 @@
                   <button
                     type="button"
                     class="table-actions__delete"
-                    title="Desactivar categoría"
+                    [class.table-actions__delete--disabled]="employee.estado === Estado.INACTIVO"
+                    [disabled]="employee.estado === Estado.INACTIVO"
+                    [title]="employee.estado === Estado.ACTIVO ? 'Desactivar personal' : 'Personal inactivo'"
                     (click)="delete(employee)">
                     
                     <svg lucideTrash2></svg>
-                    <span>Eliminar</span>
+                    <span>Desactivar</span>
 
                   </button>
                 </div>

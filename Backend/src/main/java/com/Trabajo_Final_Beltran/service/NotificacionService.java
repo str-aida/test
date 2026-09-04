@@ -34,4 +34,6 @@ public interface NotificacionService {
 
   long contarNoLeidas();
 
+  void eliminarNotificacionesAntiguas();
+
 }
