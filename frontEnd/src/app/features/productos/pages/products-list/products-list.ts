@@ -82,7 +82,7 @@ export class ProductsListComponent {
     }
 
     const product = this.selectedProduct;
-    this.isDeactivating = true;
+    this.closeDeleteModal();
 
     const request: UpdateProductRequest = {
       nombre: product.nombre,
@@ -97,13 +97,10 @@ export class ProductsListComponent {
 
     this.productService.editarProducto(product.id, request, null).subscribe({
       next: () => {
-        this.isDeactivating = false;
         this.notificationService.success(`Producto "${product.nombre}" desactivado correctamente.`);
-        this.closeDeleteModal();
         this.productsTable?.loadProducts();
       },
       error: (error) => {
-        this.isDeactivating = false;
         console.error('Error al desactivar el producto', error);
         const msg = error?.error?.message || 'Error al desactivar el producto.';
         this.notificationService.error(msg);

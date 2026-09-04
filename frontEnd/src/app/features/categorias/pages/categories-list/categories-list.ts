@@ -83,7 +83,7 @@ export class CategoriesListComponent {
     }
 
     const category = this.selectedCategory;
-    this.isDeactivating = true;
+    this.closeDeleteModal();
 
     const request: UpdateCategoriaRequest = {
       nombre: category.nombre,
@@ -95,13 +95,10 @@ export class CategoriesListComponent {
       .editarCategoria(category.id, request)
       .subscribe({
         next: () => {
-          this.isDeactivating = false;
           this.notificationService.success(`Categoría "${category.nombre}" desactivada correctamente.`);
-          this.closeDeleteModal();
           this.categoriesTable?.loadCategories();
         },
         error: (error) => {
-          this.isDeactivating = false;
           console.error('Error al desactivar la categoría', error);
           const msg = error?.error?.message || 'Error al desactivar la categoría.';
           this.notificationService.error(msg);

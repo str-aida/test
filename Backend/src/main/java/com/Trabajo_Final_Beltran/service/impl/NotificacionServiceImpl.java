@@ -17,6 +17,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import com.Trabajo_Final_Beltran.entity.Cupon;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -74,9 +77,7 @@ public class NotificacionServiceImpl implements NotificacionService {
   }
 
   @Override
-  public void notificarPedidoListo(
-      Pedido pedido
-  ) {
+  public void notificarPedidoListo(Pedido pedido) {
 
     crearNotificacion(
         pedido.getUsuario(),
@@ -221,5 +222,22 @@ public class NotificacionServiceImpl implements NotificacionService {
         .eliminarNotificacionesAnterioresA(
             fechaLimite
         );
+  }
+
+  @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void notificarCuponAsignado(
+      Usuario usuario,
+      Cupon cupon
+  ) {
+
+    crearNotificacion(
+        usuario,
+        "¡Tenés un nuevo cupón!",
+        "Se te asignó el cupón " + cupon.getCodigo() + ".",
+        TipoNotificacion.PROMOCION,
+        TipoReferencia.CUPON,
+        cupon.getId()
+    );
   }
 }

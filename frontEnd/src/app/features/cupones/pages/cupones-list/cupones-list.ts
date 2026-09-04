@@ -171,17 +171,14 @@ export class CuponesListComponent implements OnInit {
     if (!this.selectedCupon) return;
 
     const cuponId = this.selectedCupon.id;
-    this.isDeactivating = true;
+    this.closeDeactivateModal();
 
     this.cuponService.desactivarCupon(cuponId).subscribe({
       next: () => {
-        this.isDeactivating = false;
         this.notificationService.success('Cupón desactivado correctamente.');
-        this.closeDeactivateModal();
         this.loadCupones();
       },
       error: (err) => {
-        this.isDeactivating = false;
         const msg = err?.error?.message || 'Error al desactivar el cupón';
         this.notificationService.error(msg);
       }
