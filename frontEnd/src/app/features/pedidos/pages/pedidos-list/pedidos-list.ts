@@ -135,13 +135,13 @@ export class PedidosListComponent implements OnInit {
     if (this.filtroMetodoPago)   filtros.metodoPago   = this.filtroMetodoPago;
     if (this.filtroFechaDesde)   filtros.fechaDesde   = this.filtroFechaDesde;
     if (this.filtroFechaHasta)   filtros.fechaHasta   = this.filtroFechaHasta;
-    // Búsqueda rápida: se envía al backend como nombreCliente o numeroPedido
+    // Búsqueda rápida: si es número de pedido o formato PED-..., se filtra por numeroPedido; caso contrario, por nombreCliente
     const q = this.busquedaRapida.trim();
     if (q) {
-      // Si parece número de pedido (empieza con #, letras/números sin espacios)
-      if (/^[A-Za-z0-9#-]+$/.test(q)) {
-        filtros.numeroPedido  = q.replace(/^#/, '');
-        filtros.nombreCliente = q;
+      const cleanQ = q.replace(/^#/, '').trim();
+      // Si tiene prefijo ped- (insensible a mayúsculas) o son solo dígitos, es número de pedido
+      if (/^ped-\d+$/i.test(cleanQ) || /^\d+$/.test(cleanQ)) {
+        filtros.numeroPedido = cleanQ.toUpperCase();
       } else {
         filtros.nombreCliente = q;
       }
