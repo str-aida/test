@@ -1,0 +1,545 @@
+<div class="analitica">
+
+  <!-- Header del Dashboard -->
+  <header class="analitica__header">
+    <div class="analitica__header-title">
+      <div class="analitica__header-icon">
+        <svg lucideBarChart3 class="icon"></svg>
+      </div>
+      <div>
+        <h1 class="analitica__title">Analítica & Métricas</h1>
+        <p class="analitica__subtitle">Panel estratégico de ventas, pedidos y clientes en tiempo real</p>
+      </div>
+    </div>
+    <div class="analitica__header-actions">
+      <button type="button" class="btn btn--outline" (click)="cargarDatos()" [disabled]="isLoading()">
+        <svg lucideRefreshCw class="icon" [class.spin]="isLoading()"></svg>
+        <span>Actualizar</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="analitica__loading">
+      <div class="spinner"></div>
+      <p>Cargando datos analíticos del sistema...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (hasError() && !isLoading()) {
+    <div class="analitica__error">
+      <svg lucideAlertTriangle class="icon icon--lg"></svg>
+      <h3>Error al cargar los datos analíticos</h3>
+      <p>No se pudo establecer conexión con los servicios de analítica del servidor.</p>
+      <button type="button" class="btn btn--primary" (click)="cargarDatos()">Reintentar</button>
+    </div>
+  }
+
+  @if (!isLoading() && !hasError()) {
+
+    <!-- 1. RESUMEN EJECUTIVO (6 KPI Cards) -->
+    <section class="analitica__section">
+      <h2 class="analitica__section-title">Resumen Ejecutivo</h2>
+      
+      @if (resumen(); as r) {
+        <div class="kpi-grid">
+
+          <div class="kpi-card kpi-card--primary">
+            <div class="kpi-card__header">
+              <span class="kpi-card__label">Ventas Totales</span>
+              <div class="kpi-card__icon kpi-card__icon--primary">
+                <svg lucideDollarSign class="icon"></svg>
+              </div>
+            </div>
+            <div class="kpi-card__value">{{ r.ventasTotales | currency:'ARS':'symbol':'1.0-2' }}</div>
+            <div class="kpi-card__footer">
+              <span class="kpi-card__badge kpi-card__badge--success">
+                <svg lucideTrendingUp class="icon-sm"></svg> Acumulado
+              </span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-card__header">
+              <span class="kpi-card__label">Total Pedidos</span>
+              <div class="kpi-card__icon kpi-card__icon--info">
+                <svg lucideShoppingBag class="icon"></svg>
+              </div>
+            </div>
+            <div class="kpi-card__value">{{ r.totalPedidos }}</div>
+            <div class="kpi-card__footer">
+              <span class="kpi-card__subtext">Órdenes registradas</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-card__header">
+              <span class="kpi-card__label">Ticket Promedio</span>
+              <div class="kpi-card__icon kpi-card__icon--purple">
+                <svg lucideBarChart3 class="icon"></svg>
+              </div>
+            </div>
+            <div class="kpi-card__value">{{ r.ticketPromedio | currency:'ARS':'symbol':'1.0-2' }}</div>
+            <div class="kpi-card__footer">
+              <span class="kpi-card__subtext">Promedio por pedido</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-card__header">
+              <span class="kpi-card__label">Pedidos Pendientes</span>
+              <div class="kpi-card__icon kpi-card__icon--warning">
+                <svg lucideClock class="icon"></svg>
+              </div>
+            </div>
+            <div class="kpi-card__value">{{ r.pedidosPendientes }}</div>
+            <div class="kpi-card__footer">
+              <span class="kpi-card__subtext">En proceso de atención</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-card__header">
+              <span class="kpi-card__label">Pedidos Entregados</span>
+              <div class="kpi-card__icon kpi-card__icon--success">
+                <svg lucideCheckCircle2 class="icon"></svg>
+              </div>
+            </div>
+            <div class="kpi-card__value">{{ r.pedidosEntregados }}</div>
+            <div class="kpi-card__footer">
+              <span class="kpi-card__subtext">Completados con éxito</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-card__header">
+              <span class="kpi-card__label">Clientes Registrados</span>
+              <div class="kpi-card__icon kpi-card__icon--teal">
+                <svg lucideUsers class="icon"></svg>
+              </div>
+            </div>
+            <div class="kpi-card__value">{{ r.clientesRegistrados }}</div>
+            <div class="kpi-card__footer">
+              <span class="kpi-card__subtext">Base total de usuarios</span>
+            </div>
+          </div>
+
+        </div>
+      }
+    </section>
+
+    <!-- 2. INSIGHT DESTACADO (Producto Estrella) -->
+    @if (productoEstrella(); as producto) {
+      <section class="insight-banner">
+        <div class="insight-banner__icon">
+          <svg lucideStar class="icon icon--lg"></svg>
+        </div>
+        <div class="insight-banner__content">
+          <span class="insight-banner__badge">INSIGHT DE VENTAS</span>
+          <h3 class="insight-banner__text">
+            Producto más vendido: <strong>{{ producto.nombreProducto }}</strong> — 
+            <span>{{ producto.cantidadVendida }} unidades vendidas</span> 
+            ({{ producto.totalVendido | currency:'ARS':'symbol':'1.0-2' }})
+          </h3>
+        </div>
+      </section>
+    }
+
+    <!-- 3. GRID PRINCIPAL: DESEMPEÑO DE VENTAS Y MEJORES CLIENTES -->
+    <div class="analitica__grid-2">
+
+      <!-- 4. Desempeño de Ventas y Tendencia -->
+      <div class="card">
+        <div class="card__header">
+          <div>
+            <h3 class="card__title">Evolución de Ventas</h3>
+            <p class="card__subtitle">Tendencia de facturación en el período seleccionado</p>
+          </div>
+          <div class="card__filter-group">
+            <button type="button" class="filter-btn" [class.filter-btn--active]="diasVentas() === 7" (click)="onDiasVentasChange(7)">7d</button>
+            <button type="button" class="filter-btn" [class.filter-btn--active]="diasVentas() === 15" (click)="onDiasVentasChange(15)">15d</button>
+            <button type="button" class="filter-btn" [class.filter-btn--active]="diasVentas() === 30" (click)="onDiasVentasChange(30)">30d</button>
+            <button type="button" class="filter-btn" [class.filter-btn--active]="diasVentas() === 90" (click)="onDiasVentasChange(90)">90d</button>
+          </div>
+        </div>
+
+        <div class="card__body">
+          @if (ventasPeriodo().length === 0) {
+            <div class="card__empty">No hay registro de ventas en este período.</div>
+          } @else {
+            <div class="svg-chart-container">
+              <svg class="svg-chart" viewBox="0 0 600 180" preserveAspectRatio="none">
+                <!-- Grid Lines -->
+                <line x1="0" y1="20" x2="600" y2="20" class="svg-chart__grid-line" />
+                <line x1="0" y1="80" x2="600" y2="80" class="svg-chart__grid-line" />
+                <line x1="0" y1="140" x2="600" y2="140" class="svg-chart__grid-line" />
+
+                <!-- Fill Area -->
+                <path [attr.d]="svgPoints().area" class="svg-chart__area" />
+
+                <!-- Line -->
+                <path [attr.d]="svgPoints().path" class="svg-chart__line" />
+
+                <!-- Points -->
+                @for (pt of svgPoints().points; track pt.item.periodo) {
+                  <circle
+                    [attr.cx]="pt.x"
+                    [attr.cy]="pt.y"
+                    r="5"
+                    class="svg-chart__point"
+                    (mouseenter)="hoveredPoint.set({ periodo: pt.item.periodo, ventas: pt.item.ventas, x: pt.x, y: pt.y })"
+                    (mouseleave)="hoveredPoint.set(null)"
+                  />
+                }
+              </svg>
+
+              <!-- Hover Tooltip -->
+              @if (hoveredPoint(); as hp) {
+                <div class="chart-tooltip" [style.left.px]="hp.x" [style.top.px]="hp.y - 45">
+                  <strong>{{ hp.periodo }}</strong>
+                  <span>{{ hp.ventas | currency:'ARS':'symbol':'1.0-2' }}</span>
+                </div>
+              }
+            </div>
+
+            <!-- Eje X de Periodos -->
+            <div class="chart-labels">
+              @for (v of ventasPeriodo(); track v.periodo) {
+                <span class="chart-labels__item">{{ v.periodo }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- 3. Mejores Clientes -->
+      <div class="card">
+        <div class="card__header">
+          <div>
+            <h3 class="card__title">Mejores Clientes</h3>
+            <p class="card__subtitle">Clientes con mayor volumen de compra</p>
+          </div>
+          <div class="badge badge--primary">
+            <svg lucideAward class="icon-sm"></svg> Top Clients
+          </div>
+        </div>
+
+        <div class="card__body p-0">
+          @if (mejoresClientes().length === 0) {
+            <div class="card__empty">No se registraron datos de clientes aún.</div>
+          } @else {
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Cliente</th>
+                    <th class="text-center">Pedidos</th>
+                    <th class="text-right">Total Gastado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (cliente of mejoresClientes(); track cliente.id; let i = $index) {
+                    <tr>
+                      <td>
+                        <div class="user-cell">
+                          <span class="user-rank" [class.user-rank--top]="i < 3">{{ i + 1 }}</span>
+                          <div>
+                            <div class="user-name">{{ cliente.nombreCompleto }}</div>
+                            <div class="user-sub">Última compra: {{ cliente.ultimaCompra | date:'dd/MM/yyyy' }}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-center">
+                        <span class="badge badge--neutral">{{ cliente.cantidadPedidos }}</span>
+                      </td>
+                      <td class="text-right text-bold">
+                        {{ cliente.totalGastado | currency:'ARS':'symbol':'1.0-2' }}
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 5. DISTRIBUCIÓN OPERATIVA (3 columnas) -->
+    <section class="analitica__section">
+      <h2 class="analitica__section-title">Distribución Operativa</h2>
+
+      <div class="analitica__grid-3">
+
+        <!-- Pedidos por Estado -->
+        <div class="card">
+          <div class="card__header">
+            <h3 class="card__title">Estado de Pedidos</h3>
+          </div>
+          <div class="card__body">
+            @if (pedidosEstado().length === 0) {
+              <div class="card__empty">Sin registros.</div>
+            } @else {
+              <div class="progress-list">
+                @for (item of pedidosEstado(); track item.estado) {
+                  <div class="progress-item">
+                    <div class="progress-item__info">
+                      <span class="progress-item__label">
+                        <span class="dot" [style.background-color]="getEstadoColor(item.estado)"></span>
+                        {{ formatEstadoLabel(item.estado) }}
+                      </span>
+                      <span class="progress-item__val">
+                        <strong>{{ item.cantidad }}</strong> ({{ calcPorcentaje(item.cantidad, totalPedidosEnEstados()) }}%)
+                      </span>
+                    </div>
+                    <div class="progress-bar">
+                      <div
+                        class="progress-bar__fill"
+                        [style.width.%]="calcPorcentaje(item.cantidad, totalPedidosEnEstados())"
+                        [style.background-color]="getEstadoColor(item.estado)">
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Ventas por Método de Pago -->
+        <div class="card">
+          <div class="card__header">
+            <h3 class="card__title">Métodos de Pago</h3>
+          </div>
+          <div class="card__body">
+            @if (ventasMetodoPago().length === 0) {
+              <div class="card__empty">Sin registros.</div>
+            } @else {
+              <div class="progress-list">
+                @for (item of ventasMetodoPago(); track item.metodoPago) {
+                  <div class="progress-item">
+                    <div class="progress-item__info">
+                      <span class="progress-item__label">
+                        <svg lucideCreditCard class="icon-sm text-muted"></svg>
+                        {{ getMetodoPagoLabel(item.metodoPago) }}
+                      </span>
+                      <span class="progress-item__val">
+                        {{ item.totalVentas | currency:'ARS':'symbol':'1.0-2' }}
+                      </span>
+                    </div>
+                    <div class="progress-bar">
+                      <div
+                        class="progress-bar__fill progress-bar__fill--primary"
+                        [style.width.%]="calcPorcentaje(item.totalVentas, totalVentasMetodoPagoSum())">
+                      </div>
+                    </div>
+                    <div class="progress-item__sub font-xs text-muted">
+                      {{ item.cantidadTransacciones }} transacciones
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Ventas por Tipo de Entrega -->
+        <div class="card">
+          <div class="card__header">
+            <h3 class="card__title">Tipos de Entrega</h3>
+          </div>
+          <div class="card__body">
+            @if (ventasTipoEntrega().length === 0) {
+              <div class="card__empty">Sin registros.</div>
+            } @else {
+              <div class="progress-list">
+                @for (item of ventasTipoEntrega(); track item.tipoEntrega) {
+                  <div class="progress-item">
+                    <div class="progress-item__info">
+                      <span class="progress-item__label">
+                        <svg lucideTruck class="icon-sm text-muted"></svg>
+                        {{ getTipoEntregaLabel(item.tipoEntrega) }}
+                      </span>
+                      <span class="progress-item__val">
+                        {{ item.totalVentas | currency:'ARS':'symbol':'1.0-2' }}
+                      </span>
+                    </div>
+                    <div class="progress-bar">
+                      <div
+                        class="progress-bar__fill progress-bar__fill--teal"
+                        [style.width.%]="calcPorcentaje(item.totalVentas, totalVentasTipoEntregaSum())">
+                      </div>
+                    </div>
+                    <div class="progress-item__sub font-xs text-muted">
+                      {{ item.cantidadPedidos }} pedidos
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 6. CATÁLOGO: PRODUCTOS MÁS VENDIDOS Y MENOS VENDIDOS -->
+    <div class="analitica__grid-2">
+
+      <!-- Productos Más Vendidos -->
+      <div class="card">
+        <div class="card__header">
+          <h3 class="card__title">Productos Más Vendidos</h3>
+          <span class="badge badge--success">Top Salientes</span>
+        </div>
+        <div class="card__body p-0">
+          @if (masVendidos().length === 0) {
+            <div class="card__empty">No se registraron ventas de productos.</div>
+          } @else {
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th class="text-center">Unidades</th>
+                    <th class="text-right">Total Facturado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (prod of masVendidos(); track prod.idProducto) {
+                    <tr>
+                      <td class="font-medium">{{ prod.nombreProducto }}</td>
+                      <td class="text-center">
+                        <span class="badge badge--info">{{ prod.cantidadVendida }} u.</span>
+                      </td>
+                      <td class="text-right text-bold">
+                        {{ prod.totalVendido | currency:'ARS':'symbol':'1.0-2' }}
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Productos Menos Vendidos -->
+      <div class="card">
+        <div class="card__header">
+          <div>
+            <h3 class="card__title">Productos de Menor Rotación</h3>
+            <p class="card__subtitle">Baja o nula demanda en el período</p>
+          </div>
+          <div class="card__filter-group">
+            <button type="button" class="filter-btn" [class.filter-btn--active]="diasMenosVendidos() === 15" (click)="onDiasMenosVendidosChange(15)">15d</button>
+            <button type="button" class="filter-btn" [class.filter-btn--active]="diasMenosVendidos() === 30" (click)="onDiasMenosVendidosChange(30)">30d</button>
+            <button type="button" class="filter-btn" [class.filter-btn--active]="diasMenosVendidos() === 90" (click)="onDiasMenosVendidosChange(90)">90d</button>
+          </div>
+        </div>
+        <div class="card__body p-0">
+          @if (menosVendidos().length === 0) {
+            <div class="card__empty">Sin registros de menor rotación.</div>
+          } @else {
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th class="text-center">Unidades</th>
+                    <th class="text-right">Total Facturado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (prod of menosVendidos(); track prod.idProducto) {
+                    <tr>
+                      <td class="font-medium text-muted-dark">{{ prod.nombreProducto }}</td>
+                      <td class="text-center">
+                        <span class="badge badge--warning">{{ prod.cantidadVendida }} u.</span>
+                      </td>
+                      <td class="text-right text-muted-dark">
+                        {{ prod.totalVendido | currency:'ARS':'symbol':'1.0-2' }}
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 7. RIESGO / CLIENTES INACTIVOS -->
+    <section class="analitica__section">
+      <div class="card card--danger-border">
+        <div class="card__header">
+          <div class="flex-align">
+            <div class="card__header-icon card__header-icon--danger">
+              <svg lucideUserX class="icon"></svg>
+            </div>
+            <div>
+              <h3 class="card__title">Clientes Inactivos (Alerta de Retención)</h3>
+              <p class="card__subtitle">Clientes registrados sin realizar compras durante el rango seleccionado</p>
+            </div>
+          </div>
+          <div class="card__filter-group">
+            <button type="button" class="filter-btn" [class.filter-btn--active]="diasInactivos() === 15" (click)="onDiasInactivosChange(15)">>15 días</button>
+            <button type="button" class="filter-btn" [class.filter-btn--active]="diasInactivos() === 30" (click)="onDiasInactivosChange(30)">>30 días</button>
+            <button type="button" class="filter-btn" [class.filter-btn--active]="diasInactivos() === 60" (click)="onDiasInactivosChange(60)">>60 días</button>
+            <button type="button" class="filter-btn" [class.filter-btn--active]="diasInactivos() === 90" (click)="onDiasInactivosChange(90)">>90 días</button>
+          </div>
+        </div>
+
+        <div class="card__body p-0">
+          @if (clientesInactivos().length === 0) {
+            <div class="card__empty text-success">
+              ¡Excelente! No hay clientes inactivos en los últimos {{ diasInactivos() }} días.
+            </div>
+          } @else {
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Cliente</th>
+                    <th>Email</th>
+                    <th class="text-center">Última Compra</th>
+                    <th class="text-right">Histórico Gastado</th>
+                    <th class="text-center">Pedidos Históricos</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (cliente of clientesInactivos(); track cliente.idCliente) {
+                    <tr>
+                      <td class="font-medium">{{ cliente.nombreCompleto }}</td>
+                      <td class="text-muted">{{ cliente.email }}</td>
+                      <td class="text-center">
+                        @if (cliente.ultimaCompra) {
+                          <span class="badge badge--danger">{{ cliente.ultimaCompra | date:'dd/MM/yyyy' }}</span>
+                        } @else {
+                          <span class="badge badge--neutral">Sin compras</span>
+                        }
+                      </td>
+                      <td class="text-right">
+                        {{ cliente.totalGastado | currency:'ARS':'symbol':'1.0-2' }}
+                      </td>
+                      <td class="text-center">
+                        <span class="badge badge--neutral">{{ cliente.cantidadPedidos }}</span>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+
+  }
+
+</div>

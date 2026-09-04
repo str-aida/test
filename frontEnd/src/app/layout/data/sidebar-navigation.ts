@@ -2,9 +2,9 @@ import { NavigationItem } from '../models/navigation-item.model';
 
 export const ADMIN_NAVIGATION: NavigationItem[] = [
   {
-    id: 'dashboard',
-    label: 'Dashboard',
-    route: '/admin/dashboard'
+    id: 'analitica',
+    label: 'Analítica',
+    route: '/admin/analitica'
   },
   {
     id: 'pedidos-en-curso',

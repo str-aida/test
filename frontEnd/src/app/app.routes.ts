@@ -26,6 +26,7 @@ import { PedidosListComponent } from './features/pedidos/pages/pedidos-list/pedi
 import { PedidoDetalleAdminComponent } from './features/pedidos/pages/pedido-detalle-admin/pedido-detalle-admin';
 import { PedidosEnCursoComponent } from './features/pedidos/pages/pedidos-en-curso/pedidos-en-curso';
 import { ConfiguracionComponent } from './features/configuracion/configuracion';
+import { AnaliticaDashboardComponent } from './features/analitica/pages/analitica-dashboard/analitica-dashboard';
 
 export const routes: Routes = [
 
@@ -48,6 +49,8 @@ export const routes: Routes = [
     path: 'admin',
     component: AppLayoutComponent,
     children: [
+      { path: 'analitica', component: AnaliticaDashboardComponent, data: { title: 'Analítica y Métricas' } },
+      { path: 'dashboard', redirectTo: 'analitica', pathMatch: 'full' },
       { path: 'personal', component: EmployeesListComponent, data: { title: 'Personal' } },
       { path: 'perfil', component: ProfileComponent, data: { title: 'Perfil' } },
       { path: 'categorias', component: CategoriesListComponent, data: { title: 'Categorías' } },
