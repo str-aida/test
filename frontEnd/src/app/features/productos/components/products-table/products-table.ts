@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
-import { LucideImage, LucidePencil, LucideTrash2 } from '@lucide/angular';
+import { LucideImage, LucidePencil, LucideTrash2, LucideSearch, LucideFilter } from '@lucide/angular';
 import { ProductsService } from '../../../../core/services/products.service';
 import { ProductResponse } from '../../../../core/models/product-response';
 import { environment } from '../../../../../environments/environment';
@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-products-table',
-  imports: [FormsModule, LucideImage, DecimalPipe, LucidePencil, LucideTrash2],
+  imports: [FormsModule, LucideImage, DecimalPipe, LucidePencil, LucideTrash2, LucideSearch, LucideFilter],
   templateUrl: './products-table.html',
   styleUrl: './products-table.scss',
 })

@@ -3,6 +3,7 @@
   <div class="employees-table__toolbar">
 
     <div class="employees-table__search">
+      <svg lucideSearch class="table-search__icon"></svg>
       <input
         type="text"
         class="form-control"
@@ -12,11 +13,12 @@
     </div>
 
     <div class="employees-table__filter">
+      <svg lucideFilter class="filter-icon"></svg>
       <select
         class="form-select"
         [(ngModel)]="rol"
         (change)="search()">
-        <option value="">Todos los roles</option>
+        <option value="">Roles</option>
         <option value="ADMIN">Administrador</option>
         <option value="EMPLEADO">Empleado</option>
       </select>

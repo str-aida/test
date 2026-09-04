@@ -3,24 +3,23 @@
   <div class="products-table__toolbar">
 
     <div class="products-table__search">
-
+      <svg lucideSearch class="table-search__icon"></svg>
       <input
         type="text"
         class="form-control"
         placeholder="Buscar por nombre o descripción..."
         [(ngModel)]="texto"
         (keyup.enter)="search()">
-
     </div>
 
     <div class="products-table__filter">
-
+      <svg lucideFilter class="filter-icon"></svg>
       <select
         class="form-select"
         [(ngModel)]="categoriaId"
         (change)="search()">
 
-        <option [ngValue]="undefined">Todas las categorías</option>
+        <option [ngValue]="undefined">Categorías</option>
 
         @for (categoria of categorias(); track categoria.id) {
           <option [ngValue]="categoria.id"> {{ categoria.nombre }} </option>
@@ -31,13 +30,13 @@
     </div>
 
     <div class="products-table__filter">
-
+      <svg lucideFilter class="filter-icon"></svg>
       <select
         class="form-select"
         [(ngModel)]="estado"
         (change)="search()">
 
-        <option value="">Todos los estados</option>
+        <option value="">Estados</option>
         <option value="ACTIVO">Activo</option>
         <option value="INACTIVO">Inactivo</option>
 
