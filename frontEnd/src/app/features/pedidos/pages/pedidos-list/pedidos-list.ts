@@ -113,7 +113,7 @@ export class PedidosListComponent implements OnInit {
   }
 
   cargarEstablecimiento(): void {
-    this.establecimientoService.obtenerEstablecimiento().subscribe({
+    this.establecimientoService.obtenerInfoClienteActual().subscribe({
       next: (est) => {
         this.tipoServicioEstablecimiento = est.tipoServicio;
       },
