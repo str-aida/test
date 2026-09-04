@@ -35,11 +35,6 @@ public interface CuponRepository extends JpaRepository<Cupon, Long> {
         EstadoCupon estado
 );
 
-    /**
-     * Adquiere un lock pesimista de escritura sobre la fila del cupón.
-     * Serializa las asignaciones concurrentes: dos hilos no pueden pasar
-     * el "contar → insertar" al mismo tiempo para el mismo cupón.
-     */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT c FROM Cupon c WHERE c.id = :id")
     Optional<Cupon> findByIdForUpdate(@Param("id") Long id);

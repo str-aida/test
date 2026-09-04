@@ -27,12 +27,5 @@ public class CuponResponse {
     private Integer usoMaximo;
     private Integer usosActuales;
     private EstadoCupon estado;
-
-    /**
-     * Cupos restantes para asignar a nuevos usuarios.
-     * null = sin límite (usoMaximo es null).
-     * 0   = agotado.
-     * Calculado como max(usoMaximo - totalAsignaciones, 0).
-     */
     private Integer cuposDisponibles;
-}
+}

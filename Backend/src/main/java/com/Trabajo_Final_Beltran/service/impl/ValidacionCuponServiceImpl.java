@@ -38,8 +38,6 @@ public class ValidacionCuponServiceImpl implements ValidacionCuponService {
 
     private void validarEstadoActivo(Cupon cupon) {
         if (cupon.getEstado() != EstadoCupon.ACTIVO) {
-            // Si el cupón quedó INACTIVO porque se agotaron sus cupos de asignación (llegó al límite de usuarios),
-            // los usuarios que ya lo tienen asignado pueden seguir utilizándolo en sus pedidos.
             boolean agotadoPorCupos = cupon.getUsoMaximo() != null
                     && cuponUsuarioRepository.countByCuponId(cupon.getId()) >= cupon.getUsoMaximo();
 

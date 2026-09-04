@@ -36,9 +36,7 @@ public class CuponUsuarioServiceImpl implements CuponUsuarioService {
         }
 
         try {
-            // Re-bloquear el cupón con lock pesimista de escritura.
-            // Serializa asignaciones concurrentes sobre el mismo cupón:
-            // dos hilos no pueden pasar el "contar → insertar" simultáneamente.
+
             Cupon cuponBloqueado = cuponRepository.findByIdForUpdate(cupon.getId())
                     .orElseThrow(() -> new BusinessException("El cupón no existe"));
 
@@ -59,7 +57,6 @@ public class CuponUsuarioServiceImpl implements CuponUsuarioService {
                     .build();
             cuponUsuarioRepository.save(cuponUsuario);
 
-            // Si al asignar se agotaron los cupos disponibles, pasar el cupón de ACTIVO a INACTIVO
             if (cuponBloqueado.getUsoMaximo() != null) {
                 cuponUsuarioRepository.flush();
                 long totalAsignaciones = cuponUsuarioRepository.countByCuponId(cuponBloqueado.getId());
@@ -78,22 +75,13 @@ public class CuponUsuarioServiceImpl implements CuponUsuarioService {
         }
     }
 
-    /**
-     * Valida que un cupón cumple todas las condiciones para ser asignable:
-     * estado ACTIVO, dentro de la vigencia y con cupos disponibles (por COUNT de asignaciones).
-     * Todos los campos opcionales son null-safe.
-     *
-     * IMPORTANTE: este método recibe el cupón ya bloqueado con PESSIMISTIC_WRITE,
-     * por lo que el COUNT que se hace a continuación está protegido contra la race condition.
-     */
+
     private void validarCuponAsignable(Cupon cupon) {
 
-        // 1. Estado activo
         if (cupon.getEstado() != EstadoCupon.ACTIVO) {
             throw new BusinessException("El cupón no está activo");
         }
 
-        // 2. Vigencia de fechas (null-safe: null = sin restricción de fecha)
         LocalDate hoy = LocalDate.now();
 
         if (cupon.getFechaInicio() != null && hoy.isBefore(cupon.getFechaInicio())) {
@@ -104,9 +92,6 @@ public class CuponUsuarioServiceImpl implements CuponUsuarioService {
             throw new BusinessException("El cupón ya no está vigente (venció)");
         }
 
-        // 3. Cupos disponibles: se cuenta el TOTAL de asignaciones (usadas + pendientes + reservadas).
-        //    El cupo se consume al ASIGNAR, no al usar.
-        //    usoMaximo == null → sin límite → no se valida.
         if (cupon.getUsoMaximo() != null) {
             long totalAsignaciones = cuponUsuarioRepository.countByCuponId(cupon.getId());
             if (totalAsignaciones >= cupon.getUsoMaximo()) {

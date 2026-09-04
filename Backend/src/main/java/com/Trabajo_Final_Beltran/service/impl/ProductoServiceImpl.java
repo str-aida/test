@@ -1,6 +1,4 @@
-
 package com.Trabajo_Final_Beltran.service.impl;
-
 
 import com.Trabajo_Final_Beltran.dto.request.CreateProductoRequest;
 import com.Trabajo_Final_Beltran.dto.request.UpdateProductoRequest;
@@ -256,12 +254,20 @@ public class ProductoServiceImpl implements ProductoService {
                             )
                     );
 
-      Categoria categoria =
-          obtenerCategoriaActiva(
-              request.getCategoriaId(),
-              establecimiento.getId()
+      Categoria categoria;
+      if (producto.getCategoria().getId().equals(request.getCategoriaId())
+              && request.getEstado() == EstadoProducto.INACTIVO) {
+          categoria = categoriaRepository.findByIdAndEstablecimientoId(
+                  request.getCategoriaId(),
+                  establecimiento.getId()
+          ).orElseThrow(() -> new BusinessException("La categoría no existe o no pertenece al establecimiento"));
+      } else {
+          categoria = obtenerCategoriaActiva(
+                  request.getCategoriaId(),
+                  establecimiento.getId()
           );
-
+      }
+      
     validarCodigoUnicoEdicion(
             request,
             productoId

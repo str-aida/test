@@ -35,19 +35,10 @@ public class CuponMapper {
         cupon.setEstado(request.getEstado());
     }
 
-    /**
-     * Mapea un cupón sin calcular cuposDisponibles (cuposDisponibles = null).
-     * Usar cuando no se dispone del conteo de asignaciones o no es relevante.
-     */
     public static CuponResponse toResponse(Cupon cupon) {
         return buildResponse(cupon, null);
     }
 
-    /**
-     * Mapea un cupón calculando cuposDisponibles a partir del total de asignaciones.
-     * usoMaximo == null → cuposDisponibles = null (sin límite).
-     * usoMaximo != null → cuposDisponibles = max(usoMaximo - totalAsignaciones, 0).
-     */
     public static CuponResponse toResponse(Cupon cupon, long totalAsignaciones) {
         Integer cuposDisponibles = null;
         if (cupon.getUsoMaximo() != null) {
