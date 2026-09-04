@@ -143,16 +143,24 @@ $stitch-text-muted: #6b7280;
   }
 }
 
-/* CARD DE FILTROS Y BÚSQUEDA */
+/* FILTROS Y BÚSQUEDA */
 .cupones-filter-card {
-  background: $color-white;
-  border-radius: 8px;
-  border: 1px solid $stitch-border;
-  padding: 16px 20px;
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  gap: $space-md;
+  gap: 1rem;
+  width: 100%;
+  margin: 2rem auto 2.5rem;
+
+  /* Sin contenedor de fondo */
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+  }
 
   @media (max-width: 640px) {
     flex-direction: column;
@@ -160,82 +168,116 @@ $stitch-text-muted: #6b7280;
   }
 }
 
+/* BUSCADOR */
 .cupones-filter__search {
   position: relative;
+  display: flex;
+  align-items: center;
   flex: 1;
-  max-width: 440px;
+  min-width: 200px;
+}
 
-  @media (max-width: 640px) {
-    max-width: 100%;
+.cupones-filter__search-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 16px 0 36px;
+  border: 1px solid $color-border;
+  border-radius: 8px;
+  background: $color-white;
+  font-family: $font-body;
+  font-size: $fs-caption;
+  color: $color-text;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+
+  &::placeholder {
+    font-family: $font-body;
+    color: #888;
+  }
+
+  &:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 .15rem rgba($color-primary, .15);
+    outline: none;
   }
 }
 
 .cupones-filter__search-icon {
   position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
+  left: 12px;
   width: 18px;
   height: 18px;
-  color: $stitch-text-muted;
+  color: $color-text-light;
+  pointer-events: none;
 }
 
-.cupones-filter__search-input {
-  width: 100%;
-  height: 40px;
-  padding-left: 42px;
-  padding-right: 14px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-family: $font-body;
-  font-size: 0.9rem;
-  color: $stitch-text-main;
-  outline: none;
-  transition: border-color 0.2s ease;
+/* FILTRO */
+.cupones-filter__status {
+  display: flex;
+  align-items: center;
 
-  &::placeholder {
-    color: #9ca3af;
-  }
-
-  &:focus {
-    border-color: $stitch-primary;
-    box-shadow: 0 0 0 3px rgba($stitch-primary, 0.08);
+  @media (max-width: 640px) {
+    width: 100%;
   }
 }
 
 .cupones-filter__select-wrapper {
   position: relative;
-  display: inline-flex;
+  display: flex;
   align-items: center;
 }
 
 .cupones-filter__select {
-  height: 40px;
-  padding: 0 36px 0 14px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
+  width: 100%;
+  height: 42px;
+  padding: 0 16px 0 36px;
+  border: 1px solid $color-border;
+  border-radius: 8px;
+  background: $color-white;
   font-family: $font-body;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #374151;
+  font-size: $fs-caption;
+  color: $color-text;
   outline: none;
-  background-color: $color-white;
   cursor: pointer;
-  appearance: none;
-  transition: border-color 0.2s ease;
+  transition: border-color .2s ease, box-shadow .2s ease;
 
   &:focus {
-    border-color: $stitch-primary;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 .15rem rgba($color-primary, .15);
+    outline: none;
   }
 }
 
 .cupones-filter__filter-icon {
   position: absolute;
-  right: 12px;
-  pointer-events: none;
+  left: 12px;
   width: 16px;
   height: 16px;
-  color: #6b7280;
+  color: $color-text-light;
+  pointer-events: none;
+}
+
+/* BOTÓN BUSCAR */
+.cupones-filter__button {
+  width: 100px;
+  height: 42px;
+  border: none;
+  border-radius: 8px;
+  background: $color-primary;
+  color: $color-white;
+  font-family: $font-body;
+  font-size: $fs-body;
+  font-weight: $fw-semibold;
+  transition: .2s ease;
+
+  &:hover {
+    background: $color-primary-dark;
+    color: $color-white;
+  }
+
+  @media (max-width: 640px) {
+    width: 100%;
+  }
 }
 
 /* CARD DE TABLA STITCH */
@@ -642,4 +684,3 @@ $stitch-text-muted: #6b7280;
     font-weight: 600;
   }
 }
-

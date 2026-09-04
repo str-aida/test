@@ -103,24 +103,29 @@
 
 .pedidos-toolbar {
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: $space-sm;
-  margin-bottom: $space-sm;
+  gap: 1rem;
+  width: 100%;
+  margin: 2rem auto 2.5rem;
 }
 
 // ─── BÚSQUEDA RÁPIDA ─────────────────────────────────────────
 
 .pedidos-search {
-  flex: 1;
   position: relative;
   display: flex;
   align-items: center;
+  flex: 1;
+  min-width: 200px;
 
   &__icon {
     position: absolute;
-    left: 14px;
-    width: 17px;
-    height: 17px;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
     color: $color-text-light;
     pointer-events: none;
   }
@@ -128,20 +133,25 @@
   &__input {
     width: 100%;
     height: 42px;
-    padding: 0 40px 0 42px;
-    border: 1.5px solid $color-border;
+    padding: 0 40px 0 36px;
+    border: 1px solid $color-border;
     border-radius: 8px;
+    background: $color-white;
     font-family: $font-body;
-    font-size: $fs-body;
+    font-size: $fs-caption;
     color: $color-text;
-    background: $color-background;
-    transition: border-color 0.2s;
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
 
-    &::placeholder { color: $color-text-light; }
+    &::placeholder {
+      font-family: $font-body;
+      color: #888;
+    }
 
     &:focus {
+      border-color: $color-primary;
+      box-shadow: 0 0 0 .15rem rgba($color-primary, .15);
       outline: none;
-      border-color: $color-primary-light;
     }
   }
 
@@ -158,9 +168,12 @@
     color: $color-text-light;
     cursor: pointer;
     border-radius: 50%;
-    transition: background 0.15s;
+    transition: background .15s ease, color .15s ease;
 
-    svg { width: 14px; height: 14px; }
+    svg {
+      width: 14px;
+      height: 14px;
+    }
 
     &:hover {
       background: $color-surface;
@@ -172,23 +185,27 @@
 // ─── BOTÓN BUSCAR ─────────────────────────────────────────────
 
 .btn-buscar {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  width: 100px;
   height: 42px;
-  padding: 0 16px;
-  background: $color-primary;
-  color: $color-white;
   border: none;
   border-radius: 8px;
+  background: $color-primary;
+  color: $color-white;
   font-family: $font-body;
-  font-size: $fs-caption;
+  font-size: $fs-body;
   font-weight: $fw-semibold;
   cursor: pointer;
-  white-space: nowrap;
-  transition: filter 0.15s;
+  transition: .2s ease;
 
-  &:hover { filter: brightness(1.15); }
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  &:hover {
+    background: $color-primary-dark;
+    color: $color-white;
+  }
 
   &__icon {
     width: 15px;

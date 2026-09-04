@@ -68,12 +68,16 @@
 
       <div class="audit-filter-panel__field">
         <label for="filtro-usuario">Usuario</label>
-        <input
-          id="filtro-usuario"
-          type="text"
-          class="audit-filter-panel__input"
-          placeholder="Buscar por usuario..."
-          [(ngModel)]="filtroUsuario" />
+
+        <div class="audit-filter-panel__search">
+          <svg lucideSearch class="audit-filter-panel__search-icon"></svg>
+          <input
+            id="filtro-usuario"
+            type="text"
+            class="audit-filter-panel__input"
+            placeholder="Buscar por usuario..."
+            [(ngModel)]="filtroUsuario" />
+        </div>
       </div>
 
       <div class="audit-filter-panel__buttons">

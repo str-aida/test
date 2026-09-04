@@ -42,22 +42,29 @@
         class="cupones-filter__search-input"
         placeholder="Buscar por código..."
         [(ngModel)]="searchTerm"
-        (ngModelChange)="applyFilter()">
+        (keyup.enter)="applyFilter()">
     </div>
 
     <div class="cupones-filter__status">
       <div class="cupones-filter__select-wrapper">
+        <svg lucideFilter class="cupones-filter__filter-icon"></svg>
         <select
           class="cupones-filter__select"
           [(ngModel)]="statusFilter"
-          (ngModelChange)="applyFilter()">
-          <option value="TODOS">Filtros</option>
+          (change)="applyFilter()">
+          <option value="TODOS">Estados</option>
           <option value="ACTIVO">Activos</option>
           <option value="INACTIVO">Inactivos</option>
         </select>
-        <svg lucideFilter class="cupones-filter__filter-icon"></svg>
       </div>
     </div>
+
+    <button
+      type="button"
+      class="btn cupones-filter__button"
+      (click)="applyFilter()">
+      Buscar
+    </button>
   </div>
 
   <!-- CONTENIDO PRINCIPAL -->
