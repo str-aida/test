@@ -8,7 +8,7 @@
 .product-list__header {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 .product-list__header-title {
@@ -21,6 +21,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     width: 48px;
     height: 48px;
     border-radius: 12px;
@@ -42,7 +43,6 @@
 }
 
 .product-list__subtitle {
-    //margin: $space-xs 0 0;
     font-family: $font-body;
     font-size: $fs-caption;
     color: $color-text-light;
@@ -52,7 +52,6 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: $space-sm;
 }
 
 .product-list__add-btn .btn__icon {
@@ -60,9 +59,15 @@
     height: 20px;
 }
 
+@media (max-width: $bp-laptop) {
+  .product-list__header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: $space-md;
+  }
+}
 
 /* MODAL GENERAL */
-
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -89,7 +94,6 @@
     box-shadow: 0 20px 50px rgba(0, 0, 0, .2);
     animation: modal-enter .2s ease;
 }
-
 
 /* HEADER */
 .modal-card__header {
@@ -275,4 +279,4 @@
 @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
-}
+}

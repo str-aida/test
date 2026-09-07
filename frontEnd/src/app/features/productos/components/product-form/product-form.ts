@@ -20,9 +20,10 @@ import { NotificationService } from '../../../../core/services/notification.serv
 })
 export class ProductFormComponent extends BaseFormComponent implements OnInit, OnChanges {
 
-  protected override get form(): FormGroup {
-    return this.productForm;
-  }
+  @Input() editingProduct: ProductResponse | null = null;
+  @Output() productCreated = new EventEmitter<void>();
+  @Output() productUpdated = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
 
   private readonly fb = inject(FormBuilder);
   private readonly productService = inject(ProductsService);
@@ -30,19 +31,16 @@ export class ProductFormComponent extends BaseFormComponent implements OnInit, O
   private readonly notificationService = inject(NotificationService);
   protected readonly Estado = Estado;
   protected categorias = signal<CategoriaResponse[]>([]);
-
   protected selectedImage: File | null = null;
   protected imagePreviewUrl = signal<string | null>(null);
   protected removeImage = signal(false);
 
-  @Input() editingProduct: ProductResponse | null = null;
-  @Output() productCreated = new EventEmitter<void>();
-  @Output() productUpdated = new EventEmitter<void>();
-  @Output() cancel = new EventEmitter<void>();
+  protected override get form(): FormGroup {
+    return this.productForm;
+  }
 
   /* FORMULARIO */
   readonly productForm = this.fb.group({
-
     nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(150)]],
     descripcion: ['', Validators.maxLength(500)],
     precio: this.fb.control<number | null>(null, [Validators.required, Validators.min(0.01)]),
@@ -50,7 +48,6 @@ export class ProductFormComponent extends BaseFormComponent implements OnInit, O
     estado: [Estado.ACTIVO, Validators.required],
     stock: [0, Validators.min(0)],
     codigo: ['', [Validators.required, Validators.maxLength(50)]]
-
   });
 
   get isEditMode(): boolean {
@@ -109,23 +106,18 @@ export class ProductFormComponent extends BaseFormComponent implements OnInit, O
   }
 
   onSubmit(): void {
-
     if (this.form.invalid) {
       this.markFormAsTouched();
       return;
     }
-
     if (this.isEditMode) {
       this.updateProduct();
       return;
     }
-
     this.createProduct();
-
   }
 
   private createProduct(): void {
-
     const request = this.buildRequest();
 
     this.productService.crearProducto(request, this.selectedImage).subscribe({
@@ -136,7 +128,6 @@ export class ProductFormComponent extends BaseFormComponent implements OnInit, O
         console.error('Error al crear el producto: ', error);
       }
     });
-
   }
 
   private buildRequest(): CreateProductRequest {
@@ -151,7 +142,6 @@ export class ProductFormComponent extends BaseFormComponent implements OnInit, O
   }
 
   private updateProduct(): void {
-
     if (!this.editingProduct) {
       return;
     }
@@ -167,7 +157,6 @@ export class ProductFormComponent extends BaseFormComponent implements OnInit, O
         console.error('Error al editar el producto: ', error);
       }
     });
-
   }
 
   private buildUpdateRequest(): UpdateProductRequest {
@@ -184,7 +173,6 @@ export class ProductFormComponent extends BaseFormComponent implements OnInit, O
   }
 
   protected onImageSelected(event: Event): void {
-
     const input = event.target as HTMLInputElement;
 
     if (!input.files || input.files.length === 0) {
@@ -216,9 +204,7 @@ export class ProductFormComponent extends BaseFormComponent implements OnInit, O
     const image = new Image();
 
     image.onload = () => {
-
       console.log('Dimensiones:', image.width, 'x', image.height);
-
       const minWidth = 300;
       const minHeight = 300;
       const maxWidth = 3000;
@@ -243,11 +229,9 @@ export class ProductFormComponent extends BaseFormComponent implements OnInit, O
       }
 
       this.imagePreviewUrl.set(objectUrl);
-
     };
-
+    
     image.src = objectUrl;
-
   }
 
   protected onRemoveImage(): void {

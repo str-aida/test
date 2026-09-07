@@ -1,6 +1,6 @@
 import { Component, inject, ViewChild } from '@angular/core';
 import { ProductsTableComponent } from '../../components/products-table/products-table';
-import { LucideAlertTriangle, LucidePlus, LucideRefreshCw, LucideShapes, LucideX } from '@lucide/angular';
+import { LucideTriangleAlert, LucidePlus, LucideRefreshCw, LucideX, LucideShoppingBag } from '@lucide/angular';
 import { ProductFormComponent } from '../../components/product-form/product-form';
 import { ProductResponse } from '../../../../core/models/product-response';
 import { ProductsService } from '../../../../core/services/products.service';
@@ -10,15 +10,7 @@ import { Estado } from '../../../../core/models/enums/estado.enum';
 
 @Component({
   selector: 'app-products-list',
-  imports: [
-    ProductsTableComponent,
-    ProductFormComponent,
-    LucideShapes,
-    LucidePlus,
-    LucideX,
-    LucideAlertTriangle,
-    LucideRefreshCw
-  ],
+  imports: [ProductsTableComponent, ProductFormComponent, LucideShoppingBag, LucidePlus, LucideX, LucideTriangleAlert, LucideRefreshCw],
   templateUrl: './products-list.html',
   styleUrl: './products-list.scss',
 })
@@ -31,7 +23,6 @@ export class ProductsListComponent {
   productsTable?: ProductsTableComponent;
 
   selectedProduct: ProductResponse | null = null;
-
   showCreateModal = false;
   showEditModal = false;
   showDeleteModal = false;

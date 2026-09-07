@@ -27,7 +27,7 @@
     thead {
         background: $color-primary;
         th {
-            padding: 1rem 1.25rem;
+            padding: .75rem .95rem;
             color: $color-white;
             font-size: $fs-caption;
             font-weight: $fw-semibold;
@@ -48,7 +48,7 @@
             }
         }
         td {
-            padding: 1rem 1.25rem;
+            padding: .75rem .95rem;
             color: $color-text;
             font-size: $fs-caption;
             vertical-align: middle;
