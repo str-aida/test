@@ -1,135 +1,52 @@
-<form
-    class="category-form"
-    [formGroup]="categoryForm"
-    (ngSubmit)="onSubmit()">
+<form class="category-form" [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
 
     <!-- NOMBRE -->
     <div class="form-field">
-
-        <label
-            class="form-field__label"
-            for="name">
-            Nombre de la categoría
-
-            <span class="form-field__required">*</span>
-        </label>
-
-        <input
-            id="name"
-            class="form-field__input"
-            type="text"
-            formControlName="nombre"
-            placeholder="Ej. Tortas, Bebidas, Postres"
-            autocomplete="off">
-
-        @if (hasError('nombre', 'required')) {
-            <small class="form-field__error">
-                El nombre es obligatorio.
-            </small>
-        } @else if (hasError('nombre', 'minlength') || hasError('nombre', 'maxlength')) {
-            <small class="form-field__error">
-                El nombre debe tener entre 3 y 100 caracteres.
-            </small>
-        }
-
+        <label class="form-field__label">Nombre de la categoría <span class="form-field__required">*</span></label>
+        <input class="form-field__input" type="text" formControlName="nombre" placeholder="Ej. Tortas, Bebidas, Postres">
+            @if (hasError('nombre', 'required')) {
+                <small class="form-field__error">El nombre es obligatorio.</small>
+            } @else if (hasError('nombre', 'minlength') || hasError('nombre', 'maxlength')) {
+                <small class="form-field__error">El nombre debe tener entre 3 y 100 caracteres.
+                </small>
+            }
     </div>
-
     <!-- DESCRIPCION -->
     <div class="form-field">
-
-        <label
-            class="form-field__label"
-            for="description">
-            Descripción
-        </label>
-
-        <textarea
-            id="description"
-            class="form-field__textarea"
-            rows="3"
-            formControlName="descripcion"
-            placeholder="Variedad de tortas artesanales y postres enteros"></textarea>
-
+        <label class="form-field__label">Descripción</label>
+        <textarea class="form-field__textarea" rows="3" formControlName="descripcion" placeholder="Variedad de tortas artesanales y postres enteros"></textarea>
         @if (hasError('descripcion', 'maxlength')) {
-            <small class="form-field__error">
-                La descripción no puede superar los 200 caracteres.
-            </small>
+            <small class="form-field__error">La descripción no puede superar los 200 caracteres.</small>
         }
-
     </div>
-
     <!-- ESTADO -->
     @if (isEditMode) {
-
         <div class="form-field">
-
-            <label class="form-field__label">
-                Estado
-
-                <span class="form-field__required">*</span>
-            </label>
-
+            <label class="form-field__label">Estado <span class="form-field__required">*</span></label>
             <div class="estado-toggle">
-
-                <label
-                    class="estado-toggle__option estado-toggle__option--active"
+                <label class="estado-toggle__option estado-toggle__option--active"
                     [class.estado-toggle__option--selected]="
                         categoryForm.get('estado')?.value === Estado.ACTIVO
                     ">
-
-                    <input
-                        type="radio"
-                        formControlName="estado"
-                        [value]="Estado.ACTIVO">
-
+                    <input type="radio" formControlName="estado" [value]="Estado.ACTIVO">
                     <span class="estado-toggle__indicator"></span>
-
-                    <span>
-                        Activa
-                    </span>
-
+                    <span>Activa</span>
                 </label>
-
-
-                <label
-                    class="estado-toggle__option estado-toggle__option--inactive"
+                <label class="estado-toggle__option estado-toggle__option--inactive"
                     [class.estado-toggle__option--selected]="
                         categoryForm.get('estado')?.value === Estado.INACTIVO
                     ">
-
-                    <input
-                        type="radio"
-                        formControlName="estado"
-                        [value]="Estado.INACTIVO">
-
+                    <input type="radio" formControlName="estado" [value]="Estado.INACTIVO">
                     <span class="estado-toggle__indicator"></span>
-
-                    <span>
-                        Inactiva
-                    </span>
-
+                    <span> Inactiva</span>
                 </label>
-
             </div>
-
         </div>
-
     }
-
     <!-- ACCIONES -->
     <div class="form-actions">
-
-        <button
-            type="button"
-            class="btn btn--outline"
-            [disabled]="isSaving"
-            (click)="onCancel()">
-            Cancelar
-        </button>
-        <button
-            type="submit"
-            class="btn btn--primary"
-            [disabled]="isSaving">
+        <button type="button" class="btn btn--outline" [disabled]="isSaving" (click)="onCancel()">Cancelar</button>
+        <button type="submit" class="btn btn--primary" [disabled]="isSaving">
             @if (isSaving) {
                 <svg lucideLoader class="btn__spin-icon"></svg>
                 <span>Guardando...</span>
@@ -137,7 +54,6 @@
                 <span>{{ isEditMode ? 'Guardar cambios' : 'Crear categoría' }}</span>
             }
         </button>
-
     </div>
 
 </form>

@@ -24,16 +24,14 @@ export class CategoriesTableComponent implements OnInit {
   }
 
   loadCategories(): void {
-    this.categoriaService
-      .listarCategorias()
-      .subscribe({
-        next: categories => {
-          this.categories.set(categories || []);
-        },
-        error: err => {
-          console.error('Error al cargar categorias', err);
-        }
-      });
+    this.categoriaService.listarCategorias().subscribe({
+      next: categories => {
+        this.categories.set(categories || []);
+      },
+      error: err => {
+        console.error('Error al cargar categorias', err);
+      }
+    });
   }
 
   edit(category: CategoriaResponse): void {

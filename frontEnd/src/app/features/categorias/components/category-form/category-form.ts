@@ -20,15 +20,13 @@ export class CategoryFormComponent extends BaseFormComponent implements OnChange
   private readonly fb = inject(FormBuilder);
   private readonly categoriaService = inject(CategoriaService);
   private readonly notificationService = inject(NotificationService);
-
   protected readonly Estado = Estado;
+  isSaving = false;
 
   @Input() editingCategory: CategoriaResponse | null = null;
   @Output() categoryCreated = new EventEmitter<void>();
   @Output() categoryUpdated = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
-
-  isSaving = false;
 
   protected override get form(): FormGroup {
     return this.categoryForm;
@@ -88,21 +86,19 @@ export class CategoryFormComponent extends BaseFormComponent implements OnChange
     this.isSaving = true;
     const category = this.categoryForm.value as CreateCategoriaRequest;
 
-    this.categoriaService
-      .crearCategoria(category)
-      .subscribe({
-        next: () => {
-          this.isSaving = false;
-          console.log(); //Categoría creada correctamente
-          this.categoryCreated.emit();
-        },
-        error: (error) => {
-          this.isSaving = false;
-          console.error('Error al crear la categoría.', error);
-          const msg = error?.error?.message || 'Error al crear la categoría.';
-          this.notificationService.error(msg);
-        }
-      });
+    this.categoriaService.crearCategoria(category).subscribe({
+      next: () => {
+        this.isSaving = false;
+        console.log(); //Categoría creada correctamente
+        this.categoryCreated.emit();
+      },
+      error: (error) => {
+        this.isSaving = false;
+        console.error('Error al crear la categoría.', error);
+        const msg = error?.error?.message || 'Error al crear la categoría.';
+        this.notificationService.error(msg);
+      }
+    });
   }
 
   private updateCategory(): void {
@@ -117,21 +113,19 @@ export class CategoryFormComponent extends BaseFormComponent implements OnChange
       estado: this.categoryForm.value.estado!
     };
 
-    this.categoriaService
-      .editarCategoria(this.editingCategory.id, category)
-      .subscribe({
-        next: () => {
-          this.isSaving = false;
-          this.notificationService.success('Categoría actualizada exitosamente.');
-          this.categoryUpdated.emit();
-        },
-        error: (error) => {
-          this.isSaving = false;
-          console.error('Error al editar la categoría', error);
-          const msg = error?.error?.message || 'Error al editar la categoría.';
-          this.notificationService.error(msg);
-        }
-      });
+    this.categoriaService.editarCategoria(this.editingCategory.id, category).subscribe({
+      next: () => {
+        this.isSaving = false;
+        this.notificationService.success('Categoría actualizada exitosamente.');
+        this.categoryUpdated.emit();
+      },
+      error: (error) => {
+        this.isSaving = false;
+        console.error('Error al editar la categoría', error);
+        const msg = error?.error?.message || 'Error al editar la categoría.';
+        this.notificationService.error(msg);
+      }
+    });
   }
 
 }

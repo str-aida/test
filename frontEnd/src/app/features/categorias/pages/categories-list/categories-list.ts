@@ -1,6 +1,6 @@
 import { Component, inject, ViewChild } from '@angular/core';
 import { CategoriesTableComponent } from '../../components/categories-table/categories-table';
-import { LucideAlertTriangle, LucidePlus, LucideShapes, LucideX, LucideRefreshCw } from '@lucide/angular';
+import { LucideTriangleAlert, LucidePlus, LucideShapes, LucideX, LucideRefreshCw } from '@lucide/angular';
 import { CategoryFormComponent } from '../../components/category-form/category-form';
 import { CategoriaResponse } from '../../../../core/models/categoria-response';
 import { CategoriaService } from '../../../../core/services/categoria.service';
@@ -10,15 +10,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
 
 @Component({
   selector: 'app-categories-list',
-  imports: [
-    CategoriesTableComponent,
-    CategoryFormComponent,
-    LucideShapes,
-    LucidePlus,
-    LucideX,
-    LucideAlertTriangle,
-    LucideRefreshCw
-  ],
+  imports: [CategoriesTableComponent, CategoryFormComponent, LucideShapes, LucidePlus, LucideX, LucideTriangleAlert, LucideRefreshCw],
   templateUrl: './categories-list.html',
   styleUrl: './categories-list.scss',
 })
@@ -26,12 +18,11 @@ export class CategoriesListComponent {
 
   private readonly categoriaService = inject(CategoriaService);
   private readonly notificationService = inject(NotificationService);
-
+  
   @ViewChild(CategoriesTableComponent)
   categoriesTable?: CategoriesTableComponent;
 
   selectedCategory: CategoriaResponse | null = null;
-
   showCreateModal = false;
   showDeleteModal = false;
   showEditModal = false;
@@ -91,19 +82,17 @@ export class CategoriesListComponent {
       estado: Estado.INACTIVO,
     };
     
-    this.categoriaService
-      .editarCategoria(category.id, request)
-      .subscribe({
-        next: () => {
-          this.notificationService.success(`Categoría "${category.nombre}" desactivada correctamente.`);
-          this.categoriesTable?.loadCategories();
-        },
-        error: (error) => {
-          console.error('Error al desactivar la categoría', error);
-          const msg = error?.error?.message || 'Error al desactivar la categoría.';
-          this.notificationService.error(msg);
-        }
-      });
+    this.categoriaService.editarCategoria(category.id, request).subscribe({
+      next: () => {
+        this.notificationService.success(`Categoría "${category.nombre}" desactivada correctamente.`);
+        this.categoriesTable?.loadCategories();
+      },
+      error: (error) => {
+        console.error('Error al desactivar la categoría', error);
+        const msg = error?.error?.message || 'Error al desactivar la categoría.';
+        this.notificationService.error(msg);
+      }
+    });
   }
 
 }

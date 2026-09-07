@@ -59,8 +59,8 @@
   height: 20px;
 }
 
-/* TMOBILE */
-@media (max-width: $bp-mobile) {
+/* MOBILE */
+@media (max-width: $bp-laptop) {
   .employees-list__header {
     flex-direction: column;
     align-items: stretch;

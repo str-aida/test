@@ -1,31 +1,18 @@
 <section class="category-list">
 
     <header class="category-list__header">
-
         <div class="category-list__header-title">
-
             <div class="category-list__icon-wrapper">
                 <svg lucideShapes class="category-list__icon"></svg>
             </div>
             <div>
-                <h1 class="category-list__title">
-                    Gestión de categorías
-                </h1>
-                <p class="category-list__subtitle">
-                    Administrá las categorías de productos de tu establecimiento.
-                </p>
+                <h1 class="category-list__title">Gestión de categorías</h1>
+                <p class="category-list__subtitle">Administrá las categorías de productos de tu establecimiento.</p>
             </div>
-
         </div>
-
-        <button
-            type="button"
-            class="btn btn--primary category-list__add-btn"
-            (click)="openCreateModal()">
-
+        <button type="button" class="btn btn--primary category-list__add-btn" (click)="openCreateModal()">
             <svg lucidePlus class="btn__icon"></svg>
             <span>Nueva categoría</span>
-
         </button>
     </header>
 
@@ -36,172 +23,94 @@
 
     <!-- MODAL DE NUEVA CATEGORÍA -->
     @if (showCreateModal) {
-        <div
-            class="modal-overlay"
-            (click)="closeCreateModal()">
-
-            <div
-                class="modal-card"
-                (click)="$event.stopPropagation()">
-
-                <!-- HEADER DEL MODAL -->
+        <div class="modal-overlay" (click)="closeCreateModal()">
+            <div class="modal-card" (click)="$event.stopPropagation()">
                 <header class="modal-card__header">
-
                     <div class="modal-card__header-info">
-
                         <div class="modal-card__header-icon">
                             <svg lucideShapes></svg>
                         </div>
-
                         <div>
-                            <h2 class="modal-card__title">
-                                Nueva categoría
-                            </h2>
-                            <p class="modal-card__subtitle">
-                                Completá los datos para registrar una nueva categoría.
-                            </p>
+                            <h2 class="modal-card__title">Nueva categoría</h2>
+                            <p class="modal-card__subtitle">Completá los datos para registrar una nueva categoría.</p>
                         </div>
-
                     </div>
-
-                    <button
-                        type="button"
-                        class="modal-card__close"
-                        aria-label="Cerrar modal"
-                        (click)="closeCreateModal()">
-
+                    <button type="button" class="modal-card__close" (click)="closeCreateModal()">
                         <svg lucideX></svg>
-
                     </button>
-
                 </header>
 
                 <!-- FORMULARIO -->
                 <div class="modal-card__body">
-
                     <app-category-form
                         (categoryCreated)="onCategoryCreate()"
                         (cancel)="closeCreateModal()">
                     </app-category-form>
-
                 </div>
 
             </div>
-
         </div>
     }
 
     <!-- MODAL DE EDITAR CATEGORÍA -->
     @if (showEditModal && selectedCategory) {
-        <div
-            class="modal-overlay"
-            (click)="closeEditModal()">
-
-            <div
-                class="modal-card"
-                (click)="$event.stopPropagation()">
-
-                <!-- HEADER DEL MODAL -->
+        <div class="modal-overlay" (click)="closeEditModal()">
+            <div class="modal-card" (click)="$event.stopPropagation()">
                 <header class="modal-card__header">
-
                     <div class="modal-card__header-info">
-
                         <div class="modal-card__header-icon">
                             <svg lucideShapes></svg>
                         </div>
-
                         <div>
-                            <h2 class="modal-card__title">
-                                Editar categoría
-                            </h2>
-                            <p class="modal-card__subtitle">
-                                Modificá los datos de la categoría seleccionada.
-                            </p>
+                            <h2 class="modal-card__title">Editar categoría</h2>
+                            <p class="modal-card__subtitle">Modificá los datos de la categoría seleccionada.</p>
                         </div>
-
                     </div>
-
-                    <button
-                        type="button"
-                        class="modal-card__close"
-                        aria-label="Cerrar modal"
-                        (click)="closeEditModal()">
-
+                    <button type="button" class="modal-card__close" (click)="closeEditModal()">
                         <svg lucideX></svg>
-
                     </button>
-
                 </header>
 
                 <!-- FORMULARIO -->
                 <div class="modal-card__body">
-
                     <app-category-form
                         [editingCategory]="selectedCategory"
                         (categoryUpdated)="onCategoryUpdated()"
                         (cancel)="closeEditModal()">
                     </app-category-form>
-
                 </div>
 
             </div>
-
         </div>
     }
 
     <!-- MODAL DE ELIMINAR CATEGORÍA -->
     @if (showDeleteModal && selectedCategory) {
-        <div
-            class="modal-overlay"
-            (click)="closeDeleteModal()">
-
-            <div
-                class="modal-card modal-card--danger"
-                (click)="$event.stopPropagation()">
-
+        <div class="modal-overlay" (click)="closeDeleteModal()">
+            <div class="modal-card modal-card--danger" (click)="$event.stopPropagation()">
                 <div class="modal-card__alert-icon">
-                    <svg lucideAlertTriangle></svg>
+                    <svg lucideTriangleAlert></svg>
                 </div>
-
                 <div class="modal-card__confirm-content">
                     <h3>¿Desactivar categoría?</h3>
                     <p>
-                        Vas a cambiar el estado de la categoría
-                        <strong> "{{ selectedCategory.nombre }}" </strong>
-                        a <strong>INACTIVA</strong>.
+                        Vas a cambiar el estado de la categoría <strong>"{{ selectedCategory.nombre }}"</strong> a <strong>INACTIVA</strong>.
                     </p>
                 </div>
-
                 <footer class="modal-card__footer">
-
-                    <button
-                        type="button"
-                        class="btn btn--outline"
-                        [disabled]="isDeactivating"
-                        (click)="closeDeleteModal()">
-                        
+                    <button type="button" class="btn btn--outline" [disabled]="isDeactivating" (click)="closeDeleteModal()">
                         Cancelar
-
                     </button>
-                    <button
-                        type="button"
-                        class="btn btn--primary btn--danger-action"
-                        [disabled]="isDeactivating"
-                        (click)="confirmDelete()">
-                        
+                    <button type="button" class="btn btn--primary btn--danger-action" [disabled]="isDeactivating" (click)="confirmDelete()">      
                         @if (isDeactivating) {
                             <svg lucideRefreshCw class="btn__spin-icon"></svg>
                             <span>Desactivando...</span>
                         } @else {
                             <span>Sí, desactivar</span>
                         }
-
                     </button>
-
                 </footer>
-
             </div>
-
         </div>
     }
 
