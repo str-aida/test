@@ -1,57 +1,34 @@
 <section class="employees-table">
   
   <div class="employees-table__toolbar">
-
     <div class="employees-table__search">
       <svg lucideSearch class="table-search__icon"></svg>
-      <input
-        type="text"
-        class="form-control"
-        placeholder="Buscar por nombre o email..."
+      <input type="text" class="form-control" placeholder="Buscar por nombre o email..."
         [(ngModel)]="texto"
         (keyup.enter)="search()">
     </div>
-
     <div class="employees-table__filter">
-      <svg lucideFilter class="filter-icon"></svg>
-      <select
-        class="form-select"
-        [(ngModel)]="rol"
-        (change)="search()">
+      <svg lucideListFilter class="filter-icon"></svg>
+      <select class="form-select" [(ngModel)]="rol" (change)="search()">
         <option value="">Roles</option>
         <option value="ADMIN">Administrador</option>
         <option value="EMPLEADO">Empleado</option>
       </select>
     </div>
-
-    <button
-      type="button"
-      class="btn employees-table__button"
-      (click)="search()">
-      Buscar
-    </button>
-
+    <button type="button" class="btn employees-table__button" (click)="search()">Buscar</button>
   </div>
 
-
   @if (employees().length === 0) {
-
     <div class="table-empty">
-
       @if (hasActiveFilters()) {
         <p>No se encontró personal con los filtros seleccionados.</p>
       } @else {
         <p>No hay personal registrado.</p>
       }
-
     </div>
-
   } @else {
-
     <div class="table-wrapper">
-
       <table class="table">
-
         <thead>
           <tr>
             <th>EMPLEADO</th>
@@ -61,19 +38,14 @@
             <th>ACCIONES</th>
           </tr>
         </thead>
-
         <tbody>
-
           @for (employee of employees(); track employee.id) {
-
             <tr>
               <!-- EMPLEADO -->
               <td class="employees-table__cell-name">
                 <div class="employees-table__user-info">
-                  <span
-                    class="employees-table__avatar-icon"
+                  <span class="employees-table__avatar-icon"
                     [class.employees-table__avatar-icon--admin]="employee.rol === UserRole.ADMIN">
-
                     @if (employee.rol === UserRole.ADMIN) {
                       <svg lucideShield></svg>
                     } @else {
@@ -81,89 +53,59 @@
                     }
                   </span>
                   <div class="employees-table__user-details">
-                    <span class="employees-table__name">
-                      {{ employee.nombre }} {{ employee.apellido }}
-                    </span>
-
+                    <span class="employees-table__name">{{ employee.nombre }} {{ employee.apellido }}</span>
                     @if (employee.dni) {
-                      <small class="employees-table__subtext">
-                        DNI: {{ employee.dni }}
-                      </small>
+                      <small class="employees-table__subtext">DNI: {{ employee.dni }}</small>
                     }
                   </div>
-
                 </div>
               </td>
               <!-- CONTACTO -->
               <td class="employees-table__cell-contact">
                 <div class="employees-table__contact-info">
-                  <span class="employees-table__email">
-                    {{ employee.email }}
-                  </span>
-
+                  <span class="employees-table__email">{{ employee.email }}</span>
                   @if (employee.telefono) {
-                    <small class="employees-table__phone">
-                      {{ employee.telefono }}
-                    </small>
+                    <small class="employees-table__phone">{{ employee.telefono }}</small>
                   }
                 </div>
               </td>
               <!-- ROL -->
               <td>
-                <span
-                  class="badge-role"
+                <span class="badge-role"
                   [class.badge-role--admin]="employee.rol === UserRole.ADMIN"
                   [class.badge-role--employee]="employee.rol === UserRole.EMPLEADO">
-
                   {{ employee.rol === UserRole.ADMIN ? 'Administrador' : 'Empleado' }}
                 </span>
               </td>
               <td>
-                <span
-                  class="table-status"
+                <span class="table-status"
                   [class.table-status--active]="employee.estado === Estado.ACTIVO"
                   [class.table-status--inactive]="employee.estado === Estado.INACTIVO">
-
                   {{ employee.estado === Estado.ACTIVO ? 'Activo' : 'Inactivo' }}
                 </span>
               </td>
               <td>
                 <div class="table-actions">
-                  <button
-                    type="button"
-                    class="table-actions__edit"
-                    title="Editar producto"
+                  <button type="button" class="table-actions__edit" title="Editar producto"
                     (click)="edit(employee)">
-                    
                     <svg lucidePencil></svg>
                     <span>Editar</span>
-
                   </button>
-                  <button
-                    type="button"
-                    class="table-actions__delete"
+                  <button type="button" class="table-actions__delete"
                     [class.table-actions__delete--disabled]="employee.estado === Estado.INACTIVO"
                     [disabled]="employee.estado === Estado.INACTIVO"
                     [title]="employee.estado === Estado.ACTIVO ? 'Desactivar personal' : 'Personal inactivo'"
                     (click)="delete(employee)">
-                    
                     <svg lucideTrash2></svg>
                     <span>Desactivar</span>
-
                   </button>
                 </div>
               </td>
-
             </tr>
-
           }
-
         </tbody>
-
       </table>
-
     </div>
-
   }
 
 </section>
