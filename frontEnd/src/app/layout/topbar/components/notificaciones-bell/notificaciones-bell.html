@@ -32,6 +32,21 @@
             </span>
           }
         </div>
+        @if (unreadCount() > 0) {
+          <button
+            type="button"
+            id="btn-marcar-todas-leidas"
+            class="notifications-dropdown__mark-all-btn"
+            [class.notifications-dropdown__mark-all-btn--loading]="isMarcandoTodas()"
+            [disabled]="isMarcandoTodas()"
+            (click)="marcarTodasComoLeidas($event)"
+            aria-label="Marcar todas las notificaciones como leídas">
+            @if (isMarcandoTodas()) {
+              <span class="notifications-dropdown__mark-all-spinner"></span>
+            }
+            {{ isMarcandoTodas() ? 'Marcando...' : 'Marcar todo como leído' }}
+          </button>
+        }
       </div>
 
       <!-- Cuerpo del Panel -->

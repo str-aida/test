@@ -126,6 +126,49 @@
   border-radius: 1rem;
 }
 
+.notifications-dropdown__mark-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: $space-sm;
+  padding: 5px 12px;
+  border: 1px solid rgba(145, 48, 69, 0.25);
+  border-radius: 6px;
+  background-color: transparent;
+  color: $color-primary-light;
+  font-size: $fs-caption;
+  font-weight: $fw-semibold;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, opacity 0.18s ease;
+  letter-spacing: 0.01em;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(145, 48, 69, 0.07);
+    border-color: $color-primary-light;
+  }
+
+  &:active:not(:disabled) {
+    background-color: rgba(145, 48, 69, 0.14);
+  }
+
+  &--loading,
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.notifications-dropdown__mark-all-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid rgba(145, 48, 69, 0.3);
+  border-top-color: $color-primary-light;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
 .notifications-dropdown__body {
   max-height: 420px;
   overflow-y: auto;

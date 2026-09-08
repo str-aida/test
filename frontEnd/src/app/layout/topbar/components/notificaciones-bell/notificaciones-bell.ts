@@ -1,4 +1,5 @@
 import { Component, ElementRef, HostListener, inject, OnInit, signal } from '@angular/core';
+import { forkJoin } from 'rxjs';
 import { CommonModule, DatePipe } from '@angular/common';
 import { 
   LucideBell, 
@@ -40,6 +41,7 @@ export class NotificacionesBellComponent implements OnInit {
   readonly notificaciones = signal<NotificacionResponse[]>([]);
   readonly isOpen = signal<boolean>(false);
   readonly isLoading = signal<boolean>(false);
+  readonly isMarcandoTodas = signal<boolean>(false);
 
   readonly TipoNotificacion = TipoNotificacion;
   readonly TipoReferencia = TipoReferencia;
@@ -114,6 +116,30 @@ export class NotificacionesBellComponent implements OnInit {
 
     // 3. Ejecutar resolución y navegación dinámica centralizada
     this.navigationService.navegar(notificacion);
+  }
+
+  marcarTodasComoLeidas(event: MouseEvent): void {
+    event.stopPropagation();
+
+    const noLeidas = this.notificaciones().filter(n => !n.leida);
+    if (noLeidas.length === 0 || this.isMarcandoTodas()) return;
+
+    this.isMarcandoTodas.set(true);
+
+    // Actualización local inmediata para UX fluida
+    this.notificaciones.update(list => list.map(n => ({ ...n, leida: true })));
+    this.unreadCount.set(0);
+
+    // Llamadas al backend en paralelo (una por notificación no leída)
+    const peticiones = noLeidas.map(n => this.notificacionesService.marcarComoLeida(n.id));
+    forkJoin(peticiones).subscribe({
+      error: (err) => {
+        console.error('Error al marcar todas las notificaciones como leídas:', err);
+      },
+      complete: () => {
+        this.isMarcandoTodas.set(false);
+      }
+    });
   }
 
   @HostListener('document:click', ['$event'])

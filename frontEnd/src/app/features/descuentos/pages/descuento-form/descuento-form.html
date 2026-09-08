@@ -231,7 +231,7 @@
             </div>
           }
 
-          @for (prodGroup of productosArray.controls; track $index; let i = $index) {
+          @for (prodGroup of productosArray.controls; track trackByProductoId($index, prodGroup); let i = $index) {
             <div class="producto-card" [formGroupName]="i">
               <div class="producto-card__left">
                 <div class="producto-thumb">

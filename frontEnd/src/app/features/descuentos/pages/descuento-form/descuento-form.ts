@@ -281,12 +281,13 @@ export class DescuentoFormComponent extends BaseFormComponent implements OnInit,
       ]
     });
 
-    group.get('porcentaje')?.valueChanges.subscribe(() => {
-      this.cdr.markForCheck();
-    });
-
     this.productosArray.push(group);
     this.cdr.markForCheck();
+  }
+
+  /** Clave estable para @for: evita desalineamiento de controles al re-render */
+  trackByProductoId(_index: number, ctrl: any): number {
+    return ctrl.get('productoId')?.value ?? _index;
   }
 
   onPorcentajeChange(): void {
@@ -341,9 +342,11 @@ export class DescuentoFormComponent extends BaseFormComponent implements OnInit,
     }
 
     this.isSubmitting = true;
-    const formVal = this.descuentoForm.value;
+    // getRawValue() garantiza leer todos los controles del FormArray
+    // sin excepción (value omite disabled/invalid y puede devolver null)
+    const formVal = this.descuentoForm.getRawValue();
 
-    const productosPayload = formVal.productos.map((p: any) => ({
+    const productosPayload = (formVal.productos as any[]).map((p) => ({
       productoId: Number(p.productoId),
       porcentaje: Number(p.porcentaje)
     }));
