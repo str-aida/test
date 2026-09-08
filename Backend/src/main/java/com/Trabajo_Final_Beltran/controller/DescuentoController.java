@@ -22,7 +22,7 @@ public class DescuentoController {
     private final DescuentoService descuentoService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<DescuentoResponse> crearDescuento(
             @Valid @RequestBody CreateDescuentoRequest request
     ) {
@@ -31,7 +31,7 @@ public class DescuentoController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<DescuentoResponse> editarDescuento(
             @PathVariable Long id,
             @Valid @RequestBody UpdateDescuentoRequest request
@@ -41,25 +41,25 @@ public class DescuentoController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<List<DescuentoResponse>> listarDescuentos() {
         return ResponseEntity.ok(descuentoService.listarDescuentos());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<DescuentoResponse> obtenerPorId(@PathVariable Long id) {
         return ResponseEntity.ok(descuentoService.obtenerPorId(id));
     }
 
     @PatchMapping("/{id}/activar")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<MensajeResponse> activar(@PathVariable Long id) {
         return ResponseEntity.ok(descuentoService.activar(id));
     }
 
     @PatchMapping("/{id}/desactivar")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<MensajeResponse> desactivar(@PathVariable Long id) {
         return ResponseEntity.ok(descuentoService.desactivar(id));
     }
