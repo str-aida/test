@@ -29,6 +29,7 @@ import { ConfiguracionComponent } from './features/configuracion/configuracion';
 import { AnaliticaDashboardComponent } from './features/analitica/pages/analitica-dashboard/analitica-dashboard';
 import { DescuentosListComponent } from './features/descuentos/pages/descuentos-list/descuentos-list';
 import { DescuentoFormComponent } from './features/descuentos/pages/descuento-form/descuento-form';
+import { DescuentosClienteComponent } from './features/cliente/pages/descuentos/descuentos.component';
 
 export const routes: Routes = [
 
@@ -113,6 +114,7 @@ export const routes: Routes = [
       { path: 'inicio', component: InicioClienteComponent, data: { title: 'Bienvenido a Gestia' } },
       { path: 'productos', component: CatalogoComponent, data: { title: 'Productos' } },
       { path: 'catalogo', redirectTo: 'productos', pathMatch: 'full' },
+      { path: 'descuentos', component: DescuentosClienteComponent, data: { title: 'Productos con Descuento' } },
       { path: 'carrito', component: CarritoComponent, data: { title: 'Mi Carrito' } },
       { path: 'checkout', component: CheckoutComponent, data: { title: 'Finalizar Compra' } },
       { path: 'pedidos', component: PedidosComponent, data: { title: 'Mis Pedidos' } },

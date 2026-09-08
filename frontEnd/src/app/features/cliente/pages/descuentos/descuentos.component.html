@@ -1,0 +1,215 @@
+<div class="descuentos-container">
+
+  <!-- BANNER / CABECERA -->
+  <header class="page-header">
+    <div class="page-header__content">
+      <div class="page-header__badge">
+        <svg lucidePercent class="page-header__badge-icon"></svg>
+        <span>OFERTAS EXCLUSIVAS</span>
+      </div>
+      <h1 class="page-header__title">Productos con descuento</h1>
+      <p class="page-header__subtitle">
+        Descubre nuestros productos en oferta con precios especiales preparados para ti.
+      </p>
+    </div>
+  </header>
+
+  <!-- BARRA DE BÚSQUEDA Y FILTROS -->
+  <section class="toolbar-section">
+    <div class="search-input-wrapper">
+      <svg lucideSearch class="search-input-icon"></svg>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Buscar en productos con descuento..."
+        [(ngModel)]="textoBusqueda"
+        (keyup.enter)="buscar()" />
+      @if (textoBusqueda) {
+        <button type="button" class="clear-search-btn" (click)="textoBusqueda = ''; buscar()">
+          <svg lucideX class="clear-icon"></svg>
+        </button>
+      }
+    </div>
+
+    <button type="button" class="toolbar-btn toolbar-btn--search" (click)="buscar()">
+      Buscar
+    </button>
+  </section>
+
+  <!-- CHIPS DE CATEGORÍAS -->
+  @if (categorias().length > 0) {
+    <nav class="categories-nav" aria-label="Categorías con descuento">
+      <button
+        type="button"
+        class="category-chip"
+        [class.category-chip--active]="categoriaSeleccionadaId === undefined"
+        (click)="seleccionarCategoria(undefined)">
+        Todas
+      </button>
+      @for (cat of categorias(); track cat.id) {
+        <button
+          type="button"
+          class="category-chip"
+          [class.category-chip--active]="categoriaSeleccionadaId === cat.id"
+          (click)="seleccionarCategoria(cat.id)">
+          {{ cat.nombre }}
+        </button>
+      }
+    </nav>
+  }
+
+  <!-- CONTENIDO DE PRODUCTOS -->
+  <section class="products-section">
+
+    <!-- ESTADO DE CARGA -->
+    @if (isLoading()) {
+      <div class="section-state section-state--loading">
+        <svg lucideRefreshCw class="state-spinner"></svg>
+        <p>Cargando productos con descuento...</p>
+      </div>
+    }
+
+    <!-- ESTADO DE ERROR -->
+    @else if (hasError()) {
+      <div class="section-state section-state--error">
+        <p>Ocurrió un error al cargar los productos con descuento.</p>
+        <button type="button" class="btn-retry" (click)="cargarProductosConDescuento()">Reintentar</button>
+      </div>
+    }
+
+    <!-- ESTADO VACÍO -->
+    @else if (productosConDescuento().length === 0) {
+      <div class="section-state section-state--empty">
+        <svg lucideInbox class="state-icon"></svg>
+        <h3>No hay productos con descuento en este momento</h3>
+        <p>Te invitamos a revisar más tarde o explorar nuestro catálogo completo.</p>
+        @if (hasActiveFilters()) {
+          <button type="button" class="btn-retry" (click)="limpiarFiltros()">Limpiar filtros</button>
+        } @else {
+          <a routerLink="/cliente/productos" class="btn-retry">Ver catálogo de productos</a>
+        }
+      </div>
+    }
+
+    <!-- GRID DE PRODUCTOS CON DESCUENTO -->
+    @else {
+      <div class="products-grid">
+        @for (product of productosConDescuento(); track product.id) {
+          <div class="product-card">
+
+            <!-- IMAGEN Y BADGES -->
+            <div class="product-card__image-container">
+              @if (product.categoriaNombre) {
+                <span class="product-card__category-tag">
+                  {{ product.categoriaNombre | uppercase }}
+                </span>
+              }
+
+              @if (product.descuentoPorcentaje) {
+                <span class="product-card__discount-badge">
+                  -{{ product.descuentoPorcentaje | number:'1.0-0' }}%
+                </span>
+              }
+
+              <button
+                type="button"
+                class="product-card__fav-btn"
+                title="Favorito"
+                (click)="$event.stopPropagation()">
+                <svg lucideHeart class="fav-icon"></svg>
+              </button>
+
+              @if (getImageUrl(product.imagenUrl)) {
+                <img
+                  [src]="getImageUrl(product.imagenUrl)!"
+                  [alt]="product.nombre"
+                  class="product-card__image" />
+              } @else {
+                <div class="product-card__image-placeholder">
+                  <svg lucideImage class="placeholder-icon"></svg>
+                  <span>OFERTA ESPECIAL</span>
+                </div>
+              }
+            </div>
+
+            <!-- CUERPO DE LA TARJETA -->
+            <div class="product-card__body">
+              <h3 class="product-card__title">{{ product.nombre }}</h3>
+              <p class="product-card__description">
+                {{ product.descripcion || 'Elaborado con insumos de alta calidad.' }}
+              </p>
+
+              <div class="product-card__footer">
+                <div class="product-card__price-container">
+                  <span class="price-original">$ {{ product.precio | number:'1.0-0' }}</span>
+                  <span class="product-card__price product-card__price--discounted">
+                    $ {{ product.precioConDescuento | number:'1.0-0' }}
+                  </span>
+                </div>
+
+                <div class="product-card__actions">
+                  @if (getCantidadEnCarrito(product.id) > 0) {
+                    <div class="quantity-controls">
+                      <button
+                        type="button"
+                        class="qty-btn"
+                        (click)="reducirDelCarrito(product.id, $event)">
+                        <svg lucideMinus class="qty-icon"></svg>
+                      </button>
+                      <span class="qty-count">{{ getCantidadEnCarrito(product.id) }}</span>
+                      <button
+                        type="button"
+                        class="qty-btn"
+                        [disabled]="product.stock <= getCantidadEnCarrito(product.id)"
+                        (click)="agregarAlCarrito(product, $event)">
+                        <svg lucidePlus class="qty-icon"></svg>
+                      </button>
+                    </div>
+                  } @else {
+                    <button
+                      type="button"
+                      class="product-card__add-btn"
+                      [disabled]="product.stock <= 0"
+                      (click)="agregarAlCarrito(product, $event)">
+                      <svg lucidePlus class="add-icon"></svg>
+                      <span>Agregar</span>
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+  </section>
+
+  <!-- BARRA FLOTANTE DE CARRITO -->
+  @if (cartService.totalItems() > 0) {
+    <aside class="floating-cart-bar" aria-label="Resumen del carrito">
+      <div class="floating-cart-bar__content">
+        <div class="floating-cart-bar__info">
+          <div class="floating-cart-bar__badge">
+            <svg lucideShoppingCart class="floating-cart-bar__icon"></svg>
+            <span class="floating-cart-bar__count">{{ cartService.totalItems() }}</span>
+          </div>
+          <div class="floating-cart-bar__totals">
+            <span class="floating-cart-bar__items-label">
+              {{ cartService.totalItems() }} {{ cartService.totalItems() === 1 ? 'producto' : 'productos' }}
+            </span>
+            <span class="floating-cart-bar__subtotal">
+              Subtotal: <strong>${{ cartService.subtotal() | number:'1.2-2' }}</strong>
+            </span>
+          </div>
+        </div>
+
+        <a routerLink="/cliente/carrito" class="floating-cart-bar__checkout-btn">
+          <span>Ver mi pedido</span>
+          <svg lucideShoppingCart class="floating-cart-bar__btn-icon"></svg>
+        </a>
+      </div>
+    </aside>
+  }
+
+</div>

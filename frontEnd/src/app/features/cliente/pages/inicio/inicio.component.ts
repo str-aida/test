@@ -71,6 +71,7 @@ export class InicioClienteComponent implements OnInit {
   categorias = signal<CategoriaResponse[]>([]);
   productos = signal<ProductResponse[]>([]);
   destacados = signal<ProductResponse[]>([]);
+  descuentos = signal<ProductResponse[]>([]);
   isLoading = signal<boolean>(true);
   hasError = signal<boolean>(false);
 
@@ -98,9 +99,15 @@ export class InicioClienteComponent implements OnInit {
     // Cargar productos activos
     this.productService.listarProductos(undefined, Estado.ACTIVO).subscribe({
       next: (prods) => {
-        this.productos.set(prods || []);
+        const list = prods || [];
+        this.productos.set(list);
         // Tomar primeros 6 como productos destacados
-        this.destacados.set((prods || []).slice(0, 6));
+        this.destacados.set(list.slice(0, 6));
+        // Filtrar productos con información de descuento entregada por backend
+        const conDescuento = list.filter(
+          p => p.descuentoPorcentaje !== undefined && p.descuentoPorcentaje !== null && p.descuentoPorcentaje > 0
+        );
+        this.descuentos.set(conDescuento);
         this.isLoading.set(false);
         this.cdr.detectChanges();
       },
@@ -131,6 +138,10 @@ export class InicioClienteComponent implements OnInit {
 
   onVerProductos(): void {
     this.router.navigate(['/cliente/productos']);
+  }
+
+  onVerDescuentos(): void {
+    this.router.navigate(['/cliente/descuentos']);
   }
 
   agregarAlCarrito(producto: ProductResponse, event?: Event): void {

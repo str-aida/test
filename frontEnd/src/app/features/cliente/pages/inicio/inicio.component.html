@@ -172,6 +172,113 @@
     }
   </section>
 
+  <!-- PRODUCTOS CON DESCUENTO SECTION -->
+  <section class="featured-section">
+    <div class="featured-section__header">
+      <h2 class="featured-section__title">Productos con descuento</h2>
+      @if (descuentos().length > 0) {
+        <button type="button" class="ver-todos-link" (click)="onVerDescuentos()">
+          <span>Ver todos</span>
+          <svg lucideArrowRight class="ver-todos-icon"></svg>
+        </button>
+      }
+    </div>
+
+    <!-- ESTADO DE CARGA -->
+    @if (isLoading()) {
+      <div class="section-state section-state--loading">
+        <svg lucideRefreshCw class="state-spinner"></svg>
+        <p>Cargando productos con descuento...</p>
+      </div>
+    }
+
+    <!-- ESTADO DE ERROR -->
+    @else if (hasError()) {
+      <div class="section-state section-state--error">
+        <p>No se pudieron cargar los productos con descuento.</p>
+        <button type="button" class="btn-retry" (click)="cargarDatos()">Reintentar</button>
+      </div>
+    }
+
+    <!-- ESTADO VACÍO -->
+    @else if (descuentos().length === 0) {
+      <div class="section-state section-state--empty">
+        <svg lucideInbox class="state-icon"></svg>
+        <p>No hay productos con descuento en este momento.</p>
+      </div>
+    }
+
+    <!-- GRID DE PRODUCTOS CON DESCUENTO -->
+    @else {
+      <div class="products-grid">
+        @for (product of descuentos(); track product.id) {
+          <div class="product-card" (click)="onVerDescuentos()">
+            <!-- IMAGEN Y BADGES -->
+            <div class="product-card__image-container">
+              @if (product.categoriaNombre) {
+                <span class="product-card__category-tag">
+                  {{ product.categoriaNombre | uppercase }}
+                </span>
+              }
+
+              @if (product.descuentoPorcentaje) {
+                <span class="product-card__discount-badge">
+                  -{{ product.descuentoPorcentaje | number:'1.0-0' }}%
+                </span>
+              }
+
+              <button
+                type="button"
+                class="product-card__fav-btn"
+                title="Favorito"
+                (click)="$event.stopPropagation()">
+                <svg lucideHeart class="fav-icon"></svg>
+              </button>
+
+              @if (getImageUrl(product.imagenUrl)) {
+                <img
+                  [src]="getImageUrl(product.imagenUrl)!"
+                  [alt]="product.nombre"
+                  class="product-card__image" />
+              } @else {
+                <div class="product-card__image-placeholder">
+                  <svg lucideImage class="placeholder-icon"></svg>
+                  <span>OFERTA</span>
+                </div>
+              }
+            </div>
+
+            <!-- CONTENIDO DE LA TARJETA -->
+            <div class="product-card__body">
+              <h3 class="product-card__title">{{ product.nombre }}</h3>
+              <p class="product-card__description">
+                {{ product.descripcion || 'Elaborado con insumos frescos de alta calidad.' }}
+              </p>
+
+              <div class="product-card__footer">
+                <div class="product-card__price-container">
+                  <span class="price-original">$ {{ product.precio | number:'1.0-0' }}</span>
+                  <span class="product-card__price product-card__price--discounted">
+                    $ {{ product.precioConDescuento | number:'1.0-0' }}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  class="product-card__add-btn"
+                  [disabled]="product.stock <= 0"
+                  (click)="agregarAlCarrito(product, $event)">
+                  <svg lucidePlus class="add-icon"></svg>
+                  <span>Agregar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </section>
+
   <!-- BARRA FLOTANTE DE CARRITO -->
   @if (cartService.totalItems() > 0) {
     <aside class="floating-cart-bar" aria-label="Resumen del carrito">
