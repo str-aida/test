@@ -6,12 +6,8 @@
         <ul class="sidebar__list">
             @for (item of navigationItems; track item.route) {
                 <li class="sidebar__item">
-                    <a
-                        class="sidebar__link"
-                        [routerLink]="item.route"
-                        routerLinkActive="sidebar__link--active"
-                        [routerLinkActiveOptions]="{ exact: true }"
-                        (click)="closeSidebar()">
+                    <a class="sidebar__link" [routerLink]="item.route" routerLinkActive="sidebar__link--active"
+                        [routerLinkActiveOptions]="{ exact: true }" (click)="closeSidebar()">
 
                         @switch (item.id) {
                             @case ('analitica') {
@@ -21,16 +17,16 @@
                                 <svg lucidePackageCheck class="sidebar__icon"></svg>
                             }
                             @case ('pedidos') {
-                                <svg lucideShoppingCart class="sidebar__icon"></svg>
+                                <svg lucidePackage class="sidebar__icon"></svg>
                             }
                             @case ('productos') {
-                                <svg lucidePackage class="sidebar__icon"></svg>
+                                <svg lucideShoppingBag class="sidebar__icon"></svg>
                             }
                             @case ('categorias') {
                                 <svg lucideShapes class="sidebar__icon"></svg>
                             }
                             @case ('personal') {
-                                <svg lucideBriefcaseBusiness class="sidebar__icon"></svg>
+                                <svg lucideUsers class="sidebar__icon"></svg>
                             }
                             @case ('configuracion') {
                                 <svg lucideSettings class="sidebar__icon"></svg>
