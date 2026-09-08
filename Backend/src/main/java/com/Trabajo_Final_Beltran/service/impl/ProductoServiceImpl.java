@@ -31,6 +31,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import lombok.extern.slf4j.Slf4j;
 import java.math.RoundingMode;
 import com.Trabajo_Final_Beltran.enums.EstadoCategoria;
+import com.Trabajo_Final_Beltran.service.DescuentoResolverService;
 
 @Slf4j
 @Service
@@ -47,6 +48,7 @@ public class ProductoServiceImpl implements ProductoService {
 
     private final ImageStorageService imageStorageService;
 
+    private final DescuentoResolverService descuentoResolverService;
 
 
     @Override
@@ -482,7 +484,6 @@ public class ProductoServiceImpl implements ProductoService {
 
       return ProductoMapper.toResponse(productoActualizado);}
 
-  
     @Override
     @Transactional(readOnly = true)
     public List<ProductoResponse> listarProductos(
@@ -490,24 +491,18 @@ public class ProductoServiceImpl implements ProductoService {
             EstadoProducto estado,
             String texto
     ) {
-
-        Usuario usuario =
-                SecurityUtils.obtenerUsuarioAutenticado();
-
-        Long establecimientoId =
-                usuario.getEstablecimiento().getId();
-
+        Usuario usuario = SecurityUtils.obtenerUsuarioAutenticado();
+        Long establecimientoId = usuario.getEstablecimiento().getId();
         boolean esCliente = usuario.getRol() == Rol.CLIENTE;
         EstadoProducto estadoFiltro = esCliente ? EstadoProducto.ACTIVO : estado;
 
-        return productoCacheService.buscarProductosFiltrados(
-                establecimientoId,
-                categoriaId,
-                estadoFiltro,
-                texto,
-                esCliente
+        List<ProductoResponse> productos = productoCacheService.buscarProductosFiltrados(
+                establecimientoId, categoriaId, estadoFiltro, texto, esCliente
         );
+
+        return descuentoResolverService.aplicarDescuentos(productos, establecimientoId);
     }
+
 
   private Categoria obtenerCategoriaActiva(
       Long categoriaId,

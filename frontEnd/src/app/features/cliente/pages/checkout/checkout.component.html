@@ -351,7 +351,12 @@
                 <span class="checkout-item__qty">Cant: {{ item.cantidad }}</span>
               </div>
               <div class="checkout-item__price">
-                ${{ (item.producto.precio * item.cantidad) | number:'1.2-2' }}
+                @if (item.producto.precioConDescuento && item.producto.precioConDescuento < item.producto.precio) {
+                  <span class="checkout-item__price-original">${{ (item.producto.precio * item.cantidad) | number:'1.2-2' }}</span>
+                  <span class="checkout-item__price-discounted">${{ (item.producto.precioConDescuento * item.cantidad) | number:'1.2-2' }}</span>
+                } @else {
+                  <span>${{ (item.producto.precio * item.cantidad) | number:'1.2-2' }}</span>
+                }
               </div>
             </div>
           }

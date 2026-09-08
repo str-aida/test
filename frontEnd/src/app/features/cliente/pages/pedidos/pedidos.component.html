@@ -68,7 +68,12 @@
             <div class="pedido-card__right">
               <div class="pedido-card__price-box">
                 <span class="pedido-card__price-label">TOTAL</span>
-                <span class="pedido-card__price-value">${{ (pedido.totalConDescuento ?? pedido.total) | number:'1.2-2' }}</span>
+                @if (pedido.totalConDescuento && pedido.totalConDescuento < pedido.total) {
+                  <span class="pedido-card__price-original">${{ pedido.total | number:'1.2-2' }}</span>
+                  <span class="pedido-card__price-value pedido-card__price-value--discounted">${{ pedido.totalConDescuento | number:'1.2-2' }}</span>
+                } @else {
+                  <span class="pedido-card__price-value">${{ (pedido.totalConDescuento ?? pedido.total) | number:'1.2-2' }}</span>
+                }
               </div>
 
               <a [routerLink]="['/cliente/pedidos', pedido.id]" class="pedido-card__btn">

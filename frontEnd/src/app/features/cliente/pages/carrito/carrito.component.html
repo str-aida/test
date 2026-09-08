@@ -75,9 +75,18 @@
                       </span>
                     }
                     <h3 class="carrito-item__name">{{ item.producto.nombre }}</h3>
-                    <p class="carrito-item__unit-price">
-                      Precio unitario: <strong>${{ item.producto.precio | number:'1.2-2' }}</strong>
-                    </p>
+                    <div class="carrito-item__unit-price">
+                      Precio unitario:
+                      @if (item.producto.precioConDescuento && item.producto.precioConDescuento < item.producto.precio) {
+                        <span class="price-original">${{ item.producto.precio | number:'1.2-2' }}</span>
+                        <strong class="price-discounted">${{ item.producto.precioConDescuento | number:'1.2-2' }}</strong>
+                        @if (item.producto.descuentoPorcentaje) {
+                          <span class="discount-badge">-{{ item.producto.descuentoPorcentaje | number:'1.0-0' }}%</span>
+                        }
+                      } @else {
+                        <strong>${{ item.producto.precio | number:'1.2-2' }}</strong>
+                      }
+                    </div>
                     @if (item.producto.stock <= 5 && item.producto.stock > 0) {
                       <span class="carrito-item__stock-alert">
                         Quedan {{ item.producto.stock }} disponibles
@@ -111,9 +120,18 @@
                 <!-- Subtotal del ítem -->
                 <div class="carrito-item__subtotal">
                   <span class="carrito-item__subtotal-label">Subtotal:</span>
-                  <span class="carrito-item__subtotal-value">
-                    ${{ (item.producto.precio * item.cantidad) | number:'1.2-2' }}
-                  </span>
+                  <div class="carrito-item__subtotal-wrapper">
+                    @if (item.producto.precioConDescuento && item.producto.precioConDescuento < item.producto.precio) {
+                      <span class="price-original-subtotal">${{ (item.producto.precio * item.cantidad) | number:'1.2-2' }}</span>
+                      <span class="carrito-item__subtotal-value carrito-item__subtotal-value--discounted">
+                        ${{ (item.producto.precioConDescuento * item.cantidad) | number:'1.2-2' }}
+                      </span>
+                    } @else {
+                      <span class="carrito-item__subtotal-value">
+                        ${{ (item.producto.precio * item.cantidad) | number:'1.2-2' }}
+                      </span>
+                    }
+                  </div>
                 </div>
 
                 <!-- Botón de eliminar -->

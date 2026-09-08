@@ -32,4 +32,8 @@ public class ProductoResponse implements Serializable {
     private String codigo;
 
     private Long categoriaId;
+    
+    private BigDecimal descuentoPorcentaje;   
+    
+    private BigDecimal precioConDescuento;
 }

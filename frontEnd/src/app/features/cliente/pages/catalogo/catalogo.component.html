@@ -115,7 +115,17 @@
             <div class="product-card__footer">
               <div class="product-card__price-wrapper">
                 <span class="product-card__price-label">Precio</span>
-                <span class="product-card__price">${{ producto.precio | number:'1.2-2' }}</span>
+                @if (producto.precioConDescuento && producto.precioConDescuento < producto.precio) {
+                  <div class="product-card__price-discount-group">
+                    <span class="product-card__price-original">${{ producto.precio | number:'1.2-2' }}</span>
+                    <span class="product-card__price product-card__price--discounted">${{ producto.precioConDescuento | number:'1.2-2' }}</span>
+                    @if (producto.descuentoPorcentaje) {
+                      <span class="product-card__discount-tag">-{{ producto.descuentoPorcentaje | number:'1.0-0' }}%</span>
+                    }
+                  </div>
+                } @else {
+                  <span class="product-card__price">${{ producto.precio | number:'1.2-2' }}</span>
+                }
               </div>
 
               <!-- Controles de carrito -->

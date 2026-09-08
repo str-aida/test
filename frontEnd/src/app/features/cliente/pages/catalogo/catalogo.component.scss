@@ -354,6 +354,29 @@
     flex-direction: column;
   }
 
+  &__price-discount-group {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  &__price-original {
+    font-size: 0.85rem;
+    color: #9ca3af;
+    text-decoration: line-through;
+    font-weight: 500;
+  }
+
+  &__discount-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #dc2626;
+    background-color: #fee2e2;
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+  }
+
   &__price-label {
     font-size: 0.68rem;
     color: $color-text-light;
@@ -365,6 +388,10 @@
     font-size: 1.15rem;
     font-weight: 700;
     color: $color-primary;
+
+    &--discounted {
+      color: #dc2626;
+    }
   }
 
   &__add-btn {

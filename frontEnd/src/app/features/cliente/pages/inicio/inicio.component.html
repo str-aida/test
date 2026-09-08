@@ -140,8 +140,20 @@
               </p>
 
               <div class="product-card__footer">
-                <div class="product-card__price">
-                  $ {{ product.precio | number:'1.0-0' }}
+                <div class="product-card__price-container">
+                  @if (product.precioConDescuento && product.precioConDescuento < product.precio) {
+                    <span class="price-original">$ {{ product.precio | number:'1.0-0' }}</span>
+                    <span class="product-card__price product-card__price--discounted">
+                      $ {{ product.precioConDescuento | number:'1.0-0' }}
+                    </span>
+                    @if (product.descuentoPorcentaje) {
+                      <span class="discount-badge">-{{ product.descuentoPorcentaje | number:'1.0-0' }}%</span>
+                    }
+                  } @else {
+                    <div class="product-card__price">
+                      $ {{ product.precio | number:'1.0-0' }}
+                    </div>
+                  }
                 </div>
 
                 <button

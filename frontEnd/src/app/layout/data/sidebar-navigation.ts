@@ -32,6 +32,11 @@ export const ADMIN_NAVIGATION: NavigationItem[] = [
     route: '/admin/cupones'
   },
   {
+    id: 'descuentos',
+    label: 'Descuentos',
+    route: '/admin/descuentos'
+  },
+  {
     id: 'personal',
     label: 'Personal',
     route: '/admin/personal'
@@ -68,6 +73,11 @@ export const EMPLOYEE_NAVIGATION: NavigationItem[] = [
     id: 'productos',
     label: 'Productos',
     route: '/empleado/productos'
+  },
+  {
+    id: 'descuentos',
+    label: 'Descuentos',
+    route: '/empleado/descuentos'
   },
   {
     id: 'perfil',

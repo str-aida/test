@@ -12,5 +12,7 @@ export interface ProductResponse {
     stock: number;
     imagenUrl: string;
     codigo: string;
+    descuentoPorcentaje?: number;
+    precioConDescuento?: number;
 
 }

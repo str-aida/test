@@ -584,7 +584,17 @@
   gap: 0.85rem;
 }
 
-.col-price,
+.col-price {
+  font-family: $font-body;
+  font-size: 0.9rem;
+  color: $color-text;
+
+  &--highlighted {
+    color: #dc2626;
+    font-weight: 700;
+  }
+}
+
 .col-qty {
   font-family: $font-body;
   font-size: 0.9rem;
