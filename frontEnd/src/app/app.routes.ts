@@ -94,15 +94,6 @@ export const routes: Routes = [
       { path: 'pedidos', component: PedidosListComponent, data: { title: 'Pedidos' } },
       { path: 'pedidos/:id', component: PedidoDetalleAdminComponent, data: { title: 'Detalle de Pedido' } },
       { path: 'productos', component: ProductsListComponent, data: { title: 'Productos' } },
-      {
-        path: 'descuentos',
-        data: { title: 'Gestión de Descuentos' },
-        children: [
-          { path: '', component: DescuentosListComponent },
-          { path: 'nuevo', component: DescuentoFormComponent },
-          { path: 'editar/:id', component: DescuentoFormComponent }
-        ]
-      },
       { path: '', redirectTo: 'pedidos/en-curso', pathMatch: 'full' }
     ]
   },

@@ -18,7 +18,6 @@ export const EMPLOYEE_NAVIGATION: NavigationItem[] = [
   { id: 'pedidos-en-curso', label: 'Pedidos en Curso', route: '/empleado/pedidos/en-curso' },
   { id: 'pedidos', label: 'Pedidos', route: '/empleado/pedidos' },
   { id: 'productos', label: 'Productos', route: '/empleado/productos' },
-  { id: 'descuentos', label: 'Descuentos', route: '/empleado/descuentos' },
   { id: 'perfil', label: 'Perfil', route: '/empleado/perfil' }
 ];
 
