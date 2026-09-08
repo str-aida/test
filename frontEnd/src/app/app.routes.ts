@@ -27,6 +27,8 @@ import { PedidoDetalleAdminComponent } from './features/pedidos/pages/pedido-det
 import { PedidosEnCursoComponent } from './features/pedidos/pages/pedidos-en-curso/pedidos-en-curso';
 import { ConfiguracionComponent } from './features/configuracion/configuracion';
 import { AnaliticaDashboardComponent } from './features/analitica/pages/analitica-dashboard/analitica-dashboard';
+import { DescuentosListComponent } from './features/descuentos/pages/descuentos-list/descuentos-list';
+import { DescuentoFormComponent } from './features/descuentos/pages/descuento-form/descuento-form';
 
 export const routes: Routes = [
 
@@ -67,6 +69,15 @@ export const routes: Routes = [
       { path: 'pedidos', component: PedidosListComponent, data: { title: 'Pedidos' } },
       { path: 'pedidos/:id', component: PedidoDetalleAdminComponent, data: { title: 'Detalle de Pedido' } },
       { path: 'cupones', component: CuponesListComponent, data: { title: 'Gestión de Cupones' } },
+      {
+        path: 'descuentos',
+        data: { title: 'Gestión de Descuentos' },
+        children: [
+          { path: '', component: DescuentosListComponent },
+          { path: 'nuevo', component: DescuentoFormComponent },
+          { path: 'editar/:id', component: DescuentoFormComponent }
+        ]
+      },
       { path: 'auditoria', component: AuditoriaListComponent, data: { title: 'Auditoría' } },
       { path: 'configuracion', component: ConfiguracionComponent, data: { title: 'Configuración' } },
       { path: '', redirectTo: 'personal', pathMatch: 'full' }
@@ -82,6 +93,15 @@ export const routes: Routes = [
       { path: 'pedidos', component: PedidosListComponent, data: { title: 'Pedidos' } },
       { path: 'pedidos/:id', component: PedidoDetalleAdminComponent, data: { title: 'Detalle de Pedido' } },
       { path: 'productos', component: ProductsListComponent, data: { title: 'Productos' } },
+      {
+        path: 'descuentos',
+        data: { title: 'Gestión de Descuentos' },
+        children: [
+          { path: '', component: DescuentosListComponent },
+          { path: 'nuevo', component: DescuentoFormComponent },
+          { path: 'editar/:id', component: DescuentoFormComponent }
+        ]
+      },
       { path: '', redirectTo: 'pedidos/en-curso', pathMatch: 'full' }
     ]
   },

@@ -185,6 +185,23 @@
   }
 }
 
+.product-price-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .price-original {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    text-decoration: line-through;
+  }
+
+  .price-discounted {
+    color: #dc2626;
+    font-weight: 700;
+  }
+}
+
 /* PRODUCTO */
 .table-product {
   display: flex;

@@ -1,0 +1,341 @@
+<section class="descuento-form-page" [class.descuento-form-page--modal]="isModal">
+
+  <!-- BOTÓN VOLVER Y STATUS SUPERIOR (Solo modo página completa) -->
+  @if (!isModal) {
+    <header class="descuento-form-page__topbar">
+      <button type="button" class="btn-back" (click)="volver()">
+        <svg lucideArrowLeft class="back-icon"></svg>
+        <span>Volver a Descuentos</span>
+      </button>
+
+      @if (isEditing) {
+        <div class="topbar-right">
+          <span class="badge-status-top">
+            <span class="dot dot--orange"></span>
+            PROMOCIÓN PROGRAMADA
+          </span>
+          <span class="badge-id-ref">
+            <svg lucideCheck class="id-ref-icon"></svg>
+            ID Ref: DESC-{{ descuentoId }}
+          </span>
+        </div>
+      } @else {
+        <span class="badge-status-top">
+          <span class="dot dot--gray"></span>
+          Borrador
+        </span>
+      }
+    </header>
+  }
+
+  <!-- TARJETA PRINCIPAL DEL FORMULARIO -->
+  <div class="form-main-card" [class.form-main-card--modal]="isModal">
+
+    <!-- ENCABEZADO DEL FORMULARIO (Solo modo página completa) -->
+    @if (!isModal) {
+      <div class="form-header">
+        <div class="form-header__icon-box">
+          <svg lucidePercent class="icon-percent"></svg>
+        </div>
+        <div>
+          <h1 class="form-header__title">
+            {{ isEditing ? 'Editar Descuento' : 'Crear Descuento' }}
+          </h1>
+          <p class="form-header__subtitle">
+            {{ isEditing
+              ? 'Actualizá las condiciones de la campaña y los porcentajes por producto.'
+              : 'Creá una nueva promoción por producto y definí su vigencia y porcentajes específicos.'
+            }}
+          </p>
+        </div>
+      </div>
+    }
+
+    <!-- FORMULARIO REACTIVO -->
+    <form [formGroup]="descuentoForm" (ngSubmit)="onSubmit()">
+
+      <!-- FILA 1: NOMBRE Y TIPO -->
+      <div class="form-grid-2">
+        <!-- NOMBRE -->
+        <div class="form-group">
+          <label class="form-label" for="nombre">
+            Nombre del descuento <span class="required">*</span>
+          </label>
+          <div class="input-icon-wrapper">
+            <svg lucideTag class="input-icon"></svg>
+            <input
+              id="nombre"
+              type="text"
+              class="form-input"
+              formControlName="nombre"
+              placeholder="Ej. Día del Amigo"
+              [class.form-input--error]="hasError('nombre', 'required')">
+          </div>
+          <span class="input-caption">Visible internamente en reportes y tickets promocionales.</span>
+          @if (hasError('nombre', 'required')) {
+            <span class="form-error">El nombre de la campaña es obligatorio.</span>
+          }
+        </div>
+
+        <!-- TIPO DE CAMPAÑA -->
+        <div class="form-group">
+          <label class="form-label" for="tipo">
+            Tipo de campaña <span class="required">*</span>
+          </label>
+          <div class="input-icon-wrapper">
+            <svg lucideMegaphone class="input-icon"></svg>
+            <select
+              id="tipo"
+              class="form-select"
+              formControlName="tipo">
+              @for (opt of tipoCampanaOptions; track opt.value) {
+                <option [value]="opt.value">{{ opt.label }}</option>
+              }
+            </select>
+          </div>
+          <span class="input-caption">Determina la categoría estadística en el panel de ingresos.</span>
+        </div>
+      </div>
+
+      <!-- FILA 2: FECHA INICIO Y FIN -->
+      <div class="form-grid-2">
+        <!-- FECHA INICIO -->
+        <div class="form-group">
+          <label class="form-label" for="fechaInicio">
+            Fecha de inicio <span class="required">*</span>
+          </label>
+          <div class="input-icon-wrapper">
+            <input
+              id="fechaInicio"
+              type="date"
+              class="form-input"
+              formControlName="fechaInicio"
+              [class.form-input--error]="hasError('fechaInicio', 'required')">
+          </div>
+          @if (hasError('fechaInicio', 'required')) {
+            <span class="form-error">La fecha de inicio es obligatoria.</span>
+          }
+        </div>
+
+        <!-- FECHA FIN -->
+        <div class="form-group">
+          <label class="form-label" for="fechaFin">
+            Fecha de fin <span class="required">*</span>
+          </label>
+          <div class="input-icon-wrapper">
+            <input
+              id="fechaFin"
+              type="date"
+              class="form-input"
+              formControlName="fechaFin"
+              [class.form-input--error]="hasError('fechaFin', 'required')">
+          </div>
+          @if (hasError('fechaFin', 'required')) {
+            <span class="form-error">La fecha de fin es obligatoria.</span>
+          }
+        </div>
+      </div>
+
+      <!-- FILA 3: ESTADO EN MODO EDICIÓN -->
+      @if (isEditing) {
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="estado">
+              Estado de la campaña <span class="required">*</span>
+            </label>
+            <div class="input-icon-wrapper">
+              <select id="estado" class="form-select" formControlName="estado">
+                @for (opt of estadoOptions; track opt.value) {
+                  <option [value]="opt.value">{{ opt.label }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="info-alert-box">
+            <svg lucideSparkles class="info-icon"></svg>
+            <span class="info-text">
+              Los clientes verán la insignia de oferta automáticamente durante la vigencia estipulada.
+            </span>
+          </div>
+        </div>
+      }
+
+      <!-- SECCIÓN PRODUCTOS INCLUIDOS -->
+      <div class="productos-section">
+        <div class="productos-section__header">
+          <div>
+            <div class="productos-title-row">
+              <h2 class="productos-title">Productos incluidos</h2>
+              <span class="productos-badge-count">{{ productosArray.length }}</span>
+            </div>
+            <p class="productos-subtitle">
+              Asigná un porcentaje de descuento individual para cada producto participante.
+            </p>
+          </div>
+
+          <span class="tag-status-right">
+            {{ productosArray.length }} {{ productosArray.length === 1 ? 'producto seleccionado' : 'productos seleccionados' }}
+          </span>
+        </div>
+
+        <!-- BUSCADOR / SELECTOR DE PRODUCTOS -->
+        <div class="productos-search-bar">
+          <div class="search-input-box">
+            <svg lucideSearch class="search-icon"></svg>
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Buscar y sumar otro producto por nombre o código..."
+              [(ngModel)]="searchProductoTerm"
+              [ngModelOptions]="{ standalone: true }"
+              (focus)="abrirSelectorProductos()"
+              (input)="onSearchProductoInput()">
+          </div>
+
+          <button
+            type="button"
+            class="btn-add-product"
+            (click)="abrirSelectorProductos()">
+            <svg lucidePlus class="btn-icon"></svg>
+            <span>Agregar producto</span>
+          </button>
+
+          <!-- DROPDOWN DE SELECCIÓN DE PRODUCTOS -->
+          @if (showDropdownProductos && productosFiltradosParaAgregar.length > 0) {
+            <div class="dropdown-productos">
+              <div class="dropdown-header">
+                <span>Seleccionar producto para incluir:</span>
+                <button type="button" class="btn-close-dropdown" (click)="showDropdownProductos = false">✕</button>
+              </div>
+              <ul class="dropdown-list">
+                @for (prod of productosFiltradosParaAgregar; track prod.id) {
+                  <li class="dropdown-item" (click)="seleccionarProducto(prod)">
+                    <div class="item-info">
+                      <strong class="item-name">{{ prod.nombre }}</strong>
+                      <span class="item-meta">{{ prod.categoriaNombre }} • Precio: ${{ prod.precio }}</span>
+                    </div>
+                    <button type="button" class="btn-select-prod">Agregar</button>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+
+        <!-- LISTADO DE PRODUCTOS SELECCIONADOS -->
+        <div class="productos-list" formArrayName="productos">
+          @if (productosArray.length === 0) {
+            <div class="productos-empty">
+              <p>No has incluido ningún producto todavía. Buscá en el catálogo para sumarlos.</p>
+            </div>
+          }
+
+          @for (prodGroup of productosArray.controls; track $index; let i = $index) {
+            <div class="producto-card" [formGroupName]="i">
+              <div class="producto-card__left">
+                <div class="producto-thumb">
+                  @if (prodGroup.get('imagenUrl')?.value) {
+                    <img [src]="prodGroup.get('imagenUrl')?.value" [alt]="prodGroup.get('nombre')?.value">
+                  } @else {
+                    <div class="thumb-placeholder">
+                      <svg lucideTag></svg>
+                    </div>
+                  }
+                </div>
+
+                <div class="producto-details">
+                  <div class="name-row">
+                    <strong class="producto-name">{{ prodGroup.get('nombre')?.value }}</strong>
+                    <span class="producto-categoria">{{ prodGroup.get('categoriaNombre')?.value || 'General' }}</span>
+                  </div>
+                  <div class="price-row">
+                    <span class="price-normal">
+                      Precio base: ${{ prodGroup.get('precio')?.value | number:'1.2-2' }}
+                    </span>
+                    <span class="price-discount">
+                      Final con desc: ${{ getPrecioFinalConDescuento(prodGroup.get('precio')?.value, prodGroup.get('porcentaje')?.value) | number:'1.2-2' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="producto-card__right">
+                <span class="desc-label">Descuento:</span>
+                <div class="percent-input-wrapper">
+                  <input
+                    type="number"
+                    step="1"
+                    min="1"
+                    max="100"
+                    class="percent-input"
+                    formControlName="porcentaje"
+                    (input)="onPorcentajeChange()"
+                    (change)="onPorcentajeChange()">
+                  <span class="percent-symbol">% desc.</span>
+                </div>
+
+                <button
+                  type="button"
+                  class="btn-delete-item"
+                  title="Quitar producto de la campaña"
+                  (click)="eliminarProducto(i)">
+                  <svg lucideTrash2 class="trash-icon"></svg>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- BANNER INFORMATIVO STITCH INFERIOR -->
+        @if (isEditing) {
+          <div class="impacto-banner">
+            <div class="impacto-left">
+              <svg lucideTrendingUp class="impacto-icon"></svg>
+              <div>
+                <strong class="impacto-title">Impacto estimado de la campaña</strong>
+                <p class="impacto-subtitle">Margen proyectado +24% en volumen de venta cruzada.</p>
+              </div>
+            </div>
+            <div class="impacto-right">
+              <span class="impacto-label">Promedio de rebaja</span>
+              <strong class="impacto-percentage">{{ promedioRebaja }}%</strong>
+            </div>
+          </div>
+        } @else {
+          <div class="info-footer-banner">
+            <svg lucideCheck class="banner-check-icon"></svg>
+            <div>
+              <strong class="banner-title">Aplicación automática en catálogo y carrito</strong>
+              <p class="banner-desc">
+                Los descuentos configurados se activarán a las 00:00 hs de la fecha de inicio y reemplazarán automáticamente el precio público del producto en el menú digital.
+              </p>
+            </div>
+          </div>
+        }
+
+      </div>
+
+      <!-- BOTONES DE ACCIÓN -->
+      <footer class="form-actions">
+        <button
+          type="button"
+          class="btn-stitch-cancel"
+          (click)="volver()"
+          [disabled]="isSubmitting">
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          id="btn-submit-descuento"
+          class="btn-stitch-save"
+          [disabled]="isSubmitting">
+          <svg lucideCheck class="btn-icon"></svg>
+          <span>{{ isEditing ? 'Guardar Cambios' : 'Crear Descuento' }}</span>
+        </button>
+      </footer>
+
+    </form>
+  </div>
+
+</section>

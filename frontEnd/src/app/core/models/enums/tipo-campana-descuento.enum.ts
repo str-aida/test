@@ -1,0 +1,6 @@
+export enum TipoCampanaDescuento {
+  DIA_FESTIVO = 'DIA_FESTIVO',
+  TEMPORADA = 'TEMPORADA',
+  LIQUIDACION = 'LIQUIDACION',
+  GENERAL = 'GENERAL'
+}

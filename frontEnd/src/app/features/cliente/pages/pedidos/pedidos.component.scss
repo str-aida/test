@@ -204,12 +204,25 @@
     text-transform: uppercase;
   }
 
+  &__price-original {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #a1a1aa;
+    text-decoration: line-through;
+    margin-bottom: 2px;
+  }
+
   &__price-value {
     font-family: 'Roboto', sans-serif;
     font-size: 1.65rem;
     font-weight: 700;
     color: #1a0307;
     line-height: 1.1;
+
+    &--discounted {
+      color: #dc2626;
+    }
 
     @media (max-width: 640px) {
       font-size: 1.4rem;

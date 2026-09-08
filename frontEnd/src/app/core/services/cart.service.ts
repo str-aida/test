@@ -29,9 +29,14 @@ export class CartService {
         this._items().reduce((acc, item) => acc + item.cantidad, 0)
     );
 
-    /** Subtotal antes de descuentos */
+    /** Subtotal considerando descuentos si existen */
     readonly subtotal = computed(() =>
-        this._items().reduce((acc, item) => acc + (item.producto.precio * item.cantidad), 0)
+        this._items().reduce((acc, item) => {
+            const precioEfectivo = (item.producto.precioConDescuento && item.producto.precioConDescuento < item.producto.precio)
+                ? item.producto.precioConDescuento
+                : item.producto.precio;
+            return acc + (precioEfectivo * item.cantidad);
+        }, 0)
     );
 
     /** Si el carrito está vacío */

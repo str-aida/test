@@ -52,6 +52,9 @@ import com.Trabajo_Final_Beltran.specification.PedidoSpecification;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.bulkhead.BulkheadFullException;
 import com.Trabajo_Final_Beltran.dto.response.PageResponse;
+import com.Trabajo_Final_Beltran.service.DescuentoResolverService;
+import java.util.Map;
+import java.math.RoundingMode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -74,6 +77,7 @@ public class PedidoServiceImpl implements PedidoService {
   private final CanjeCuponService canjeCuponService;
   private final org.springframework.context.ApplicationEventPublisher eventPublisher;
   private final CuponReservaService cuponReservaService;
+  private final DescuentoResolverService descuentoResolverService;
 
 
   @Override
@@ -220,94 +224,109 @@ public class PedidoServiceImpl implements PedidoService {
     return PedidoMapper.toDetalleResponse(pedido);
   }
 
-  @Override
-  @Transactional
-  @Bulkhead(name = "crearPedido", fallbackMethod = "crearPedidoFallback")
-  public PedidoDetalleResponse crearPedido(CreatePedidoRequest request) {
-    Usuario usuario = SecurityUtils.obtenerUsuarioAutenticado();
-    Long establecimientoId = usuario.getEstablecimiento().getId();
+    @Override
+    @Transactional
+    @Bulkhead(name = "crearPedido", fallbackMethod = "crearPedidoFallback")
+    public PedidoDetalleResponse crearPedido(CreatePedidoRequest request) {
+      Usuario usuario = SecurityUtils.obtenerUsuarioAutenticado();
+      Long establecimientoId = usuario.getEstablecimiento().getId();
+      Direccion direccionSeleccionada = null;
+      Establecimiento establecimiento = usuario.getEstablecimiento();
 
-    Direccion direccionSeleccionada = null;
-    Establecimiento establecimiento = usuario.getEstablecimiento();
-    if (establecimiento == null) {
-      throw new BusinessException("El usuario no tiene un establecimiento asociado.");
-    }
+      if (establecimiento == null) {
+        throw new BusinessException("El usuario no tiene un establecimiento asociado.");
+      }
+      if (establecimiento.getTipoServicio() == TipoServicio.DELIVERY && request.getTipoEntrega() != TipoEntrega.DELIVERY) {
+        throw new BusinessException("El establecimiento solo permite pedidos con entrega a delivery.");
+      }
+      if (establecimiento.getTipoServicio() == TipoServicio.RETIRO && request.getTipoEntrega() != TipoEntrega.RETIRO) {
+        throw new BusinessException("El establecimiento solo permite pedidos con retiro en local.");
+      }
+      if (request.getTipoEntrega() == TipoEntrega.DELIVERY && request.getDireccionId() == null) {
+        throw new BusinessException("Debe seleccionar una dirección para delivery");
+      }
 
-    if (establecimiento.getTipoServicio() == TipoServicio.DELIVERY && request.getTipoEntrega() != TipoEntrega.DELIVERY) {
-      throw new BusinessException("El establecimiento solo permite pedidos con entrega a delivery.");
-    }
+      String direccionCompleta = null;
+      if (request.getTipoEntrega() == TipoEntrega.DELIVERY) {
+        direccionSeleccionada = direccionRepository
+            .findByIdAndUsuarioIdAndEstado(request.getDireccionId(), usuario.getId(), EstadoDireccion.ACTIVA)
+            .orElseThrow(() -> new BusinessException("Dirección no encontrada"));
+        direccionCompleta = direccionSeleccionada.getCalle() + " " + direccionSeleccionada.getNumero()
+            + ", " + direccionSeleccionada.getLocalidad();
+      }
 
-    if (establecimiento.getTipoServicio() == TipoServicio.RETIRO && request.getTipoEntrega() != TipoEntrega.RETIRO) {
-      throw new BusinessException("El establecimiento solo permite pedidos con retiro en local.");
-    }
-
-    if (request.getTipoEntrega() == TipoEntrega.DELIVERY && request.getDireccionId() == null) {
-      throw new BusinessException("Debe seleccionar una dirección para delivery");
-    }
-
-    String direccionCompleta = null;
-    if (request.getTipoEntrega() == TipoEntrega.DELIVERY) {
-      direccionSeleccionada = direccionRepository
-          .findByIdAndUsuarioIdAndEstado(request.getDireccionId(), usuario.getId(), EstadoDireccion.ACTIVA)
-          .orElseThrow(() -> new BusinessException("Dirección no encontrada"));
-
-      direccionCompleta = direccionSeleccionada.getCalle() + " " + direccionSeleccionada.getNumero()
-          + ", " + direccionSeleccionada.getLocalidad();
-    }
-
-    Pedido pedido = Pedido.builder()
-        .usuario(usuario)
-        .establecimiento(usuario.getEstablecimiento())
-        .fechaHora(LocalDateTime.now())
-        .estado(EstadoPedido.PENDIENTE)
-        .tipoEntrega(request.getTipoEntrega())
-        .metodoPago(request.getMetodoPago())
-        .nombreCliente(usuario.getNombre() + " " + usuario.getApellido())
-        .telefonoCliente(usuario.getTelefono())
-        .direccionCliente(direccionCompleta)
-        .build();
-
-    BigDecimal total = BigDecimal.ZERO;
-
-    if (request.getDetalles() == null || request.getDetalles().isEmpty()) {
-      throw new BusinessException("El pedido debe contener al menos un producto");
-    }
-
-    for (CreateDetallePedidoRequest detalleRequest : request.getDetalles()) {
-      Producto producto = productoRepository
-          .findByIdAndEstablecimientoId(detalleRequest.getProductoId(), establecimientoId)
-          .orElseThrow(() -> new BusinessException("Producto no encontrado"));
-
-      stockService.validarStockDisponible(producto, detalleRequest.getCantidad());
-
-      BigDecimal subtotal = producto.getPrecio().multiply(BigDecimal.valueOf(detalleRequest.getCantidad()));
-      total = total.add(subtotal);
-
-      DetallePedido detallePedido = DetallePedido.builder()
-          .pedido(pedido)
-          .producto(producto)
-          .cantidad(detalleRequest.getCantidad())
-          .precioUnitario(producto.getPrecio())
-          .subtotal(subtotal)
-          .nombreProducto(producto.getNombre())
+      Pedido pedido = Pedido.builder()
+          .usuario(usuario)
+          .establecimiento(usuario.getEstablecimiento())
+          .fechaHora(LocalDateTime.now())
+          .estado(EstadoPedido.PENDIENTE)
+          .tipoEntrega(request.getTipoEntrega())
+          .metodoPago(request.getMetodoPago())
+          .nombreCliente(usuario.getNombre() + " " + usuario.getApellido())
+          .telefonoCliente(usuario.getTelefono())
+          .direccionCliente(direccionCompleta)
           .build();
 
-      pedido.getDetalles().add(detallePedido);
+      BigDecimal total = BigDecimal.ZERO;
+
+      if (request.getDetalles() == null || request.getDetalles().isEmpty()) {
+        throw new BusinessException("El pedido debe contener al menos un producto");
+      }
+
+      // Resuelve todos los descuentos vigentes del establecimiento en una sola query,
+      // evitando N+1 al iterar los detalles del pedido.
+      Map<Long, BigDecimal> descuentosVigentes =
+          descuentoResolverService.obtenerDescuentosVigentes(establecimientoId);
+
+      for (CreateDetallePedidoRequest detalleRequest : request.getDetalles()) {
+        Producto producto = productoRepository
+            .findByIdAndEstablecimientoId(detalleRequest.getProductoId(), establecimientoId)
+            .orElseThrow(() -> new BusinessException("Producto no encontrado"));
+
+        stockService.validarStockDisponible(producto, detalleRequest.getCantidad());
+
+        BigDecimal precioUnitarioFinal = calcularPrecioConDescuento(
+            producto, descuentosVigentes.get(producto.getId())
+        );
+
+        BigDecimal subtotal = precioUnitarioFinal.multiply(BigDecimal.valueOf(detalleRequest.getCantidad()));
+        total = total.add(subtotal);
+
+        DetallePedido detallePedido = DetallePedido.builder()
+            .pedido(pedido)
+            .producto(producto)
+            .cantidad(detalleRequest.getCantidad())
+            .precioUnitario(precioUnitarioFinal)
+            .subtotal(subtotal)
+            .nombreProducto(producto.getNombre())
+            .build();
+
+        pedido.getDetalles().add(detallePedido);
+      }
+
+      pedido.setTotal(total);
+
+      Pedido pedidoGuardado = pedidoRepository.save(pedido);
+      pedidoGuardado.setNumeroPedido(String.format("PED-%08d", pedidoGuardado.getId()));
+      pedidoGuardado = pedidoRepository.save(pedidoGuardado);
+
+      return PedidoMapper.toDetalleResponse(pedidoGuardado);
     }
 
-    pedido.setTotal(total);
+    private BigDecimal calcularPrecioConDescuento(Producto producto, BigDecimal porcentaje) {
+      if (porcentaje == null) {
+        return producto.getPrecio();
+      }
+      BigDecimal factor = BigDecimal.ONE.subtract(
+          porcentaje.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP)
+      );
+      return producto.getPrecio().multiply(factor).setScale(2, RoundingMode.HALF_UP);
+    }
 
-    Pedido pedidoGuardado = pedidoRepository.save(pedido);
-    pedidoGuardado.setNumeroPedido(String.format("PED-%08d", pedidoGuardado.getId()));
-    pedidoGuardado = pedidoRepository.save(pedidoGuardado);
-
-    return PedidoMapper.toDetalleResponse(pedidoGuardado);
-  }
-
-  private PedidoDetalleResponse crearPedidoFallback(CreatePedidoRequest request, BulkheadFullException ex) {
-    log.warn("Bulkhead lleno en crearPedido - considerar subir el límite");
-    throw new BusinessException("Estamos procesando muchos pedidos en este momento. Por favor, intentá de nuevo en unos segundos.");
-  }
+    private PedidoDetalleResponse crearPedidoFallback(CreatePedidoRequest request, BulkheadFullException ex) {
+      log.warn("Bulkhead lleno en crearPedido - considerar subir el límite");
+      throw new BusinessException("Estamos procesando muchos pedidos en este momento. Por favor, intentá de nuevo en unos segundos.");
+    }
 
   @Override
   @Transactional

@@ -7,6 +7,7 @@ export const ADMIN_NAVIGATION: NavigationItem[] = [
   { id: 'productos', label: 'Productos', route: '/admin/productos' },
   { id: 'categorias', label: 'Categorías', route: '/admin/categorias' },
   { id: 'cupones', label: 'Cupones', route: '/admin/cupones' },
+  { id: 'descuentos', label: 'Descuentos', route: '/admin/descuentos' },
   { id: 'personal', label: 'Personal', route: '/admin/personal' },
   { id: 'auditoria', label: 'Auditoría', route: '/admin/auditoria' },
   { id: 'configuracion', label: 'Configuración', route: '/admin/configuracion' },
@@ -17,6 +18,7 @@ export const EMPLOYEE_NAVIGATION: NavigationItem[] = [
   { id: 'pedidos-en-curso', label: 'Pedidos en Curso', route: '/empleado/pedidos/en-curso' },
   { id: 'pedidos', label: 'Pedidos', route: '/empleado/pedidos' },
   { id: 'productos', label: 'Productos', route: '/empleado/productos' },
+  { id: 'descuentos', label: 'Descuentos', route: '/empleado/descuentos' },
   { id: 'perfil', label: 'Perfil', route: '/empleado/perfil' }
 ];
 

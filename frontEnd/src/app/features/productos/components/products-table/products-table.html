@@ -65,10 +65,19 @@
                   <span>{{ product.nombre }}</span>
                 </div>
               </td>
-              <td>{{ product.descripcion || 'Sin descripción' }}</td>
-              <td>{{ product.categoriaNombre }}</td>
-              <td>${{ product.precio | number:'1.2-2' }}</td>
-              <td>{{ product.stock }}</td>
+              <td> {{ product.descripcion || 'Sin descripción' }} </td>
+              <td> {{ product.categoriaNombre }} </td>
+              <td>
+                @if (product.precioConDescuento && product.precioConDescuento < product.precio) {
+                  <div class="product-price-cell">
+                    <span class="price-original">${{ product.precio | number:'1.2-2' }}</span>
+                    <span class="price-discounted">${{ product.precioConDescuento | number:'1.2-2' }}</span>
+                  </div>
+                } @else {
+                  ${{ product.precio | number:'1.2-2' }}
+                }
+              </td>
+              <td> {{ product.stock }} </td>
               <td> 
                 <span class="table-status"
                   [class.table-status--active]="product.estado === Estado.ACTIVO"

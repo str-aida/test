@@ -479,7 +479,11 @@ $stitch-text-muted: #6b7280;
   }
 }
 
-.col-unit,
+.col-unit {
+  font-weight: 700;
+  color: #dc2626;
+}
+
 .col-qty,
 .col-subtotal {
   font-weight: 500;
