@@ -1,5 +1,4 @@
 <section class="audit-list">
-
   <!-- HEADER -->
   <header class="audit-list__header">
     <div class="audit-list__header-title">
@@ -8,9 +7,7 @@
       </div>
       <div>
         <h1 class="audit-list__title">Auditoría</h1>
-        <p class="audit-list__subtitle">
-          Registro de movimientos y cambios realizados en el sistema.
-        </p>
+        <p class="audit-list__subtitle">Registro de movimientos y cambios realizados en el sistema.</p>
       </div>
     </div>
   </header>
@@ -19,31 +16,16 @@
   <div class="audit-list__toolbar">
     <div class="audit-search">
       <svg lucideSearch class="audit-search__icon"></svg>
-      <input
-        id="filtro-buscar"
-        type="text"
-        class="audit-search__input"
-        placeholder="Buscar movimientos..."
-        [(ngModel)]="filtroAccion"
-        (keyup.enter)="buscar()" />
+      <input id="filtro-buscar" type="text" class="audit-search__input" placeholder="Buscar movimientos..."
+        [(ngModel)]="filtroAccion" (keyup.enter)="buscar()" />
     </div>
-
     <div class="audit-actions">
-      <button
-        type="button"
-        class="btn-stitch btn-stitch--secondary"
-        (click)="toggleFiltros()"
-        id="btn-filtros">
+      <button type="button" class="btn-stitch btn-stitch--secondary" (click)="toggleFiltros()" id="btn-filtros">
         <svg lucideSlidersHorizontal class="btn-stitch__icon"></svg>
         <span>Filtros</span>
       </button>
-
-      <button
-        type="button"
-        class="btn-stitch btn-stitch--secondary"
-        [disabled]="isExporting()"
-        (click)="descargarPDF()"
-        id="btn-descargar-pdf">
+      <button type="button" class="btn-stitch btn-stitch--secondary" [disabled]="isExporting()"
+        (click)="descargarPDF()" id="btn-descargar-pdf">
         <svg lucideDownload class="btn-stitch__icon"></svg>
         <span>{{ isExporting() ? 'Exportando...' : 'Exportar' }}</span>
       </button>
@@ -54,39 +36,28 @@
   @if (mostrarFiltros) {
     <div class="audit-filter-panel">
       <div class="audit-filter-panel__field">
-        <label for="filtro-rol">Rol</label>
-        <select
-          id="filtro-rol"
-          class="audit-filter-panel__select"
-          [(ngModel)]="filtroRol">
-          <option value="">Todos los roles</option>
-          @for (rol of rolesDisponibles; track rol) {
-            <option [value]="rol">{{ rol }}</option>
-          }
-        </select>
-      </div>
-
-      <div class="audit-filter-panel__field">
-        <label for="filtro-usuario">Usuario</label>
-
-        <div class="audit-filter-panel__search">
-          <svg lucideSearch class="audit-filter-panel__search-icon"></svg>
-          <input
-            id="filtro-usuario"
-            type="text"
-            class="audit-filter-panel__input"
-            placeholder="Buscar por usuario..."
-            [(ngModel)]="filtroUsuario" />
+        <label>Rol</label>
+        <div class="audit-filter-panel__select-wrapper">
+          <svg lucideListFilter class="filter-icon"></svg>
+          <select class="audit-filter-panel__select" [(ngModel)]="filtroRol">
+            <option value="">Todos los roles</option>
+            @for (rol of rolesDisponibles; track rol) {
+              <option [value]="rol">{{ rol }}</option>
+            }
+          </select>
         </div>
       </div>
-
+      <div class="audit-filter-panel__field">
+        <label>Usuario</label>
+        <div class="audit-filter-panel__search">
+          <svg lucideSearch class="audit-filter-panel__search-icon"></svg>
+          <input type="text" class="audit-filter-panel__input"
+            placeholder="Buscar por usuario..." [(ngModel)]="filtroUsuario" />
+        </div>
+      </div>
       <div class="audit-filter-panel__buttons">
-        <button type="button" class="btn-stitch btn-stitch--primary" (click)="buscar()">
-          Aplicar
-        </button>
-        <button type="button" class="btn-stitch btn-stitch--ghost" (click)="limpiarFiltros()">
-          Limpiar
-        </button>
+        <button type="button" class="btn-stitch btn-stitch--primary" (click)="buscar()">Aplicar</button>
+        <button type="button" class="btn-stitch btn-stitch--ghost" (click)="limpiarFiltros()">Limpiar</button>
       </div>
     </div>
   }
@@ -103,15 +74,10 @@
   @else if (hasError()) {
     <div class="audit-state audit-state--error">
       <div class="audit-state__icon-wrap audit-state__icon-wrap--danger">
-        <svg lucideAlertTriangle class="audit-state__icon"></svg>
+        <svg lucideTriangleAlert class="audit-state__icon"></svg>
       </div>
       <p class="audit-state__text">Error al cargar los registros de auditoría.</p>
-      <button
-        type="button"
-        class="btn-stitch btn-stitch--primary"
-        (click)="cargarLogs()">
-        Reintentar
-      </button>
+      <button type="button" class="btn-stitch btn-stitch--primary" (click)="cargarLogs()">Reintentar</button>
     </div>
   }
 
@@ -148,35 +114,17 @@
             @for (log of logs(); track log.id) {
               <tr>
                 <!-- FECHA -->
-                <td class="col-fecha">
-                  {{ log.fecha | date:'dd/MM/yyyy HH:mm' }}
-                </td>
-
+                <td class="col-fecha">{{ log.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
                 <!-- USUARIO -->
-                <td class="col-usuario">
-                  {{ log.usuario || '-' }}
-                </td>
-
+                <td class="col-usuario">{{ log.usuario || '-' }}</td>
                 <!-- ACCIÓN -->
-                <td class="col-accion">
-                  {{ getAccionLabel(log) }}
-                </td>
-
+                <td class="col-accion">{{ getAccionLabel(log) }}</td>
                 <!-- MÓDULO (antes Tabla) -->
-                <td class="col-modulo">
-                  {{ (log.tablaAfectada || '-').toUpperCase() }}
-                </td>
-
+                <td class="col-modulo">{{ (log.tablaAfectada || '-').toUpperCase() }}</td>
                 <!-- REFERENCIA -->
-                <td class="col-referencia">
-                  {{ log.referencia || '-' }}
-                </td>
-
+                <td class="col-referencia">{{ log.referencia || '-' }}</td>
                 <!-- CAMPO -->
-                <td class="col-campo">
-                  {{ log.campoModificado || '-' }}
-                </td>
-
+                <td class="col-campo">{{ log.campoModificado || '-' }}</td>
                 <!-- VALOR ANTERIOR -->
                 <td class="col-val-anterior">
                   @if (log.valorAnterior) {
@@ -185,7 +133,6 @@
                     -
                   }
                 </td>
-
                 <!-- VALOR NUEVO -->
                 <td class="col-val-nuevo">
                   @if (log.valorNuevo) {
@@ -194,20 +141,14 @@
                     -
                   }
                 </td>
-
                 <!-- TIPO -->
                 <td class="col-tipo">
-                  <span
-                    class="tipo-badge"
-                    [ngClass]="getTipoBadgeClass(log.tipoOperacion)">
+                  <span class="tipo-badge" [ngClass]="getTipoBadgeClass(log.tipoOperacion)">
                     {{ getTipoOperacionBadgeLabel(log.tipoOperacion) }}
                   </span>
                 </td>
-
                 <!-- DESCRIPCIÓN -->
-                <td class="col-descripcion">
-                  {{ getDescripcion(log) }}
-                </td>
+                <td class="col-descripcion">{{ getDescripcion(log) }}</td>
               </tr>
             }
           </tbody>
@@ -216,38 +157,23 @@
 
       <!-- FOOTER CON INFO Y PAGINACIÓN -->
       <div class="table-card__footer">
-        <span class="pagination-info">
-          Mostrando {{ logs().length }} de {{ totalElementos() }} registros
-        </span>
+        <span class="pagination-info">Mostrando {{ logs().length }} de {{ totalElementos() }} registros</span>
 
         @if (totalPaginas() > 1) {
           <div class="pagination-controls">
-            <button
-              type="button"
-              class="pagination-btn"
-              [disabled]="primera() || isLoading()"
-              (click)="prevPage()">
+            <button type="button" class="pagination-btn" [disabled]="primera() || isLoading()" (click)="prevPage()">
               Anterior
             </button>
 
             <div class="pagination-pages">
               @for (page of pageNumbers; track page) {
-                <button
-                  type="button"
-                  class="page-num"
-                  [class.page-num--active]="page === displayCurrentPage"
-                  [disabled]="isLoading()"
-                  (click)="goToPage(page)">
+                <button type="button" class="page-num" [class.page-num--active]="page === displayCurrentPage"
+                  [disabled]="isLoading()" (click)="goToPage(page)">
                   {{ page }}
                 </button>
               }
             </div>
-
-            <button
-              type="button"
-              class="pagination-btn"
-              [disabled]="ultima() || isLoading()"
-              (click)="nextPage()">
+            <button type="button" class="pagination-btn" [disabled]="ultima() || isLoading()" (click)="nextPage()">
               Siguiente
             </button>
           </div>

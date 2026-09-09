@@ -1,14 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  LucideSearch,
-  LucideSlidersHorizontal,
-  LucideDownload,
-  LucideAlertTriangle,
-  LucideInbox,
-  LucideShieldCheck
-} from '@lucide/angular';
+import { LucideSearch, LucideSlidersHorizontal, LucideDownload, LucideTriangleAlert, LucideInbox, LucideShieldCheck, LucideListFilter} from '@lucide/angular';
 import { AuditService } from '../../../../core/services/audit.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { LogSistemaResponse } from '../../../../core/models/log-sistema-response';
@@ -19,17 +12,8 @@ import { UserRole } from '../../../../core/models/enums/user-role.enum';
 @Component({
   selector: 'app-auditoria-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    DatePipe,
-    LucideSearch,
-    LucideSlidersHorizontal,
-    LucideDownload,
-    LucideAlertTriangle,
-    LucideInbox,
-    LucideShieldCheck
-  ],
+  imports: [CommonModule, FormsModule, DatePipe, LucideSearch, LucideSlidersHorizontal, LucideDownload,
+    LucideTriangleAlert, LucideInbox, LucideShieldCheck, LucideListFilter],
   templateUrl: './auditoria-list.html',
   styleUrl: './auditoria-list.scss'
 })
@@ -37,7 +21,6 @@ export class AuditoriaListComponent implements OnInit {
 
   private readonly auditService = inject(AuditService);
   private readonly notificationService = inject(NotificationService);
-
   protected readonly TipoOperacion = TipoOperacion;
   protected readonly UserRole = UserRole;
   protected readonly rolesDisponibles = [UserRole.ADMIN, UserRole.EMPLEADO];
@@ -223,4 +206,3 @@ export class AuditoriaListComponent implements OnInit {
   }
 
 }
-
