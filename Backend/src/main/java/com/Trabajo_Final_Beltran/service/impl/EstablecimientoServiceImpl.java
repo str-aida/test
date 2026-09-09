@@ -13,11 +13,14 @@ import com.Trabajo_Final_Beltran.repository.EstablecimientoRepository;
 import com.Trabajo_Final_Beltran.repository.UsuarioRepository;
 import com.Trabajo_Final_Beltran.security.SecurityUtils;
 import com.Trabajo_Final_Beltran.service.EstablecimientoService;
+import com.Trabajo_Final_Beltran.service.ImageStorageService;
+import com.Trabajo_Final_Beltran.service.ImageValidationService;
 import com.Trabajo_Final_Beltran.util.NumeroUtils;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +31,10 @@ public class EstablecimientoServiceImpl implements EstablecimientoService {
   private final EstablecimientoRepository establecimientoRepository;
 
   private final DireccionRepository direccionRepository;
+
+  private final ImageStorageService imageStorageService;
+
+  private final ImageValidationService imageValidationService;
 
   @Override
   public EstablecimientoResponse obtenerEstablecimiento() {
@@ -78,6 +85,43 @@ public class EstablecimientoServiceImpl implements EstablecimientoService {
     establecimientoRepository.save(establecimiento);
 
     return EstablecimientoMapper.toResponse(establecimiento);
+  }
+
+  @Override
+  @Transactional
+  public EstablecimientoResponse actualizarLogo(
+      MultipartFile logo
+  ) {
+
+    Establecimiento establecimiento =
+        obtenerEstablecimientoAutenticado();
+
+    String logoAnterior =
+        establecimiento.getLogoUrl();
+
+    imageValidationService.validar(logo);
+
+    String nuevoLogo =
+        imageStorageService.guardarLogo(
+            logo,
+            establecimiento.getId()
+        );
+
+    establecimiento.setLogoUrl(nuevoLogo);
+
+    establecimientoRepository.save(
+        establecimiento
+    );
+
+    if (logoAnterior != null && !logoAnterior.isBlank()) {
+      imageStorageService.eliminar(
+          logoAnterior
+      );
+    }
+
+    return EstablecimientoMapper.toResponse(
+        establecimiento
+    );
   }
 
   private Establecimiento obtenerEstablecimientoAutenticado() {

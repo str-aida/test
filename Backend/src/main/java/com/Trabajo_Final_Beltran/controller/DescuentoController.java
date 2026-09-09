@@ -31,7 +31,7 @@ public class DescuentoController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN'}")
     public ResponseEntity<DescuentoResponse> editarDescuento(
             @PathVariable Long id,
             @Valid @RequestBody UpdateDescuentoRequest request

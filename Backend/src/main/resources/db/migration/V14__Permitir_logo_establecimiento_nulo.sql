@@ -1,0 +1,2 @@
+ALTER TABLE establecimiento
+MODIFY COLUMN logo_url VARCHAR(500) NULL;

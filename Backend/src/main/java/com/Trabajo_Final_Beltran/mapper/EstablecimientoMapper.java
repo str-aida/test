@@ -17,6 +17,7 @@ public class EstablecimientoMapper {
         .cuit(establecimiento.getCuit())
         .email(establecimiento.getEmail())
         .telefono(establecimiento.getTelefono())
+        .logoUrl(establecimiento.getLogoUrl())
         .direccion(
             DireccionMapper.toResponse(
                 establecimiento.getDireccion()
@@ -45,4 +46,4 @@ public class EstablecimientoMapper {
         .tipoServicio(establecimiento.getTipoServicio())
         .build();
   }
-}
+}

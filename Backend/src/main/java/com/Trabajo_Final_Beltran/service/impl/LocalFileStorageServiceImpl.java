@@ -84,6 +84,54 @@ public class LocalFileStorageServiceImpl implements ImageStorageService {
   }
 
   @Override
+  public String guardarLogo(
+      MultipartFile archivo,
+      Long establecimientoId
+  ) {
+    imageValidationService.validar(archivo);
+
+    try {
+
+      Path directorio =
+          Paths.get(
+              storageProperties.getLocal().getPath(),
+              "establecimiento-" + establecimientoId,
+              "logo"
+          );
+
+      Files.createDirectories(directorio);
+
+      String extension =
+          obtenerExtension(archivo.getOriginalFilename());
+
+      String nombreArchivo =
+          UUID.randomUUID() + extension;
+
+      Path archivoDestino =
+          directorio.resolve(nombreArchivo);
+
+      archivo.transferTo(archivoDestino);
+
+      return "/uploads/establecimiento-"
+          + establecimientoId
+          + "/logo/"
+          + nombreArchivo;
+
+    } catch (IOException e) {
+
+      log.error(
+          "Error al guardar el logo del establecimiento",
+          e
+      );
+
+      throw new StorageException(
+          "No se pudo guardar el logo",
+          e
+      );
+    }
+  }
+
+  @Override
   public void eliminar(String imagenUrl) {
 
     if (imagenUrl == null || imagenUrl.isBlank()) {

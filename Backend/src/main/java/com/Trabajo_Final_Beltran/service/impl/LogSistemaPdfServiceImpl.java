@@ -394,6 +394,41 @@ public class LogSistemaPdfServiceImpl implements LogSistemaPdfService {
     contentStream.endText();
   }
 
+  private String reemplazarEmojis(String texto) {
+
+    if (texto == null || texto.isBlank()) {
+      return texto;
+    }
+
+    StringBuilder resultado = new StringBuilder();
+
+    texto.codePoints().forEach(codePoint -> {
+
+      if (esEmoji(codePoint)) {
+        resultado.append('?');
+      } else {
+        resultado.appendCodePoint(codePoint);
+      }
+    });
+
+    return resultado.toString();
+  }
+
+  private boolean esEmoji(int codePoint) {
+
+    return
+        (codePoint >= 0x1F300 && codePoint <= 0x1F5FF) || // símbolos y pictogramas
+            (codePoint >= 0x1F600 && codePoint <= 0x1F64F) || // emoticonos
+            (codePoint >= 0x1F680 && codePoint <= 0x1F6FF) || // transporte y símbolos
+            (codePoint >= 0x1F700 && codePoint <= 0x1F77F) ||
+            (codePoint >= 0x1F780 && codePoint <= 0x1F7FF) ||
+            (codePoint >= 0x1F800 && codePoint <= 0x1F8FF) ||
+            (codePoint >= 0x1F900 && codePoint <= 0x1F9FF) || // emojis suplementarios
+            (codePoint >= 0x1FA00 && codePoint <= 0x1FAFF) ||
+            (codePoint >= 0x2600 && codePoint <= 0x26FF) ||   // símbolos varios
+            (codePoint >= 0x2700 && codePoint <= 0x27BF);      // dingbats
+  }
+
   private String ajustarTexto(
       String texto,
       float anchoMaximo,
@@ -404,6 +439,8 @@ public class LogSistemaPdfServiceImpl implements LogSistemaPdfService {
     if (texto == null || texto.isBlank()) {
       return "";
     }
+
+    texto = reemplazarEmojis(texto);
 
     float anchoTexto =
         fuente.getStringWidth(
