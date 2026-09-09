@@ -15,10 +15,10 @@ import {
   LucidePencil,
   LucideBan,
   LucideX,
-  LucideAlertTriangle,
+  LucideTriangleAlert,
   LucideRefreshCw,
   LucideSearch,
-  LucideFilter,
+  LucideListFilter,
   LucideChevronLeft,
   LucideChevronRight
 } from '@lucide/angular';
@@ -40,10 +40,10 @@ import { CommonModule } from '@angular/common';
     LucidePencil,
     LucideBan,
     LucideX,
-    LucideAlertTriangle,
+    LucideTriangleAlert,
     LucideRefreshCw,
     LucideSearch,
-    LucideFilter,
+    LucideListFilter,
     LucideChevronLeft,
     LucideChevronRight
   ],

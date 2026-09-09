@@ -1,5 +1,4 @@
 <section class="cupones-page">
-
   <!-- HEADER DE PÁGINA -->
   <header class="cupones-page__header">
     <div class="cupones-page__header-title">
@@ -7,26 +6,16 @@
         <svg lucideTicket class="cupones-page__icon"></svg>
       </div>
       <div>
-        <h1 class="cupones-page__title">Cupones</h1>
-        <p class="cupones-page__subtitle">
-          Gestioná las promociones y descuentos disponibles para los clientes.
-        </p>
+        <h1 class="cupones-page__title">Gestión de cupones</h1>
+        <p class="cupones-page__subtitle">Gestioná las promociones y descuentos disponibles para los clientes.</p>
       </div>
     </div>
-
     <div class="cupones-page__header-actions">
-      <button
-        type="button"
-        class="btn-stitch-outline"
-        (click)="openAssignModal()">
+      <button type="button" class="btn-stitch-outline" (click)="openAssignModal()">
         <svg lucideUserPlus class="btn-icon"></svg>
         <span>Asignar Cupón</span>
       </button>
-
-      <button
-        type="button"
-        class="btn-stitch-primary"
-        (click)="openCreateModal()">
+      <button type="button" class="btn-stitch-primary" (click)="openCreateModal()">
         <svg lucidePlus class="btn-icon"></svg>
         <span>Crear Cupón</span>
       </button>
@@ -37,34 +26,20 @@
   <div class="cupones-filter-card">
     <div class="cupones-filter__search">
       <svg lucideSearch class="cupones-filter__search-icon"></svg>
-      <input
-        type="text"
-        class="cupones-filter__search-input"
-        placeholder="Buscar por código..."
-        [(ngModel)]="searchTerm"
-        (keyup.enter)="applyFilter()">
+      <input type="text" class="cupones-filter__search-input" placeholder="Buscar por código..."
+        [(ngModel)]="searchTerm" (keyup.enter)="applyFilter()">
     </div>
-
     <div class="cupones-filter__status">
       <div class="cupones-filter__select-wrapper">
-        <svg lucideFilter class="cupones-filter__filter-icon"></svg>
-        <select
-          class="cupones-filter__select"
-          [(ngModel)]="statusFilter"
-          (change)="applyFilter()">
+        <svg lucideListFilter class="cupones-filter__filter-icon"></svg>
+        <select class="cupones-filter__select" [(ngModel)]="statusFilter" (change)="applyFilter()">
           <option value="TODOS">Estados</option>
           <option value="ACTIVO">Activos</option>
           <option value="INACTIVO">Inactivos</option>
         </select>
       </div>
     </div>
-
-    <button
-      type="button"
-      class="btn cupones-filter__button"
-      (click)="applyFilter()">
-      Buscar
-    </button>
+    <button type="button" class="btn cupones-filter__button" (click)="applyFilter()">Buscar</button>
   </div>
 
   <!-- CONTENIDO PRINCIPAL -->
@@ -132,21 +107,13 @@
               @for (cupon of filteredCupones; track cupon.id) {
                 <tr>
                   <!-- CÓDIGO -->
-                  <td class="col-codigo">
-                    {{ cupon.codigo }}
-                  </td>
-
+                  <td class="col-codigo">{{ cupon.codigo }}</td>
                   <!-- DESCUENTO -->
-                  <td class="col-descuento">
-                    {{ formatValor(cupon) }}
-                  </td>
-
+                  <td class="col-descuento">{{ formatValor(cupon) }}</td>
                   <!-- FECHA DE INICIO -->
                   <td>{{ cupon.fechaInicio | date:'dd/MM/yyyy' }}</td>
-
                   <!-- FECHA DE FIN -->
                   <td>{{ cupon.fechaFin | date:'dd/MM/yyyy' }}</td>
-
                   <!-- USOS -->
                   <td class="col-usos">
                     <span title="Canjes realizados / máximo de canjes">
@@ -161,7 +128,6 @@
                       </small>
                     }
                   </td>
-
                   <!-- ESTADO -->
                   <td>
                     @if (cupon.estado === EstadoCuponEnum.ACTIVO) {
@@ -170,37 +136,26 @@
                       <span class="badge-stitch badge-stitch--inactivo">Inactivo</span>
                     }
                   </td>
-
                   <!-- ACCIONES -->
                   <td class="text-right">
                     <div class="actions-group">
                       <!-- EDITAR -->
-                      <button
-                        type="button"
-                        class="action-btn action-btn--edit"
-                        title="Editar cupón"
+                      <button type="button" class="action-btn action-btn--edit" title="Editar cupón"
                         (click)="openEditModal(cupon)">
                         <svg lucidePencil></svg>
                       </button>
-
                       <!-- ASIGNAR -->
-                      <button
-                        type="button"
-                        class="action-btn action-btn--assign"
+                      <button type="button" class="action-btn action-btn--assign"
                         [class.action-btn--disabled]="!esCuponAsignable(cupon)"
                         [disabled]="!esCuponAsignable(cupon)"
                         [title]="getTooltipAsignar(cupon)"
                         (click)="esCuponAsignable(cupon) && openAssignModal(cupon)">
                         <svg lucideUserCheck></svg>
                       </button>
-
                       <!-- DESACTIVAR -->
                       @if (cupon.estado === EstadoCuponEnum.ACTIVO) {
-                        <button
-                          type="button"
-                          class="action-btn action-btn--danger"
-                          title="Desactivar cupón"
-                          (click)="openDeactivateModal(cupon)">
+                        <button type="button" class="action-btn action-btn--danger"
+                          title="Desactivar cupón" (click)="openDeactivateModal(cupon)">
                           <svg lucideBan></svg>
                         </button>
                       }
@@ -211,7 +166,6 @@
             </tbody>
           </table>
         </div>
-
         <!-- FOOTER PAGINACIÓN (STITCH) -->
         <div class="cupones-table-footer">
           <span class="footer-summary">
@@ -251,11 +205,7 @@
               </p>
             </div>
           </div>
-          <button
-            type="button"
-            class="modal-card__close"
-            aria-label="Cerrar modal"
-            (click)="closeFormModal()">
+          <button type="button" class="modal-card__close" aria-label="Cerrar modal" (click)="closeFormModal()">
             <svg lucideX></svg>
           </button>
         </header>
@@ -292,25 +242,15 @@
         <div class="modal-card__confirm-content">
           <h3>¿Desactivar cupón?</h3>
           <p>
-            Vas a cambiar el estado del cupón
-            <strong>"{{ selectedCupon.codigo }}"</strong>
-            a <strong>INACTIVO</strong>.
+            Vas a cambiar el estado del cupón <strong>"{{ selectedCupon.codigo }}"</strong> a <strong>INACTIVO</strong>.
           </p>
         </div>
 
         <footer class="modal-card__footer">
-          <button
-            type="button"
-            class="btn btn--outline"
-            [disabled]="isDeactivating"
-            (click)="closeDeactivateModal()">
+          <button type="button" class="btn btn--outline" [disabled]="isDeactivating" (click)="closeDeactivateModal()">
             Cancelar
           </button>
-          <button
-            type="button"
-            class="btn btn--primary"
-            [disabled]="isDeactivating"
-            (click)="confirmDeactivate()">
+          <button type="button" class="btn btn--primary" [disabled]="isDeactivating" (click)="confirmDeactivate()">
             Sí, desactivar
           </button>
         </footer>
@@ -319,4 +259,3 @@
   }
 
 </section>
-
