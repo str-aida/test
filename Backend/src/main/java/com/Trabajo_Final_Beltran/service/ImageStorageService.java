@@ -8,4 +8,7 @@ public interface ImageStorageService {
       Long establecimientoId);
 
   void eliminar(String imagenUrl);
+
+  String guardarLogo(MultipartFile archivo,
+      Long establecimientoId);
 }

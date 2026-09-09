@@ -82,6 +82,60 @@ public class S3CompatibleImageStorageServiceImpl implements ImageStorageService 
   }
 
   @Override
+  public String guardarLogo(
+      MultipartFile archivo,
+      Long establecimientoId
+  ) {
+
+    String extension =
+        obtenerExtension(
+            archivo.getOriginalFilename()
+        );
+
+    String nombreArchivo =
+        UUID.randomUUID() + extension;
+
+    String key =
+        "establecimiento-"
+            + establecimientoId
+            + "/logo/"
+            + nombreArchivo;
+
+    PutObjectRequest request =
+        PutObjectRequest.builder()
+            .bucket(
+                storageProperties
+                    .getS3()
+                    .getBucket()
+            )
+            .key(key)
+            .contentType(
+                archivo.getContentType()
+            )
+            .build();
+
+    try {
+
+      s3Client.putObject(
+          request,
+          RequestBody.fromInputStream(
+              archivo.getInputStream(),
+              archivo.getSize()
+          )
+      );
+
+    } catch (IOException | SdkException e) {
+
+      throw new StorageException(
+          "No se pudo guardar el logo",
+          e
+      );
+    }
+
+    return construirPublicUrl(key);
+  }
+
+  @Override
   public void eliminar(String imagenUrl) {
 
     if (imagenUrl == null || imagenUrl.isBlank()) {

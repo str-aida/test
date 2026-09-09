@@ -12,19 +12,18 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class SetupController {
 
-    private final SetupService setupService;
-    
-    @PostMapping("/establecimiento")
-    public ResponseEntity<SetupResponse>
-    crearEstablecimiento(
-            @RequestBody SetupRequest request
-    ) {
+  private final SetupService setupService;
 
-        return ResponseEntity.ok(
-                setupService.crearEstablecimiento(
-                        request
-                )
-        );
-    }
+  @PostMapping("/establecimiento")
+  public ResponseEntity<SetupResponse>
+  crearEstablecimiento(
+      @RequestBody SetupRequest request
+  ) {
 
+    return ResponseEntity.ok(
+        setupService.crearEstablecimiento(
+            request
+        )
+    );
+  }
 }

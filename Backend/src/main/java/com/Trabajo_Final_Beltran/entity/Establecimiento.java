@@ -67,20 +67,23 @@ public class Establecimiento {
     @Column (nullable = false, length = 20)
     private String telefono;
 
+    @Column(name = "logo_url", nullable = false, length = 500)
+    private String logoUrl;
+
     @Column (name = "horario_apertura", nullable = false)
     private LocalTime horarioApertura;
     
     @Column (name = "horario_Cierre", nullable = false)
     private LocalTime horarioCierre;
 
-  @ElementCollection
-  @CollectionTable(
+    @ElementCollection
+    @CollectionTable(
       name = "establecimiento_dias_habiles",
       joinColumns = @JoinColumn(name = "id_establecimiento")
-  )
-  @Enumerated(EnumType.STRING)
-  @Column(name = "dia", nullable = false)
-  private Set<DiaSemana> diasHabiles;
+    )
+    @Enumerated(EnumType.STRING)
+    @Column(name = "dia", nullable = false)
+    private Set<DiaSemana> diasHabiles;
     
     @Column (length = 300)
     private String descripcion;
@@ -97,13 +100,13 @@ public class Establecimiento {
     private EstadoEstablecimiento estado;
     
     @PrePersist
-public void prePersist() {
+    public void prePersist() {
 
     this.fechaCreacion = LocalDateTime.now();
 
     if (this.estado == null) {
         this.estado = EstadoEstablecimiento.ACTIVO;
     }
-}
+    }
 
 }

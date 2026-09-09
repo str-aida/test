@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/establecimiento")
@@ -57,6 +59,21 @@ public class EstablecimientoController {
 
     EstablecimientoResponse response =
         establecimientoService.actualizarEstablecimiento(request);
+
+    return ResponseEntity.ok(response);
+  }
+
+  @PutMapping(
+      value = "/logo",
+      consumes = "multipart/form-data"
+  )
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<EstablecimientoResponse> actualizarLogo(
+      @RequestPart("logo") MultipartFile logo
+  ) {
+
+    EstablecimientoResponse response =
+        establecimientoService.actualizarLogo(logo);
 
     return ResponseEntity.ok(response);
   }
