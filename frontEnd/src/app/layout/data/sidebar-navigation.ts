@@ -18,13 +18,13 @@ export const EMPLOYEE_NAVIGATION: NavigationItem[] = [
   { id: 'pedidos-en-curso', label: 'Pedidos en Curso', route: '/empleado/pedidos/en-curso' },
   { id: 'pedidos', label: 'Pedidos', route: '/empleado/pedidos' },
   { id: 'productos', label: 'Productos', route: '/empleado/productos' },
-  { id: 'descuentos', label: 'Descuentos', route: '/empleado/descuentos' },
   { id: 'perfil', label: 'Perfil', route: '/empleado/perfil' }
 ];
 
 export const CLIENT_NAVIGATION: NavigationItem[] = [
   { id: 'inicio', label: 'Inicio', route: '/cliente/inicio' },
   { id: 'productos', label: 'Productos', route: '/cliente/productos' },
+  { id: 'descuentos', label: 'Descuentos', route: '/cliente/descuentos' },
   { id: 'mis-pedidos', label: 'Mis pedidos', route: '/cliente/pedidos' },
   { id: 'mis-cupones', label: 'Mis cupones', route: '/cliente/cupones' },
   { id: 'perfil', label: 'Perfil', route: '/cliente/perfil' },
