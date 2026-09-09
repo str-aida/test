@@ -1,12 +1,12 @@
 <div class="brand">
 
     <img
-        src="images/logo/gestia-isotype-light.svg"
-        alt="Isotipo Gestia"
+        [src]="logoUrl"
+        [alt]="nombre || 'Logo del establecimiento'"
         class="brand__logo">
 
     <span class="brand__name">
-        Gestia
+        {{ nombre }}
     </span>
 
 </div>

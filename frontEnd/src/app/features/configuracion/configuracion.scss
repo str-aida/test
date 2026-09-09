@@ -237,3 +237,77 @@
     align-items: center;
     gap: .5rem;
 }
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.5rem 0;
+
+    @include mobile {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.logo-preview-wrapper {
+    width: 120px;
+    height: 120px;
+    min-width: 120px;
+    border-radius: 1rem;
+    border: 2px dashed $color-border;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: lighten($color-background, 2%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    &--fallback {
+        background-color: rgba($color-primary, 0.05);
+        border-style: solid;
+        border-color: rgba($color-primary, 0.2);
+    }
+}
+
+.logo-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.logo-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.logo-hint {
+    color: $color-text-light;
+    font-size: 0.8rem;
+    max-width: 400px;
+}
+
+.logo-selected-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .logo-filename {
+        font-weight: $fw-medium;
+        font-size: 0.85rem;
+        color: $color-primary;
+    }
+}
+
+.logo-confirm-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.btn-icon {
+    width: 1rem;
+    height: 1rem;
+}

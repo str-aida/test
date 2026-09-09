@@ -1,5 +1,60 @@
 <form class="configuration-form" [formGroup]="establishmentForm" (ngSubmit)="onSubmit()">
 
+    <!-- LOGO DEL ESTABLECIMIENTO -->
+    <section class="form-section form-section--logo">
+        <div class="form-section__header">
+            <h2 class="form-section__title">Logo del Establecimiento</h2>
+            <p class="form-section__subtitle">Personalizá la imagen que representa a tu establecimiento.</p>
+        </div>
+        <div class="logo-container">
+            <div class="logo-preview-wrapper" [class.logo-preview-wrapper--fallback]="!hasCustomLogo()">
+                <img [src]="getLogoSrc()" alt="Logo del establecimiento" class="logo-preview-img">
+            </div>
+
+            <div class="logo-actions">
+                <input
+                    type="file"
+                    #logoInput
+                    hidden
+                    accept="image/png, image/jpeg, image/jpg"
+                    (change)="onLogoSelected($event)"
+                >
+
+                @if (!selectedLogoFile()) {
+                    <button type="button" class="btn btn--secondary" (click)="logoInput.click()">
+                        <svg lucideUpload class="btn-icon"></svg>
+                        <span>Seleccionar nueva imagen</span>
+                    </button>
+                    <span class="logo-hint">Formatos: JPG, PNG. Tamaño máx: 2 MB. Dimensiones: 300x300 a 3000x3000px.</span>
+                } @else {
+                    <div class="logo-selected-info">
+                        <span class="logo-filename">{{ selectedLogoFile()?.name }}</span>
+                    </div>
+                    <div class="logo-confirm-actions">
+                        <button
+                            type="button"
+                            class="btn btn--primary"
+                            [disabled]="isUploadingLogo()"
+                            (click)="guardarLogo()"
+                        >
+                            <svg lucideCheck class="btn-icon"></svg>
+                            <span>{{ isUploadingLogo() ? 'Guardando...' : 'Guardar logo' }}</span>
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn--secondary"
+                            [disabled]="isUploadingLogo()"
+                            (click)="cancelLogoSelection()"
+                        >
+                            <svg lucideX class="btn-icon"></svg>
+                            <span>Cancelar</span>
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
     <!-- INFORMACIÓN GENERAL -->
     <section class="form-section form-section--general">
         <div class="form-section__header">

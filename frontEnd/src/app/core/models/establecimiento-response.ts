@@ -18,4 +18,5 @@ export interface EstablecimientoResponse {
     tipoServicio: TipoServicio;
     estado: Estado;
     fechaCreacion: string;
+    logoUrl?: string | null;
 }
