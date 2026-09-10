@@ -22,6 +22,8 @@ public interface NotificacionService {
 
   void marcarComoLeida(Long id);
 
+  void marcarTodasComoLeidas();
+
   long contarNoLeidas();
 
   void eliminarNotificacionesAntiguas();

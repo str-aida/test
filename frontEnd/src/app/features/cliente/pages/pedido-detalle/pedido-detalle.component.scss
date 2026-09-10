@@ -801,8 +801,13 @@
     cursor: pointer;
     transition: background 0.2s ease;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: $color-surface;
+    }
+
+    &:disabled {
+      opacity: 0.75;
+      cursor: not-allowed;
     }
   }
 
@@ -811,6 +816,17 @@
     height: 16px;
   }
 }
+
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba($color-primary, 0.25);
+  border-top-color: $color-primary;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
 
 // =============================================
 // BADGES DE ESTADO

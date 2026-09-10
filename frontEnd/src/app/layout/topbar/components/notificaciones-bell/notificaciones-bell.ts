@@ -118,11 +118,14 @@ export class NotificacionesBellComponent implements OnInit {
     this.navigationService.navegar(notificacion);
   }
 
+  get tieneNoLeidas(): boolean {
+    return this.unreadCount() > 0 || this.notificaciones().some(n => !n.leida);
+  }
+
   marcarTodasComoLeidas(event: MouseEvent): void {
     event.stopPropagation();
 
-    const noLeidas = this.notificaciones().filter(n => !n.leida);
-    if (noLeidas.length === 0 || this.isMarcandoTodas()) return;
+    if (this.isMarcandoTodas()) return;
 
     this.isMarcandoTodas.set(true);
 
@@ -130,14 +133,16 @@ export class NotificacionesBellComponent implements OnInit {
     this.notificaciones.update(list => list.map(n => ({ ...n, leida: true })));
     this.unreadCount.set(0);
 
-    // Llamadas al backend en paralelo (una por notificación no leída)
-    const peticiones = noLeidas.map(n => this.notificacionesService.marcarComoLeida(n.id));
-    forkJoin(peticiones).subscribe({
+    // Llamada atómica al backend
+    this.notificacionesService.marcarTodasComoLeidas().subscribe({
+      next: () => {
+        this.isMarcandoTodas.set(false);
+        this.unreadCount.set(0);
+      },
       error: (err) => {
         console.error('Error al marcar todas las notificaciones como leídas:', err);
-      },
-      complete: () => {
         this.isMarcandoTodas.set(false);
+        this.cargarConteoNoLeidas();
       }
     });
   }

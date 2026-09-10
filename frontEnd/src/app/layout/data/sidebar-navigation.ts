@@ -4,6 +4,7 @@ export const ADMIN_NAVIGATION: NavigationItem[] = [
   { id: 'analitica', label: 'Analítica', route: '/admin/analitica' },
   { id: 'pedidos-en-curso', label: 'Pedidos en Curso', route: '/admin/pedidos/en-curso' },
   { id: 'pedidos', label: 'Pedidos', route: '/admin/pedidos' },
+  { id: 'soporte', label: 'Soporte', route: '/admin/soporte' },
   { id: 'productos', label: 'Productos', route: '/admin/productos' },
   { id: 'categorias', label: 'Categorías', route: '/admin/categorias' },
   { id: 'cupones', label: 'Cupones', route: '/admin/cupones' },
@@ -17,6 +18,7 @@ export const ADMIN_NAVIGATION: NavigationItem[] = [
 export const EMPLOYEE_NAVIGATION: NavigationItem[] = [
   { id: 'pedidos-en-curso', label: 'Pedidos en Curso', route: '/empleado/pedidos/en-curso' },
   { id: 'pedidos', label: 'Pedidos', route: '/empleado/pedidos' },
+  { id: 'soporte', label: 'Soporte', route: '/empleado/soporte' },
   { id: 'productos', label: 'Productos', route: '/empleado/productos' },
   { id: 'perfil', label: 'Perfil', route: '/empleado/perfil' }
 ];
@@ -26,6 +28,7 @@ export const CLIENT_NAVIGATION: NavigationItem[] = [
   { id: 'productos', label: 'Productos', route: '/cliente/productos' },
   { id: 'descuentos', label: 'Descuentos', route: '/cliente/descuentos' },
   { id: 'mis-pedidos', label: 'Mis pedidos', route: '/cliente/pedidos' },
+  { id: 'soporte', label: 'Soporte', route: '/cliente/chat' },
   { id: 'mis-cupones', label: 'Mis cupones', route: '/cliente/cupones' },
   { id: 'perfil', label: 'Perfil', route: '/cliente/perfil' },
   { id: 'cuenta', label: 'Cuenta', route: '/cliente/cuenta' }

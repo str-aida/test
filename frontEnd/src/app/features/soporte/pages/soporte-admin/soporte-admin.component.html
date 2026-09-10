@@ -1,0 +1,426 @@
+<div class="soporte-console">
+
+  <!-- ============================================= -->
+  <!-- TOP BANNER & METRICS                          -->
+  <!-- ============================================= -->
+  <header class="console-top">
+    <div class="console-top__info">
+      <span class="console-top__kicker">
+        MESA OPERATIVA • Conectado como Agente Gestia
+      </span>
+      <h1 class="console-top__title">Consola de Soporte & Concierge en Vivo</h1>
+    </div>
+
+    <div class="console-top__metrics">
+      <div class="metric-pill">
+        <span class="metric-pill__dot metric-pill__dot--online"></span>
+        <span class="metric-pill__label">SLA Respuesta:</span>
+        <strong class="metric-pill__value">&lt; 2 min</strong>
+      </div>
+      <div class="metric-pill">
+        <svg lucideMessageSquare class="metric-pill__icon"></svg>
+        <span class="metric-pill__label">En atención:</span>
+        <strong class="metric-pill__value">{{ totalEnAtencion() }}</strong>
+      </div>
+    </div>
+  </header>
+
+  <!-- ALERTA DE ERROR GLOBAL -->
+  @if (errorMsg()) {
+    <div class="console-alert">
+      <svg lucideAlertCircle class="console-alert__icon"></svg>
+      <span>{{ errorMsg() }}</span>
+      <button type="button" class="console-alert__close" (click)="errorMsg.set(null)">
+        <svg lucideX class="console-alert__close-icon"></svg>
+      </button>
+    </div>
+  }
+
+  <!-- ============================================= -->
+  <!-- SPLIT VIEW PRINCIPAL                          -->
+  <!-- ============================================= -->
+  <div class="split-view">
+
+    <!-- ============================================= -->
+    <!-- PANEL IZQUIERDO: BANDEJA DE CONVERSACIONES    -->
+    <!-- ============================================= -->
+    <aside class="inbox-panel" [class.inbox-panel--hidden-mobile]="conversacionSeleccionada() !== null">
+
+      <!-- PESTAÑAS POR ESTADO -->
+      <nav class="inbox-tabs">
+        <button
+          type="button"
+          class="inbox-tabs__btn"
+          [class.inbox-tabs__btn--active]="tabActiva() === 'ABIERTA'"
+          (click)="cambiarTab('ABIERTA')"
+        >
+          <span>Pendientes</span>
+          <span class="inbox-tabs__badge inbox-tabs__badge--pending">{{ totalAbiertas() }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="inbox-tabs__btn"
+          [class.inbox-tabs__btn--active]="tabActiva() === 'EN_ATENCION'"
+          (click)="cambiarTab('EN_ATENCION')"
+        >
+          <span>En Curso</span>
+          <span class="inbox-tabs__badge inbox-tabs__badge--active">{{ totalEnAtencion() }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="inbox-tabs__btn"
+          [class.inbox-tabs__btn--active]="tabActiva() === 'CERRADA'"
+          (click)="cambiarTab('CERRADA')"
+        >
+          <span>Historial</span>
+        </button>
+      </nav>
+
+      <!-- BUSCADOR -->
+      <div class="inbox-search">
+        <svg lucideSearch class="inbox-search__icon"></svg>
+        <input
+          type="text"
+          class="inbox-search__input"
+          placeholder="Buscar por cliente, pedido #ID..."
+          [(ngModel)]="filtroTexto"
+        />
+      </div>
+
+      <!-- HEADER DE LISTA -->
+      <div class="inbox-header">
+        <span class="inbox-header__title">BANDEJA ACTIVA</span>
+        <button type="button" class="inbox-header__refresh" (click)="cargarBandeja()" title="Recargar bandeja">
+          <svg lucideRefreshCw class="inbox-header__refresh-icon" [class.spin]="isLoadingBandeja()"></svg>
+        </button>
+      </div>
+
+      <!-- LISTADO DE TARJETAS -->
+      <div class="inbox-list">
+
+        @if (isLoadingBandeja()) {
+          <div class="inbox-loading">
+            <div class="inbox-loading__spinner"></div>
+            <p>Actualizando bandeja...</p>
+          </div>
+        } @else {
+
+          @for (c of conversacionesFiltradas(); track c.id) {
+            <article
+              class="ticket-card"
+              [class.ticket-card--selected]="conversacionSeleccionada()?.id === c.id"
+              (click)="seleccionarConversacion(c)"
+            >
+              <div class="ticket-card__header">
+                <div class="ticket-card__title-row">
+                  <strong class="ticket-card__pedido">Pedido #{{ c.numeroPedido }}</strong>
+                  <span
+                    class="ticket-card__dot"
+                    [class.ticket-card__dot--pending]="c.estado === 'ABIERTA'"
+                    [class.ticket-card__dot--active]="c.estado === 'EN_ATENCION'"
+                    [class.ticket-card__dot--closed]="c.estado === 'CERRADA'"
+                  ></span>
+                </div>
+                <span class="ticket-card__time">{{ calcularTiempoTranscurrido(c.fechaCreacion) }}</span>
+              </div>
+
+              <div class="ticket-card__client">
+                <svg lucideUser class="ticket-card__client-icon"></svg>
+                <span class="ticket-card__client-name">{{ c.nombreCliente }}</span>
+              </div>
+
+              <div class="ticket-card__footer">
+                <div class="ticket-card__tags">
+                  <span
+                    class="status-pill"
+                    [class.status-pill--pending]="c.estado === 'ABIERTA'"
+                    [class.status-pill--active]="c.estado === 'EN_ATENCION'"
+                    [class.status-pill--closed]="c.estado === 'CERRADA'"
+                  >
+                    {{ c.estado === 'ABIERTA' ? 'SIN ASIGNAR' : (c.estado === 'EN_ATENCION' ? 'EN ATENCIÓN' : 'CERRADA') }}
+                  </span>
+
+                  @if (c.mensajesNoLeidos > 0) {
+                    <span class="unread-badge">
+                      {{ c.mensajesNoLeidos }} no leídos
+                    </span>
+                  }
+                </div>
+
+                @if (c.estado === 'ABIERTA') {
+                  <button
+                    type="button"
+                    class="ticket-card__claim-btn"
+                    (click)="tomarChat(c, $event)"
+                    [disabled]="isAsignando() === c.id"
+                  >
+                    @if (isAsignando() === c.id) {
+                      <span class="btn-spinner btn-spinner--dark"></span>
+                      <span>Tomando...</span>
+                    } @else {
+                      <svg lucideCheck class="ticket-card__claim-icon"></svg>
+                      <span>Tomar chat</span>
+                    }
+                  </button>
+                }
+              </div>
+            </article>
+          } @empty {
+            <div class="inbox-empty">
+              <svg lucideInbox class="inbox-empty__icon"></svg>
+              <p>No hay conversaciones en esta pestaña.</p>
+            </div>
+          }
+
+        }
+
+      </div>
+    </aside>
+
+    <!-- ============================================= -->
+    <!-- PANEL DERECHO: CONSOLA DE ATENCIÓN EN VIVO    -->
+    <!-- ============================================= -->
+    <main class="chat-console" [class.chat-console--active-mobile]="conversacionSeleccionada() !== null">
+
+      @if (!conversacionSeleccionada()) {
+        <!-- EMPTY STATE DE CONSOLA -->
+        <div class="console-empty">
+          <div class="console-empty__icon-wrap">
+            <svg lucideMessageSquare class="console-empty__icon"></svg>
+          </div>
+          <h2 class="console-empty__title">Selecciona una conversación</h2>
+          <p class="console-empty__text">
+            Elige un ticket de la bandeja de la izquierda para comenzar la atención en vivo con el comensal.
+          </p>
+        </div>
+      } @else {
+
+        <!-- CONSOLA ACTIVA -->
+        <div class="active-console">
+
+          <!-- TOPBAR DE LA CONVERSACIÓN -->
+          <header class="chat-topbar">
+            <div class="chat-topbar__left">
+              <!-- Botón Volver solo en móvil -->
+              <button
+                type="button"
+                class="chat-topbar__mobile-back"
+                (click)="conversacionSeleccionada.set(null)"
+              >
+                <svg lucideArrowLeft class="chat-topbar__back-icon"></svg>
+              </button>
+
+              <div class="chat-topbar__avatar">
+                <span>{{ obtenerIniciales(conversacionSeleccionada()?.nombreCliente) }}</span>
+                <span class="chat-topbar__avatar-dot"></span>
+              </div>
+
+              <div class="chat-topbar__info">
+                <div class="chat-topbar__name-row">
+                  <h2 class="chat-topbar__client-name">{{ conversacionSeleccionada()?.nombreCliente }}</h2>
+                  <span class="chat-topbar__tag">CLIENTE</span>
+                </div>
+                <div class="chat-topbar__meta-row">
+                  <span>Pedido #{{ conversacionSeleccionada()?.numeroPedido }}</span>
+                  <span class="chat-topbar__dot">•</span>
+                  <span
+                    class="chat-topbar__status-badge"
+                    [class.chat-topbar__status-badge--active]="conversacionSeleccionada()?.estado === 'EN_ATENCION'"
+                    [class.chat-topbar__status-badge--closed]="conversacionSeleccionada()?.estado === 'CERRADA'"
+                  >
+                    {{ conversacionSeleccionada()?.estado === 'EN_ATENCION' ? 'En atención en vivo' : (conversacionSeleccionada()?.estado === 'ABIERTA' ? 'Sin asignar' : 'Ticket cerrado') }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="chat-topbar__actions">
+              @if (conversacionSeleccionada()?.estado === 'ABIERTA') {
+                <button
+                  type="button"
+                  class="chat-topbar__claim-btn"
+                  (click)="tomarChat(conversacionSeleccionada()!)"
+                  [disabled]="isAsignando() === conversacionSeleccionada()?.id"
+                >
+                  <svg lucideCheck class="chat-topbar__action-icon"></svg>
+                  <span>Tomar Ticket</span>
+                </button>
+              }
+
+              @if (!estaCerrado()) {
+                <button
+                  type="button"
+                  class="chat-topbar__close-btn"
+                  (click)="cerrarConversacion()"
+                  [disabled]="isClosing()"
+                >
+                  @if (isClosing()) {
+                    <span class="btn-spinner btn-spinner--dark"></span>
+                    <span>Cerrando...</span>
+                  } @else {
+                    <svg lucideCheck class="chat-topbar__action-icon"></svg>
+                    <span>Cerrar Ticket</span>
+                  }
+                </button>
+              } @else {
+                <span class="chat-topbar__closed-badge">
+                  <svg lucideLock class="chat-topbar__closed-icon"></svg>
+                  <span>Ticket Finalizado</span>
+                </span>
+              }
+            </div>
+          </header>
+
+          <!-- SNAPSHOT CARD DEL PEDIDO (STITCH) -->
+          @if (pedidoSnapshot()) {
+            <div class="order-snapshot">
+              <div class="order-snapshot__col">
+                <span class="order-snapshot__label">PEDIDO VINCULADO</span>
+                <span class="order-snapshot__val">#{{ pedidoSnapshot()?.numeroPedido }}</span>
+              </div>
+              <div class="order-snapshot__col">
+                <span class="order-snapshot__label">ESTADO DE COCINA</span>
+                <span class="order-snapshot__badge">{{ pedidoSnapshot()?.estado }}</span>
+              </div>
+              <div class="order-snapshot__col">
+                <span class="order-snapshot__label">ARTÍCULOS</span>
+                <span class="order-snapshot__val">{{ pedidoSnapshot()?.cantidadItems }} ítems</span>
+              </div>
+              <div class="order-snapshot__col">
+                <span class="order-snapshot__label">TOTAL ORDEN</span>
+                <strong class="order-snapshot__total">${{ pedidoSnapshot()?.total | number:'1.0-0' }}</strong>
+              </div>
+            </div>
+          }
+
+          <!-- CONTENEDOR DE MENSAJES -->
+          <div class="messages-viewport" #messagesContainer>
+
+            <!-- SCROLL INFINITO HACIA ARRIBA -->
+            @if (hasMorePages()) {
+              <div class="messages-viewport__more">
+                <button
+                  type="button"
+                  class="messages-viewport__more-btn"
+                  (click)="cargarMasMensajes()"
+                  [disabled]="isLoadingMore()"
+                >
+                  @if (isLoadingMore()) {
+                    <span class="btn-spinner btn-spinner--dark"></span>
+                    <span>Cargando mensajes anteriores...</span>
+                  } @else {
+                    <svg lucideRefreshCw class="messages-viewport__more-icon"></svg>
+                    <span>Cargar mensajes anteriores</span>
+                  }
+                </button>
+              </div>
+            }
+
+            <!-- PILL DE INICIO -->
+            <div class="system-time-pill">
+              <span>Hoy • Conversación iniciada por App Gestia</span>
+            </div>
+
+            <!-- LISTADO DE MENSAJES -->
+            @for (msg of mensajes(); track msg.id) {
+
+              @if (msg.esSistema) {
+                @if (!esSnapshotMensaje(msg)) {
+                  <div class="system-pill">
+                    <svg lucideSlidersHorizontal class="system-pill__icon"></svg>
+                    <span>{{ msg.contenido }}</span>
+                  </div>
+                }
+              } @else if (esMensajePropio(msg)) {
+                <!-- MENSAJE DEL AGENTE / STAFF (BORDÓ A LA DERECHA) -->
+                <div class="bubble-row bubble-row--agent">
+                  <div class="bubble bubble--agent">
+                    <p class="bubble__text">{{ msg.contenido }}</p>
+                    <div class="bubble__footer">
+                      <span class="bubble__time">{{ msg.fechaEnvio | date:'HH:mm' }}</span>
+                      <svg lucideCheckCheck class="bubble__check" [class.bubble__check--read]="msg.leido"></svg>
+                    </div>
+                  </div>
+                  <div class="bubble-row__avatar bubble-row__avatar--agent">
+                    <span>{{ obtenerIniciales(msg.nombreRemitente) }}</span>
+                  </div>
+                </div>
+              } @else {
+                <!-- MENSAJE DEL CLIENTE (CLARO A LA IZQUIERDA) -->
+                <div class="bubble-row bubble-row--client">
+                  <div class="bubble-row__avatar bubble-row__avatar--client">
+                    <span>{{ obtenerIniciales(msg.nombreRemitente) }}</span>
+                  </div>
+                  <div class="bubble-row__body">
+                    <div class="bubble bubble--client">
+                      <p class="bubble__text">{{ msg.contenido }}</p>
+                      <div class="bubble__footer">
+                        <span class="bubble__time">{{ msg.fechaEnvio | date:'HH:mm' }}</span>
+                      </div>
+                    </div>
+                    <span class="bubble-row__author">{{ msg.nombreRemitente }} • {{ msg.fechaEnvio | date:'HH:mm' }}</span>
+                  </div>
+                </div>
+              }
+
+            }
+
+          </div>
+
+          <!-- BARRA DE ACCIONES RÁPIDAS (STITCH) -->
+          <div class="quick-responses">
+            <span class="quick-responses__label">⚡ RÁPIDAS:</span>
+            <button type="button" class="quick-chip" (click)="nuevoMensajeTexto = '¡Hola! Tu pedido ya está en camino con nuestro repartidor.'">
+              🚚 En camino
+            </button>
+            <button type="button" class="quick-chip" (click)="nuevoMensajeTexto = '¡Listo! Confirmado con cocina, hemos realizado el cambio solicitado.'">
+              ✨ Cambio confirmado
+            </button>
+            <button type="button" class="quick-chip" (click)="nuevoMensajeTexto = 'Estamos verificando una pequeña demora en cocina, dame unos minutos por favor.'">
+              ⏱ Demora de cocina
+            </button>
+          </div>
+
+          <!-- INPUT DE RESPUESTA -->
+          @if (!estaCerrado()) {
+            <footer class="console-input-bar">
+              <div class="console-input-bar__wrapper">
+                <textarea
+                  class="console-input-bar__input"
+                  rows="2"
+                  placeholder="Escribir respuesta al cliente... (Enter para enviar, Shift+Enter para salto de línea)"
+                  [(ngModel)]="nuevoMensajeTexto"
+                  (keydown)="onKeydown($event)"
+                ></textarea>
+
+                <div class="console-input-bar__bottom">
+                  <span class="console-input-bar__hint">Ctrl + Enter o Enter para enviar</span>
+                  <button
+                    type="button"
+                    class="console-input-bar__send-btn"
+                    (click)="enviar()"
+                    [disabled]="!nuevoMensajeTexto.trim()"
+                  >
+                    <span>Enviar</span>
+                    <svg lucideSend class="console-input-bar__send-icon"></svg>
+                  </button>
+                </div>
+              </div>
+            </footer>
+          } @else {
+            <footer class="console-closed-bar">
+              <svg lucideLock class="console-closed-bar__icon"></svg>
+              <span>Esta conversación ha sido finalizada y archivada.</span>
+            </footer>
+          }
+
+        </div>
+
+      }
+
+    </main>
+
+  </div>
+</div>

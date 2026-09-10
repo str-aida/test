@@ -16,7 +16,8 @@ import {
   LucideUserRoundCheck,
   LucideShieldCheck,
   LucideTicket,
-  LucidePercent
+  LucidePercent,
+  LucideMessageSquare
 } from '@lucide/angular';
 import { AuthService } from '../../core/services/auth.service';
 import { TokenService } from '../../core/services/token.service';
@@ -42,6 +43,7 @@ import { NavigationItem } from '../models/navigation-item.model';
     LucideShieldCheck,
     LucideTicket,
     LucidePercent,
+    LucideMessageSquare,
     LucideLogOut
   ],
   templateUrl: './sidebar.html',

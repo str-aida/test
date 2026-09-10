@@ -249,9 +249,14 @@
         <div class="help-card">
           <h3 class="help-card__title">¿Necesitas ayuda?</h3>
           <p class="help-card__text">Nuestro equipo de soporte está disponible para asistirte con cualquier inconveniente.</p>
-          <button class="help-card__btn" type="button">
-            <svg lucideMessageSquare class="help-card__btn-icon"></svg>
-            Contactar Soporte
+          <button class="help-card__btn" type="button" (click)="contactarSoporte()" [disabled]="isContactingSupport()">
+            @if (isContactingSupport()) {
+              <span class="loading-spinner"></span>
+              <span>Iniciando chat...</span>
+            } @else {
+              <svg lucideMessageSquare class="help-card__btn-icon"></svg>
+              <span>Contactar Soporte</span>
+            }
           </button>
         </div>
 

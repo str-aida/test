@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import {
   LucideArrowLeft,
@@ -20,6 +20,7 @@ import {
   LucideMessageSquare
 } from '@lucide/angular';
 import { PedidoService } from '../../../../core/services/pedido.service';
+import { ChatService } from '../../../../core/services/chat.service';
 import { PedidoDetalleResponse } from '../../../../core/models/pedido-detalle-response';
 import { EstadoPedido } from '../../../../core/models/enums/estado-pedido.enum';
 import { TipoEntrega } from '../../../../core/models/enums/tipo-entrega.enum';
@@ -60,7 +61,9 @@ interface Step {
 export class PedidoDetalleComponent implements OnInit, OnDestroy {
 
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly pedidoService = inject(PedidoService);
+  private readonly chatService = inject(ChatService);
   private routeSub?: Subscription;
 
   protected readonly EstadoPedido = EstadoPedido;
@@ -69,6 +72,7 @@ export class PedidoDetalleComponent implements OnInit, OnDestroy {
 
   pedido = signal<PedidoDetalleResponse | null>(null);
   isLoading = signal<boolean>(true);
+  isContactingSupport = signal<boolean>(false);
   errorMsg = signal<string | null>(null);
 
   // Stepper de estados
@@ -159,4 +163,24 @@ export class PedidoDetalleComponent implements OnInit, OnDestroy {
       default: return 'badge--neutral';
     }
   }
+
+  contactarSoporte(): void {
+    const p = this.pedido();
+    if (!p || this.isContactingSupport()) return;
+
+    this.isContactingSupport.set(true);
+    this.chatService.crearOReutilizarChat(p.id).subscribe({
+      next: (conversacion) => {
+        this.isContactingSupport.set(false);
+        this.router.navigate(['/cliente/chat', conversacion.id]);
+      },
+      error: (err) => {
+        this.isContactingSupport.set(false);
+        console.error('Error al contactar soporte:', err);
+        const msg = err.error?.mensaje || err.error?.message || 'No se pudo iniciar el chat de soporte.';
+        this.errorMsg.set(msg);
+      }
+    });
+  }
 }
+

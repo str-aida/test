@@ -1,0 +1,402 @@
+<div class="chat-page">
+
+  <!-- ============================================= -->
+  <!-- SIDEBAR / DRAWER DE CHATS DEL CLIENTE         -->
+  <!-- ============================================= -->
+  @if (showDrawer()) {
+    <div class="chat-drawer-overlay" (click)="toggleDrawer()"></div>
+    <aside class="chat-drawer">
+      <div class="chat-drawer__header">
+        <div class="chat-drawer__title-box">
+          <svg lucideMessageSquare class="chat-drawer__icon"></svg>
+          <h2 class="chat-drawer__title">Mis Conversaciones</h2>
+        </div>
+        <button type="button" class="chat-drawer__close" (click)="toggleDrawer()">
+          <svg lucideX class="chat-drawer__close-icon"></svg>
+        </button>
+      </div>
+
+      <div class="chat-drawer__list">
+        @for (item of chatsHistorial(); track item.id) {
+          <div
+            class="chat-drawer__item"
+            [class.chat-drawer__item--active]="item.id === conversacion()?.id"
+            (click)="seleccionarChat(item.id)"
+          >
+            <div class="chat-drawer__item-top">
+              <span class="chat-drawer__item-pedido">Pedido #{{ item.numeroPedido }}</span>
+              <span
+                class="chat-drawer__item-badge"
+                [class.chat-drawer__item-badge--open]="item.estado === 'ABIERTA'"
+                [class.chat-drawer__item-badge--active]="item.estado === 'EN_ATENCION'"
+                [class.chat-drawer__item-badge--closed]="item.estado === 'CERRADA'"
+              >
+                {{ item.estado === 'ABIERTA' ? 'En espera' : (item.estado === 'EN_ATENCION' ? 'En atención' : 'Cerrado') }}
+              </span>
+            </div>
+            <span class="chat-drawer__item-date">{{ item.fecha | date:"dd/MM/yyyy, HH:mm" }}</span>
+          </div>
+        } @empty {
+          <div class="chat-drawer__empty">
+            <p>No tenés otras conversaciones registradas.</p>
+          </div>
+        }
+      </div>
+    </aside>
+  }
+
+  <!-- ============================================= -->
+  <!-- CONTENEDOR PRINCIPAL DEL CHAT                 -->
+  <!-- ============================================= -->
+  <div class="chat-container">
+
+    <!-- ERROR BANNER -->
+    @if (errorMsg()) {
+      <div class="chat-alert chat-alert--error">
+        <svg lucideAlertCircle class="chat-alert__icon"></svg>
+        <span>{{ errorMsg() }}</span>
+        <button type="button" class="chat-alert__close" (click)="errorMsg.set(null)">
+          <svg lucideX class="chat-alert__close-icon"></svg>
+        </button>
+      </div>
+    }
+
+    <!-- LOADING STATE -->
+    @if (isLoading()) {
+      <div class="chat-loading">
+        <div class="chat-loading__spinner"></div>
+        <p class="chat-loading__text">Cargando conversación de soporte...</p>
+      </div>
+    } @else if (!conversacion()) {
+      <!-- EMPTY STATE CUANDO NO HAY CHAT SELECCIONADO -->
+      <div class="chat-empty-state">
+        <div class="chat-empty-state__icon-wrap">
+          <svg lucideMessageSquare class="chat-empty-state__icon"></svg>
+        </div>
+        <h2 class="chat-empty-state__title">Centro de Soporte al Comensal</h2>
+        <p class="chat-empty-state__text">
+          Para iniciar una consulta sobre un pedido, ingresá al detalle de tu pedido y hacé clic en <strong>Contactar Soporte</strong>.
+        </p>
+        <a routerLink="/cliente/pedidos" class="chat-empty-state__btn">
+          <span>Ver mis pedidos</span>
+          <svg lucideArrowLeft class="chat-empty-state__btn-icon" style="transform: rotate(180deg);"></svg>
+        </a>
+      </div>
+    } @else {
+
+      <!-- ============================================= -->
+      <!-- TOP HEADER (STITCH)                           -->
+      <!-- ============================================= -->
+      <header class="chat-header">
+        <div class="chat-header__left">
+          <a [routerLink]="['/cliente/pedidos', conversacion()?.pedidoId]" class="chat-header__back-btn">
+            <svg lucideArrowLeft class="chat-header__back-icon"></svg>
+            <span>Volver al Pedido #{{ conversacion()?.numeroPedido }}</span>
+          </a>
+          <span class="chat-header__separator">•</span>
+          <span class="chat-header__subtitle">Soporte al comensal</span>
+
+          @if (chatsHistorial().length > 1) {
+            <button
+              type="button"
+              class="chat-header__drawer-btn"
+              (click)="toggleDrawer()"
+              title="Ver mis otras consultas"
+            >
+              <svg lucideSlidersHorizontal class="chat-header__drawer-icon"></svg>
+              <span>Mis chats ({{ chatsHistorial().length }})</span>
+            </button>
+          }
+        </div>
+
+        <div class="chat-header__right">
+          <!-- BADGE DEL AGENTE -->
+          <div class="agent-badge">
+            <div class="agent-badge__avatar">
+              <span>{{ obtenerIniciales(conversacion()?.nombreAgente) }}</span>
+              <span
+                class="agent-badge__dot"
+                [class.agent-badge__dot--online]="conversacion()?.estado === 'EN_ATENCION'"
+                [class.agent-badge__dot--waiting]="conversacion()?.estado === 'ABIERTA'"
+                [class.agent-badge__dot--offline]="conversacion()?.estado === 'CERRADA'"
+              ></span>
+            </div>
+            <div class="agent-badge__info">
+              <span class="agent-badge__name">
+                {{ conversacion()?.nombreAgente || 'Soporte Gestia' }}
+              </span>
+              <span class="agent-badge__status">
+                @if (conversacion()?.estado === 'EN_ATENCION') {
+                  En atención en línea
+                } @else if (conversacion()?.estado === 'ABIERTA') {
+                  Esperando agente...
+                } @else {
+                  Consulta finalizada
+                }
+              </span>
+            </div>
+          </div>
+
+          <!-- BOTÓN FINALIZAR CONSULTA -->
+          @if (!estaCerrado()) {
+            <button
+              type="button"
+              class="chat-header__finish-btn"
+              (click)="abrirModalCierre()"
+              [disabled]="isClosing()"
+            >
+              @if (isClosing()) {
+                <span class="btn-spinner"></span>
+                <span>Finalizando...</span>
+              } @else {
+                <svg lucideCheck class="chat-header__finish-icon"></svg>
+                <span>Finalizar consulta</span>
+              }
+            </button>
+          } @else {
+            <span class="chat-header__closed-pill">
+              <svg lucideLock class="chat-header__closed-icon"></svg>
+              <span>Consulta cerrada</span>
+            </span>
+          }
+        </div>
+      </header>
+
+      <!-- ============================================= -->
+      <!-- CARD DE SNAPSHOT DEL PEDIDO                   -->
+      <!-- ============================================= -->
+      <div class="chat-snapshot">
+        <div class="chat-snapshot__icon-wrap">
+          <svg lucidePackage class="chat-snapshot__icon"></svg>
+        </div>
+
+        <div class="chat-snapshot__content">
+          <div class="chat-snapshot__info">
+            <span class="chat-snapshot__order">Pedido #{{ conversacion()?.numeroPedido }}</span>
+            <span class="chat-snapshot__badge">
+              {{ pedidoSnapshot()?.estado || 'En Gestión' }}
+            </span>
+            <span class="chat-snapshot__dot">•</span>
+            <span class="chat-snapshot__desc">
+              @if (pedidoSnapshot()?.cantidadItems) {
+                {{ pedidoSnapshot()?.cantidadItems }} {{ pedidoSnapshot()?.cantidadItems === 1 ? 'artículo' : 'artículos' }} vinculados
+              } @else {
+                Información de pedido sincronizada
+              }
+            </span>
+          </div>
+
+          <div class="chat-snapshot__actions">
+            @if (pedidoSnapshot()?.total) {
+              <span class="chat-snapshot__total">
+                Total: <strong>${{ pedidoSnapshot()?.total | number:'1.0-0' }}</strong>
+              </span>
+            }
+            <a
+              [routerLink]="['/cliente/pedidos', conversacion()?.pedidoId]"
+              class="chat-snapshot__link"
+            >
+              <span>Detalles completos</span>
+              <svg lucideExternalLink class="chat-snapshot__link-icon"></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================= -->
+      <!-- ÁREA DE MENSAJES CON SCROLL INFINITO HACIA ARRIBA -->
+      <!-- ============================================= -->
+      <div class="chat-messages" #messagesContainer>
+
+        <!-- BOTÓN / TRIGGER PARA CARGAR MÁS MENSAJES (MÁS VIEJOS) -->
+        @if (hasMorePages()) {
+          <div class="chat-messages__load-more">
+            <button
+              type="button"
+              class="chat-messages__load-btn"
+              (click)="cargarMasMensajes()"
+              [disabled]="isLoadingMore()"
+            >
+              @if (isLoadingMore()) {
+                <span class="btn-spinner btn-spinner--dark"></span>
+                <span>Cargando mensajes anteriores...</span>
+              } @else {
+                <svg lucideRefreshCw class="chat-messages__load-icon"></svg>
+                <span>Cargar mensajes anteriores</span>
+              }
+            </button>
+          </div>
+        }
+
+        <!-- PILL DE SISTEMA INICIAL -->
+        <div class="system-pill">
+          <svg lucideLock class="system-pill__icon"></svg>
+          <span>
+            Conversación iniciada el {{ conversacion()?.fechaCreacion | date:"dd/MM/yyyy 'a las' HH:mm" }} • Pedido vinculado <strong>#{{ conversacion()?.numeroPedido }}</strong>
+          </span>
+        </div>
+
+        <!-- LISTADO DE MENSAJES -->
+        @for (msg of mensajes(); track msg.id) {
+
+          @if (msg.esSistema) {
+            <!-- MENSAJES DE SISTEMA -->
+            @if (!esSnapshotMensaje(msg)) {
+              <div class="system-notice">
+                <svg lucideSlidersHorizontal class="system-notice__icon"></svg>
+                <span>{{ msg.contenido }}</span>
+              </div>
+            }
+          } @else if (esMensajeCliente(msg)) {
+            <!-- BURBUJA DEL CLIENTE (BORDÓ INSTITUCIONAL, ALINEADA A LA DERECHA) -->
+            <div class="message-row message-row--client">
+              <div class="message-bubble message-bubble--client">
+                <p class="message-bubble__text">{{ msg.contenido }}</p>
+                <div class="message-bubble__footer">
+                  <span class="message-bubble__time">{{ msg.fechaEnvio | date:'HH:mm' }}</span>
+                  <svg lucideCheckCheck class="message-bubble__check" [class.message-bubble__check--read]="msg.leido"></svg>
+                </div>
+              </div>
+            </div>
+          } @else {
+            <!-- BURBUJA DEL AGENTE (CLARA, CON AVATAR, ALINEADA A LA IZQUIERDA) -->
+            <div class="message-row message-row--agent">
+              <div class="message-row__avatar">
+                <span>{{ obtenerIniciales(msg.nombreRemitente) }}</span>
+              </div>
+              <div class="message-row__body">
+                <div class="message-row__author">
+                  <span class="message-row__name">{{ msg.nombreRemitente }}</span>
+                  <span class="message-row__role">• Soporte Gestia</span>
+                </div>
+                <div class="message-bubble message-bubble--agent">
+                  <p class="message-bubble__text">{{ msg.contenido }}</p>
+                  <div class="message-bubble__footer">
+                    <span class="message-bubble__time">{{ msg.fechaEnvio | date:'HH:mm' }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+
+        }
+
+      </div>
+
+      <!-- ============================================= -->
+      <!-- BARRA DE ESTADO DE CONEXIÓN EN VIVO          -->
+      <!-- ============================================= -->
+      <div class="chat-status-bar">
+        <div class="chat-status-bar__left">
+          <span
+            class="chat-status-bar__dot"
+            [class.chat-status-bar__dot--connected]="estadoConexion() === 'conectado'"
+            [class.chat-status-bar__dot--reconnecting]="estadoConexion() === 'reconectando'"
+            [class.chat-status-bar__dot--connecting]="estadoConexion() === 'conectando'"
+          ></span>
+          <span class="chat-status-bar__text">
+            @if (estadoConexion() === 'conectado') {
+              Conectado a soporte en tiempo real
+            } @else if (estadoConexion() === 'reconectando') {
+              Reconectando con el servidor...
+            } @else {
+              Conectando con soporte...
+            }
+          </span>
+        </div>
+        <div class="chat-status-bar__right">
+          <svg lucideShield class="chat-status-bar__icon"></svg>
+          <span class="chat-status-bar__crypto">Cifrado de extremo a extremo</span>
+        </div>
+      </div>
+
+      <!-- ============================================= -->
+      <!-- INPUT BAR / AVISO DE CONVERSACIÓN FINALIZADA -->
+      <!-- ============================================= -->
+      @if (!estaCerrado()) {
+        <footer class="chat-input-bar">
+          <div class="chat-input-bar__wrapper">
+            <input
+              type="text"
+              class="chat-input-bar__input"
+              placeholder="Escribí tu mensaje..."
+              [(ngModel)]="nuevoMensajeTexto"
+              (keydown)="onKeydown($event)"
+              [disabled]="!conectado()"
+            />
+            <button
+              type="button"
+              class="chat-input-bar__attach-btn"
+              title="Adjuntar archivo (próximamente)"
+              disabled
+            >
+              <svg lucidePaperclip class="chat-input-bar__attach-icon"></svg>
+            </button>
+            <button
+              type="button"
+              class="chat-input-bar__send-btn"
+              (click)="enviar()"
+              [disabled]="!nuevoMensajeTexto.trim() || !conectado()"
+              title="Enviar mensaje (Enter)"
+            >
+              <svg lucideSend class="chat-input-bar__send-icon"></svg>
+            </button>
+          </div>
+        </footer>
+      } @else {
+        <footer class="chat-closed-bar">
+          <svg lucideLock class="chat-closed-bar__icon"></svg>
+          <span>Esta conversación ha sido finalizada. Podés abrir una nueva consulta desde el detalle de tu pedido.</span>
+        </footer>
+      }
+
+    }
+
+  </div>
+
+  <!-- ============================================= -->
+  <!-- MODAL: CONFIRMAR CIERRE DE CONSULTA           -->
+  <!-- ============================================= -->
+  @if (showModalCierre()) {
+    <div class="modal-backdrop" (click)="cancelarCierre()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+
+        <div class="modal-card__icon-wrap">
+          <svg lucideCheck class="modal-card__icon"></svg>
+        </div>
+
+        <h2 class="modal-card__title">¿Finalizar consulta?</h2>
+        <p class="modal-card__body">
+          Estás por cerrar esta consulta de soporte. Una vez finalizada, <strong>no podrás enviar más mensajes</strong> en esta conversación.
+          Podrás iniciar una nueva consulta desde el detalle de tu pedido si lo necesitás.
+        </p>
+
+        <div class="modal-card__actions">
+          <button
+            type="button"
+            class="modal-card__btn modal-card__btn--cancel"
+            (click)="cancelarCierre()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="modal-card__btn modal-card__btn--confirm"
+            (click)="cerrarConversacion()"
+            [disabled]="isClosing()"
+          >
+            @if (isClosing()) {
+              <span class="btn-spinner btn-spinner--light"></span>
+              <span>Finalizando...</span>
+            } @else {
+              <svg lucideCheck class="modal-card__btn-icon"></svg>
+              <span>Sí, finalizar consulta</span>
+            }
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+</div>

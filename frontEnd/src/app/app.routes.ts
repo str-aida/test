@@ -30,6 +30,8 @@ import { AnaliticaDashboardComponent } from './features/analitica/pages/analitic
 import { DescuentosListComponent } from './features/descuentos/pages/descuentos-list/descuentos-list';
 import { DescuentoFormComponent } from './features/descuentos/pages/descuento-form/descuento-form';
 import { DescuentosClienteComponent } from './features/cliente/pages/descuentos/descuentos.component';
+import { ChatClienteComponent } from './features/cliente/pages/chat-cliente/chat-cliente.component';
+import { SoporteAdminComponent } from './features/soporte/pages/soporte-admin/soporte-admin.component';
 
 export const routes: Routes = [
 
@@ -81,6 +83,8 @@ export const routes: Routes = [
       },
       { path: 'auditoria', component: AuditoriaListComponent, data: { title: 'Auditoría' } },
       { path: 'configuracion', component: ConfiguracionComponent, data: { title: 'Configuración' } },
+      { path: 'soporte', component: SoporteAdminComponent, data: { title: 'Consola de Soporte' } },
+      { path: 'soporte/:id', component: SoporteAdminComponent, data: { title: 'Consola de Soporte' } },
       { path: '', redirectTo: 'personal', pathMatch: 'full' }
     ]
   },
@@ -94,6 +98,8 @@ export const routes: Routes = [
       { path: 'pedidos', component: PedidosListComponent, data: { title: 'Pedidos' } },
       { path: 'pedidos/:id', component: PedidoDetalleAdminComponent, data: { title: 'Detalle de Pedido' } },
       { path: 'productos', component: ProductsListComponent, data: { title: 'Productos' } },
+      { path: 'soporte', component: SoporteAdminComponent, data: { title: 'Consola de Soporte' } },
+      { path: 'soporte/:id', component: SoporteAdminComponent, data: { title: 'Consola de Soporte' } },
       { path: '', redirectTo: 'pedidos/en-curso', pathMatch: 'full' }
     ]
   },
@@ -110,6 +116,8 @@ export const routes: Routes = [
       { path: 'checkout', component: CheckoutComponent, data: { title: 'Finalizar Compra' } },
       { path: 'pedidos', component: PedidosComponent, data: { title: 'Mis Pedidos' } },
       { path: 'pedidos/:id', component: PedidoDetalleComponent, data: { title: 'Detalle de Pedido' } },
+      { path: 'chat', component: ChatClienteComponent, data: { title: 'Soporte' } },
+      { path: 'chat/:id', component: ChatClienteComponent, data: { title: 'Soporte al comensal' } },
       { path: 'cupones', component: MisCuponesComponent, data: { title: 'Mis Cupones' } },
       { path: 'perfil', component: ProfileComponent, data: { title: 'Perfil' } },
       { path: '', redirectTo: 'inicio', pathMatch: 'full' }

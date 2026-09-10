@@ -142,6 +142,7 @@ public class NotificacionServiceImpl implements NotificacionService {
   }
 
   @Override
+  @Transactional
   public void marcarComoLeida(Long id) {
 
     Usuario usuario =
@@ -172,6 +173,19 @@ public class NotificacionServiceImpl implements NotificacionService {
         notificacion
     );
 
+  }
+
+  @Override
+  @Transactional
+  public void marcarTodasComoLeidas() {
+
+    Usuario usuario =
+        SecurityUtils.obtenerUsuarioAutenticado();
+
+    notificacionRepository
+        .marcarTodasComoLeidas(
+            usuario.getId()
+        );
   }
 
   @Override

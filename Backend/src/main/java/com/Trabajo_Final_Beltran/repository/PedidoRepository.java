@@ -7,6 +7,7 @@ import com.Trabajo_Final_Beltran.dto.response.VentaTipoEntregaResponse;
 import com.Trabajo_Final_Beltran.entity.Pedido;
 import com.Trabajo_Final_Beltran.enums.EstadoPedido;
 import io.lettuce.core.dynamic.annotation.Param;
+import jakarta.persistence.LockModeType;
 import java.time.LocalDateTime;
 import org.springframework.data.domain.Pageable;
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.repository.Lock;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long>,
@@ -51,6 +53,10 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long>,
   Page<Pedido> findAllByUsuarioId(
       Long usuarioId,
       Pageable pageable);
+  
+  @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT p FROM Pedido p WHERE p.id = :id")
+    Optional<Pedido> findByIdForUpdate(@Param("id") Long id);
 
   // consultas para analytic y metrica
 

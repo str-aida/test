@@ -50,4 +50,13 @@ public class NotificacionController {
 
     return ResponseEntity.noContent().build();
   }
+
+  @PatchMapping({"/marcar-todas-leidas", "/todas-leidas"})
+  public ResponseEntity<Void>
+  marcarTodasComoLeidas() {
+
+    notificacionService.marcarTodasComoLeidas();
+
+    return ResponseEntity.noContent().build();
+  }
 }

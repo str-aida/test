@@ -84,7 +84,7 @@ public class SecurityConfig {
                                 "img-src 'self' data: https:; " +
                                 "script-src 'self'; " +
                                 "style-src 'self' 'unsafe-inline'; " +
-                                "connect-src 'self'"
+                                "connect-src 'self' ws: wss:"
                             )
                     )
             )
@@ -113,7 +113,9 @@ public class SecurityConfig {
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/test",
-                        "/uploads/**"
+                        "/uploads/**",
+                        "/ws-chat",
+                        "/ws-chat/**"     // WebSocket handshake — auth delegada al StompAuthChannelInterceptor
                     ).permitAll()
                         .anyRequest().authenticated()
                 )

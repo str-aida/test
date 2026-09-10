@@ -36,4 +36,12 @@ export class NotificacionesService {
     return this.http.patch<void>(`${this.apiUrl}/${id}/leida`, {});
   }
 
+  /**
+   * Marca todas las notificaciones no leídas como leídas.
+   * PATCH /notificaciones/marcar-todas-leidas
+   */
+  marcarTodasComoLeidas(): Observable<void> {
+    return this.http.patch<void>(`${this.apiUrl}/marcar-todas-leidas`, {});
+  }
+
 }

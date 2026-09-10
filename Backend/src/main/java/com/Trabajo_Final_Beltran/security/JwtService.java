@@ -68,6 +68,20 @@ public class JwtService {
         );
     }
 
+    /**
+     * Overload para contextos sin UserDetails (WebSocket STOMP).
+     * Valida firma + expiración. La firma se valida implícitamente:
+     * extractUsername() -> extractAllClaims() lanza JwtException si es inválida.
+     */
+    public boolean isTokenValid(String token) {
+        try {
+            extractUsername(token);
+            return !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private boolean isTokenExpired(String token) {
         return extractExpiration(token)
                 .before(new Date());
