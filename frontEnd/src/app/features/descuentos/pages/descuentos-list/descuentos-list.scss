@@ -1,27 +1,10 @@
 @use 'abstracts/index' as *;
 
-$font-roboto: 'Roboto', sans-serif;
-$stitch-primary: #300006;
-$stitch-primary-hover: #4a0d19;
-$stitch-border: #eaeaeb;
-$stitch-text-main: #1f2937;
-$stitch-text-muted: #6b7280;
-
 .descuentos-page {
-  font-family: $font-roboto;
-  display: flex;
-  flex-direction: column;
-  gap: $space-md;
-  padding: $space-lg;
   width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
+  padding: $space-md;
 
-  * {
-    font-family: $font-roboto;
-  }
-
-  @media (max-width: 768px) {
+  @media (max-width: $bp-tablet) {
     padding: $space-md;
   }
 }
@@ -31,12 +14,12 @@ $stitch-text-muted: #6b7280;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $space-md;
-  margin-bottom: $space-xs;
+  margin-bottom: $space-sm;
 
-  @media (max-width: 640px) {
+  @media (max-width: $bp-mobile) { //antes 640px
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch; //antes flex-start
+    gap: $space-sm;
   }
 }
 
@@ -54,27 +37,27 @@ $stitch-text-muted: #6b7280;
   height: 48px;
   flex-shrink: 0;
   border-radius: 12px;
-  background: rgba($color-primary, 0.1);
+  background-color: rgba($color-primary, 0.1);
   color: $color-primary;
 
   .descuentos-page__icon {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
   }
 }
 
 .descuentos-page__title-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .descuentos-page__title {
   margin: 0;
-  font-family: $font-roboto;
-  font-size: 2rem;
-  font-weight: 700;
-  color: $stitch-primary;
+  font-family: $font-heading;
+  font-size: $fs-h3;
+  font-weight: $fw-bold;
+  color: $color-primary;
 }
 
 .descuentos-page__badge-count {
@@ -82,15 +65,15 @@ $stitch-text-muted: #6b7280;
   padding: 4px 12px;
   background-color: #f3f4f6;
   color: #4b5563;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: $fs-small;
+  font-weight: $fw-medium;
   border-radius: 9999px;
 }
 
 .descuentos-page__subtitle {
-  margin: 0;
-  font-size: 0.95rem;
-  color: $stitch-text-muted;
+  font-family: $font-body;
+  font-size: $fs-caption;
+  color: $color-text-light;
 }
 
 .descuentos-page__header-actions {
@@ -109,10 +92,10 @@ $stitch-text-muted: #6b7280;
   padding: 0 20px;
   border: none;
   border-radius: 8px;
-  background-color: $stitch-primary;
+  background-color: $color-primary;
   color: #ffffff;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: $fs-caption;
+  font-weight: $fw-semibold;
   cursor: pointer;
   transition: background-color 0.2s ease;
 
@@ -122,7 +105,7 @@ $stitch-text-muted: #6b7280;
   }
 
   &:hover {
-    background-color: $stitch-primary-hover;
+    background-color: $color-primary-dark;
   }
 }
 
@@ -143,7 +126,7 @@ $stitch-text-muted: #6b7280;
   gap: 1rem;
   padding: 1.25rem 1.5rem;
   background-color: #ffffff;
-  border: 1px solid $stitch-border;
+  border: 1px solid $color-border;
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
@@ -156,7 +139,7 @@ $stitch-text-muted: #6b7280;
   height: 48px;
   border-radius: 10px;
   background-color: #faf5f5;
-  color: $stitch-primary;
+  color: $color-primary;
   flex-shrink: 0;
 
   .metric-icon {
@@ -172,8 +155,8 @@ $stitch-text-muted: #6b7280;
 }
 
 .metric-card__label {
-  font-size: 0.72rem;
-  font-weight: 700;
+  font-size: $fs-small;
+  font-weight: $fw-bold;
   letter-spacing: 0.05em;
   color: #6b7280;
   text-transform: uppercase;
@@ -187,26 +170,26 @@ $stitch-text-muted: #6b7280;
 
 .metric-card__number {
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: $fw-bold;
   color: #111827;
   line-height: 1;
 }
 
 .metric-card__number-date {
   font-size: 1.15rem;
-  font-weight: 700;
+  font-weight: $fw-bold;
   color: #111827;
   line-height: 1;
 }
 
 .metric-card__subtext {
-  font-size: 0.85rem;
+  font-size: $fs-caption;
   color: #6b7280;
 }
 
 .metric-card__tag-alert {
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: $fs-small;
+  font-weight: $fw-semibold;
   color: #b91c1c;
 }
 
@@ -216,9 +199,9 @@ $stitch-text-muted: #6b7280;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-top: 0.5rem;
+  margin: 2rem auto 2.5rem;
 
-  @media (max-width: 768px) {
+  @media (max-width: $bp-tablet) {
     flex-direction: column;
     align-items: stretch;
   }
@@ -229,7 +212,7 @@ $stitch-text-muted: #6b7280;
   flex: 1;
   max-width: 480px;
 
-  @media (max-width: 768px) {
+  @media (max-width: $bp-tablet) {
     max-width: 100%;
   }
 }
@@ -241,7 +224,7 @@ $stitch-text-muted: #6b7280;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   background: #f9fafb;
-  font-size: 0.9rem;
+  font-size: $fs-caption;
   color: #111827;
   outline: none;
   transition: all 0.2s ease;
@@ -252,8 +235,8 @@ $stitch-text-muted: #6b7280;
 
   &:focus {
     background: #ffffff;
-    border-color: $stitch-primary;
-    box-shadow: 0 0 0 3px rgba($stitch-primary, 0.1);
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
   }
 }
 
@@ -282,8 +265,8 @@ $stitch-text-muted: #6b7280;
   background: transparent;
   padding: 6px 14px;
   border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: $fs-caption;
+  font-weight: $fw-medium;
   color: #4b5563;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -304,7 +287,7 @@ $stitch-text-muted: #6b7280;
 .descuentos-table-card {
   background: #ffffff;
   border-radius: 12px;
-  border: 1px solid $stitch-border;
+  border: 1px solid $color-border;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 
@@ -317,7 +300,7 @@ $stitch-text-muted: #6b7280;
 .descuentos-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: $fs-caption;
 
   thead {
     background-color: $color-primary;
@@ -328,7 +311,7 @@ $stitch-text-muted: #6b7280;
     padding: 14px 20px;
     color: $color-white;
     font-weight: $fw-semibold;
-    font-size: 0.75rem;
+    font-size: $fs-small;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     border: none;
@@ -371,7 +354,7 @@ $stitch-text-muted: #6b7280;
   height: 36px;
   border-radius: 8px;
   background-color: #faf5f5;
-  color: $stitch-primary;
+  color: $color-primary;
   flex-shrink: 0;
 
   .campana-icon {
@@ -386,13 +369,13 @@ $stitch-text-muted: #6b7280;
 }
 
 .descuento-title {
-  font-weight: 600;
+  font-weight: $fw-semibold;
   color: #111827;
-  font-size: 0.92rem;
+  font-size: $fs-caption;
 }
 
 .descuento-desc {
-  font-size: 0.78rem;
+  font-size: $fs-small;
   color: #6b7280;
 }
 
@@ -402,14 +385,14 @@ $stitch-text-muted: #6b7280;
   padding: 4px 10px;
   background-color: #f3f4f6;
   color: #374151;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: $fs-caption;
+  font-weight: $fw-medium;
   border-radius: 6px;
 }
 
 /* COLUMNA FECHA */
 .col-fecha {
-  font-size: 0.88rem;
+  font-size: $fs-caption;
   color: #4b5563;
 }
 
@@ -427,8 +410,8 @@ $stitch-text-muted: #6b7280;
   }
 
   .productos-count {
-    font-weight: 500;
-    font-size: 0.88rem;
+    font-weight: $fw-medium;
+    font-size: $fs-caption;
   }
 }
 
@@ -439,8 +422,8 @@ $stitch-text-muted: #6b7280;
   gap: 6px;
   padding: 3px 10px;
   border-radius: 9999px;
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: $fs-small;
+  font-weight: $fw-semibold;
 }
 
 .status-dot {
@@ -488,7 +471,7 @@ $stitch-text-muted: #6b7280;
   border-radius: 6px;
   border: 1px solid #e5e7eb;
   background-color: #ffffff;
-  color: $stitch-text-muted;
+  color: $color-text-light;
   cursor: pointer;
   transition: all 0.15s ease;
 
@@ -499,12 +482,12 @@ $stitch-text-muted: #6b7280;
 
   &:hover {
     background-color: #f3f4f6;
-    color: $stitch-text-main;
+    color: $color-text;
   }
 
   &--edit:hover {
-    border-color: $stitch-primary;
-    color: $stitch-primary;
+    border-color: $color-primary;
+    color: $color-primary;
     background-color: #faf5f5;
   }
 
@@ -528,7 +511,7 @@ $stitch-text-muted: #6b7280;
   justify-content: space-between;
   padding: 14px 20px;
   background-color: #faf9f9;
-  border-top: 1px solid $stitch-border;
+  border-top: 1px solid $color-border;
 
   @media (max-width: 640px) {
     flex-direction: column;
@@ -538,8 +521,8 @@ $stitch-text-muted: #6b7280;
 }
 
 .footer-summary {
-  font-size: 0.85rem;
-  color: $stitch-text-muted;
+  font-size: $fs-caption;
+  color: $color-text-light;
 }
 
 .pagination-controls {
@@ -557,9 +540,9 @@ $stitch-text-muted: #6b7280;
   border-radius: 4px;
   border: none;
   background: transparent;
-  color: $stitch-text-muted;
-  font-size: 0.85rem;
-  font-weight: 600;
+  color: $color-text-light;
+  font-size: $fs-caption;
+  font-weight: $fw-semibold;
   cursor: pointer;
 
   svg {
@@ -573,7 +556,7 @@ $stitch-text-muted: #6b7280;
   }
 
   &--active {
-    background-color: $stitch-primary;
+    background-color: $color-primary;
     color: #ffffff;
   }
 }
@@ -587,23 +570,23 @@ $stitch-text-muted: #6b7280;
   padding: 3rem 1.5rem;
   text-align: center;
   gap: 1rem;
-  color: $stitch-text-muted;
+  color: $color-text-light;
 
   h3 {
     margin: 0;
-    color: $stitch-text-main;
+    color: $color-text;
   }
 
   p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: $fs-caption;
   }
 }
 
 .state-icon {
   width: 48px;
   height: 48px;
-  color: $stitch-text-muted;
+  color: $color-text-light;
 }
 
 .state-container--error .state-icon {
@@ -613,8 +596,8 @@ $stitch-text-muted: #6b7280;
 .spinner {
   width: 36px;
   height: 36px;
-  border: 3px solid rgba($stitch-primary, 0.2);
-  border-top-color: $stitch-primary;
+  border: 3px solid rgba($color-primary, 0.2);
+  border-top-color: $color-primary;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }

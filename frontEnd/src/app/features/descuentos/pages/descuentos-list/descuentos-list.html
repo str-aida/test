@@ -1,5 +1,4 @@
 <section class="descuentos-page">
-
   <!-- HEADER PRINCIPAL STITCH -->
   <header class="descuentos-page__header">
     <div class="descuentos-page__header-title">
@@ -8,23 +7,16 @@
       </div>
       <div>
         <div class="descuentos-page__title-row">
-          <h1 class="descuentos-page__title">Descuentos</h1>
+          <h1 class="descuentos-page__title">Gestión de descuentos</h1>
           <span class="descuentos-page__badge-count">
             {{ totalDescuentos }} {{ totalDescuentos === 1 ? 'campaña registrada' : 'campañas registradas' }}
           </span>
         </div>
-        <p class="descuentos-page__subtitle">
-          Gestioná las promociones por producto y sus fechas de vigencia.
-        </p>
+        <p class="descuentos-page__subtitle">Administrá las promociones por producto y sus fechas de vigencia.</p>
       </div>
     </div>
-
     <div class="descuentos-page__header-actions">
-      <button
-        type="button"
-        id="btn-crear-descuento"
-        class="btn-stitch-primary"
-        (click)="navegarCrear()">
+      <button type="button" class="btn-stitch-primary" (click)="navegarCrear()">
         <svg lucidePlus class="btn-icon"></svg>
         <span>Crear Descuento</span>
       </button>
@@ -84,34 +76,19 @@
   <div class="descuentos-filter-card">
     <div class="descuentos-filter__search">
       <svg lucideSearch class="descuentos-filter__search-icon"></svg>
-      <input
-        type="text"
-        id="input-buscar-descuento"
-        class="descuentos-filter__search-input"
-        placeholder="Buscar descuento por nombre..."
-        [(ngModel)]="searchTerm"
-        (input)="applyFilter()">
+      <input type="text" class="descuentos-filter__search-input" placeholder="Buscar descuento por nombre..."
+        [(ngModel)]="searchTerm" (input)="applyFilter()">
     </div>
-
     <div class="descuentos-filter__tabs">
-      <button
-        type="button"
-        class="tab-btn"
-        [class.tab-btn--active]="statusTab === 'TODOS'"
+      <button type="button" class="tab-btn" [class.tab-btn--active]="statusTab === 'TODOS'"
         (click)="setStatusTab('TODOS')">
         Todos ({{ totalDescuentos }})
       </button>
-      <button
-        type="button"
-        class="tab-btn"
-        [class.tab-btn--active]="statusTab === 'ACTIVO'"
+      <button type="button" class="tab-btn" [class.tab-btn--active]="statusTab === 'ACTIVO'"
         (click)="setStatusTab('ACTIVO')">
         Activos ({{ totalActivos }})
       </button>
-      <button
-        type="button"
-        class="tab-btn"
-        [class.tab-btn--active]="statusTab === 'INACTIVO'"
+      <button type="button" class="tab-btn" [class.tab-btn--active]="statusTab === 'INACTIVO'"
         (click)="setStatusTab('INACTIVO')">
         Inactivos ({{ totalInactivos }})
       </button>
@@ -120,7 +97,6 @@
 
   <!-- CONTENIDO PRINCIPAL -->
   <div class="descuentos-page__content">
-
     <!-- ESTADO DE CARGA -->
     @if (isLoading) {
       <div class="state-container">
@@ -128,11 +104,10 @@
         <p>Cargando campañas de descuento...</p>
       </div>
     }
-
     <!-- ESTADO DE ERROR -->
     @else if (hasError) {
       <div class="state-container state-container--error">
-        <svg lucideAlertTriangle class="state-icon"></svg>
+        <svg lucideTriangleAlert class="state-icon"></svg>
         <h3>Error al cargar los descuentos</h3>
         <p>No se pudo conectar con el servidor.</p>
         <button type="button" class="btn-stitch-primary" (click)="loadDescuentos()">
@@ -141,7 +116,6 @@
         </button>
       </div>
     }
-
     <!-- ESTADO VACÍO -->
     @else if (filteredDescuentos.length === 0) {
       <div class="state-container state-container--empty">
@@ -162,7 +136,6 @@
         }
       </div>
     }
-
     <!-- TABLA DE DESCUENTOS STITCH -->
     @else {
       <div class="descuentos-table-card">
@@ -203,30 +176,18 @@
                       </div>
                       <div class="nombre-text">
                         <strong class="descuento-title">{{ descuento.nombre }}</strong>
-                        <span class="descuento-desc">
-                          Promoción aplicada en carta digital
-                        </span>
+                        <span class="descuento-desc">Promoción aplicada en carta digital</span>
                       </div>
                     </div>
                   </td>
-
                   <!-- TIPO BADGE -->
                   <td class="col-tipo">
-                    <span class="tipo-badge">
-                      {{ getTipoBadgeLabel(descuento.tipo) }}
-                    </span>
+                    <span class="tipo-badge">{{ getTipoBadgeLabel(descuento.tipo) }}</span>
                   </td>
-
                   <!-- FECHA DE INICIO -->
-                  <td class="col-fecha">
-                    {{ descuento.fechaInicio | date:'dd/MM/yyyy' }}
-                  </td>
-
+                  <td class="col-fecha">{{ descuento.fechaInicio | date:'dd/MM/yyyy' }}</td>
                   <!-- FECHA DE FIN -->
-                  <td class="col-fecha">
-                    {{ descuento.fechaFin | date:'dd/MM/yyyy' }}
-                  </td>
-
+                  <td class="col-fecha">{{ descuento.fechaFin | date:'dd/MM/yyyy' }}</td>
                   <!-- PRODUCTOS INCLUIDOS -->
                   <td class="col-productos">
                     <div class="productos-cell">
@@ -236,7 +197,6 @@
                       </span>
                     </div>
                   </td>
-
                   <!-- ESTADO BADGE -->
                   <td class="col-estado">
                     @if (descuento.estado === EstadoDescuentoEnum.ACTIVO) {
@@ -251,23 +211,16 @@
                       </span>
                     }
                   </td>
-
                   <!-- ACCIONES -->
                   <td class="text-right">
                     <div class="actions-group">
                       <!-- EDITAR -->
-                      <button
-                        type="button"
-                        class="action-btn action-btn--edit"
-                        title="Editar descuento"
+                      <button type="button" class="action-btn action-btn--edit" title="Editar descuento"
                         (click)="openEditModal(descuento)">
                         <svg lucidePencil></svg>
                       </button>
-
                       <!-- ACTIVAR / DESACTIVAR -->
-                      <button
-                        type="button"
-                        class="action-btn"
+                      <button type="button" class="action-btn"
                         [class.action-btn--power-active]="descuento.estado === EstadoDescuentoEnum.ACTIVO"
                         [class.action-btn--power-inactive]="descuento.estado === EstadoDescuentoEnum.INACTIVO"
                         [title]="descuento.estado === EstadoDescuentoEnum.ACTIVO ? 'Desactivar descuento' : 'Activar descuento'"
@@ -281,7 +234,6 @@
             </tbody>
           </table>
         </div>
-
         <!-- FOOTER PAGINACIÓN STITCH -->
         <div class="descuentos-table-footer">
           <span class="footer-summary">
@@ -378,18 +330,10 @@
           </p>
         </div>
         <footer class="modal-card__footer">
-          <button
-            type="button"
-            class="btn btn--outline"
-            [disabled]="isProcessingAction"
-            (click)="closeDeleteModal()">
+          <button type="button" class="btn btn--outline" [disabled]="isProcessingAction" (click)="closeDeleteModal()">
             Cancelar
           </button>
-          <button
-            type="button"
-            class="btn btn--danger"
-            [disabled]="isProcessingAction"
-            (click)="confirmarDesactivar()">
+          <button type="button" class="btn btn--danger" [disabled]="isProcessingAction" (click)="confirmarDesactivar()">
             @if (isProcessingAction) {
               <span>Desactivando...</span>
             } @else {
