@@ -253,7 +253,7 @@
                 <button
                   type="button"
                   class="chat-topbar__close-btn"
-                  (click)="cerrarConversacion()"
+                  (click)="abrirModalCierre()"
                   [disabled]="isClosing()"
                 >
                   @if (isClosing()) {
@@ -423,4 +423,53 @@
     </main>
 
   </div>
+
+  <!-- ============================================= -->
+  <!-- MODAL: CONFIRMAR CIERRE DE TICKET             -->
+  <!-- ============================================= -->
+  @if (showModalCierre()) {
+    <div class="modal-backdrop" (click)="cancelarCierre()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+
+        <div class="modal-card__icon-wrap">
+          <svg lucideLock class="modal-card__icon"></svg>
+        </div>
+
+        <h2 class="modal-card__title">¿Cerrar ticket de soporte?</h2>
+        <p class="modal-card__body">
+          Estás por cerrar y archivar la conversación con
+          <strong>{{ conversacionSeleccionada()?.nombreCliente }}</strong> —
+          Pedido&nbsp;#{{ conversacionSeleccionada()?.numeroPedido }}.
+          El cliente <strong>no podrá enviar más mensajes</strong> en este ticket.
+          Podrá abrir uno nuevo desde el detalle de su pedido si lo necesita.
+        </p>
+
+        <div class="modal-card__actions">
+          <button
+            type="button"
+            class="modal-card__btn modal-card__btn--cancel"
+            (click)="cancelarCierre()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="modal-card__btn modal-card__btn--confirm"
+            (click)="cerrarConversacion()"
+            [disabled]="isClosing()"
+          >
+            @if (isClosing()) {
+              <span class="btn-spinner btn-spinner--light"></span>
+              <span>Cerrando...</span>
+            } @else {
+              <svg lucideLock class="modal-card__btn-icon"></svg>
+              <span>Sí, cerrar ticket</span>
+            }
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
 </div>
