@@ -1,14 +1,13 @@
 <div class="analitica">
-
   <!-- Header del Dashboard -->
   <header class="analitica__header">
     <div class="analitica__header-title">
       <div class="analitica__header-icon">
-        <svg lucideBarChart3 class="icon"></svg>
+        <svg lucideLayoutDashboard class="icon"></svg>
       </div>
       <div>
-        <h1 class="analitica__title">Analítica & Métricas</h1>
-        <p class="analitica__subtitle">Panel estratégico de ventas, pedidos y clientes en tiempo real</p>
+        <h1 class="analitica__title">Analítica y Métricas</h1>
+        <p class="analitica__subtitle">Panel estratégico de ventas, pedidos y clientes en tiempo real.</p>
       </div>
     </div>
     <div class="analitica__header-actions">
@@ -30,7 +29,7 @@
   <!-- Error State -->
   @if (hasError() && !isLoading()) {
     <div class="analitica__error">
-      <svg lucideAlertTriangle class="icon icon--lg"></svg>
+      <svg lucideTriangleAlert class="icon icon--lg"></svg>
       <h3>Error al cargar los datos analíticos</h3>
       <p>No se pudo establecer conexión con los servicios de analítica del servidor.</p>
       <button type="button" class="btn btn--primary" (click)="cargarDatos()">Reintentar</button>
@@ -38,7 +37,6 @@
   }
 
   @if (!isLoading() && !hasError()) {
-
     <!-- 1. RESUMEN EJECUTIVO (6 KPI Cards) -->
     <section class="analitica__section">
       <h2 class="analitica__section-title">Resumen Ejecutivo</h2>
@@ -60,12 +58,11 @@
               </span>
             </div>
           </div>
-
           <div class="kpi-card">
             <div class="kpi-card__header">
               <span class="kpi-card__label">Total Pedidos</span>
               <div class="kpi-card__icon kpi-card__icon--info">
-                <svg lucideShoppingBag class="icon"></svg>
+                <svg lucidePackage class="icon"></svg>
               </div>
             </div>
             <div class="kpi-card__value">{{ r.totalPedidos }}</div>
@@ -73,12 +70,11 @@
               <span class="kpi-card__subtext">Órdenes registradas</span>
             </div>
           </div>
-
           <div class="kpi-card">
             <div class="kpi-card__header">
               <span class="kpi-card__label">Ticket Promedio</span>
               <div class="kpi-card__icon kpi-card__icon--purple">
-                <svg lucideBarChart3 class="icon"></svg>
+                <svg lucideReceipt class="icon"></svg>
               </div>
             </div>
             <div class="kpi-card__value">{{ r.ticketPromedio | currency:'ARS':'symbol':'1.0-2' }}</div>
@@ -86,7 +82,6 @@
               <span class="kpi-card__subtext">Promedio por pedido</span>
             </div>
           </div>
-
           <div class="kpi-card">
             <div class="kpi-card__header">
               <span class="kpi-card__label">Pedidos Pendientes</span>
@@ -99,12 +94,11 @@
               <span class="kpi-card__subtext">En proceso de atención</span>
             </div>
           </div>
-
           <div class="kpi-card">
             <div class="kpi-card__header">
               <span class="kpi-card__label">Pedidos Entregados</span>
               <div class="kpi-card__icon kpi-card__icon--success">
-                <svg lucideCheckCircle2 class="icon"></svg>
+                <svg lucideCircleCheck class="icon"></svg>
               </div>
             </div>
             <div class="kpi-card__value">{{ r.pedidosEntregados }}</div>
@@ -112,7 +106,6 @@
               <span class="kpi-card__subtext">Completados con éxito</span>
             </div>
           </div>
-
           <div class="kpi-card">
             <div class="kpi-card__header">
               <span class="kpi-card__label">Clientes Registrados</span>
@@ -149,7 +142,6 @@
 
     <!-- 3. GRID PRINCIPAL: DESEMPEÑO DE VENTAS Y MEJORES CLIENTES -->
     <div class="analitica__grid-2">
-
       <!-- 4. Desempeño de Ventas y Tendencia -->
       <div class="card">
         <div class="card__header">
@@ -175,13 +167,10 @@
                 <line x1="0" y1="20" x2="600" y2="20" class="svg-chart__grid-line" />
                 <line x1="0" y1="80" x2="600" y2="80" class="svg-chart__grid-line" />
                 <line x1="0" y1="140" x2="600" y2="140" class="svg-chart__grid-line" />
-
                 <!-- Fill Area -->
                 <path [attr.d]="svgPoints().area" class="svg-chart__area" />
-
                 <!-- Line -->
                 <path [attr.d]="svgPoints().path" class="svg-chart__line" />
-
                 <!-- Points -->
                 @for (pt of svgPoints().points; track pt.item.periodo) {
                   <circle
@@ -194,7 +183,6 @@
                   />
                 }
               </svg>
-
               <!-- Hover Tooltip -->
               @if (hoveredPoint(); as hp) {
                 <div class="chart-tooltip" [style.left.px]="hp.x" [style.top.px]="hp.y - 45">
@@ -203,7 +191,6 @@
                 </div>
               }
             </div>
-
             <!-- Eje X de Periodos -->
             <div class="chart-labels">
               @for (v of ventasPeriodo(); track v.periodo) {
@@ -254,9 +241,7 @@
                       <td class="text-center">
                         <span class="badge badge--neutral">{{ cliente.cantidadPedidos }}</span>
                       </td>
-                      <td class="text-right text-bold">
-                        {{ cliente.totalGastado | currency:'ARS':'symbol':'1.0-2' }}
-                      </td>
+                      <td class="text-right text-bold">{{ cliente.totalGastado | currency:'ARS':'symbol':'1.0-2' }}</td>
                     </tr>
                   }
                 </tbody>
@@ -273,7 +258,6 @@
       <h2 class="analitica__section-title">Distribución Operativa</h2>
 
       <div class="analitica__grid-3">
-
         <!-- Pedidos por Estado -->
         <div class="card">
           <div class="card__header">
@@ -296,8 +280,7 @@
                       </span>
                     </div>
                     <div class="progress-bar">
-                      <div
-                        class="progress-bar__fill"
+                      <div class="progress-bar__fill"
                         [style.width.%]="calcPorcentaje(item.cantidad, totalPedidosEnEstados())"
                         [style.background-color]="getEstadoColor(item.estado)">
                       </div>
@@ -326,19 +309,14 @@
                         <svg lucideCreditCard class="icon-sm text-muted"></svg>
                         {{ getMetodoPagoLabel(item.metodoPago) }}
                       </span>
-                      <span class="progress-item__val">
-                        {{ item.totalVentas | currency:'ARS':'symbol':'1.0-2' }}
-                      </span>
+                      <span class="progress-item__val">{{ item.totalVentas | currency:'ARS':'symbol':'1.0-2' }}</span>
                     </div>
                     <div class="progress-bar">
-                      <div
-                        class="progress-bar__fill progress-bar__fill--primary"
+                      <div class="progress-bar__fill progress-bar__fill--primary"
                         [style.width.%]="calcPorcentaje(item.totalVentas, totalVentasMetodoPagoSum())">
                       </div>
                     </div>
-                    <div class="progress-item__sub font-xs text-muted">
-                      {{ item.cantidadTransacciones }} transacciones
-                    </div>
+                    <div class="progress-item__sub font-xs text-muted">{{ item.cantidadTransacciones }} transacciones</div>
                   </div>
                 }
               </div>
@@ -363,19 +341,14 @@
                         <svg lucideTruck class="icon-sm text-muted"></svg>
                         {{ getTipoEntregaLabel(item.tipoEntrega) }}
                       </span>
-                      <span class="progress-item__val">
-                        {{ item.totalVentas | currency:'ARS':'symbol':'1.0-2' }}
-                      </span>
+                      <span class="progress-item__val">{{ item.totalVentas | currency:'ARS':'symbol':'1.0-2' }}</span>
                     </div>
                     <div class="progress-bar">
-                      <div
-                        class="progress-bar__fill progress-bar__fill--teal"
+                      <div class="progress-bar__fill progress-bar__fill--teal"
                         [style.width.%]="calcPorcentaje(item.totalVentas, totalVentasTipoEntregaSum())">
                       </div>
                     </div>
-                    <div class="progress-item__sub font-xs text-muted">
-                      {{ item.cantidadPedidos }} pedidos
-                    </div>
+                    <div class="progress-item__sub font-xs text-muted">{{ item.cantidadPedidos }} pedidos</div>
                   </div>
                 }
               </div>
@@ -415,9 +388,7 @@
                       <td class="text-center">
                         <span class="badge badge--info">{{ prod.cantidadVendida }} u.</span>
                       </td>
-                      <td class="text-right text-bold">
-                        {{ prod.totalVendido | currency:'ARS':'symbol':'1.0-2' }}
-                      </td>
+                      <td class="text-right text-bold">{{ prod.totalVendido | currency:'ARS':'symbol':'1.0-2' }}</td>
                     </tr>
                   }
                 </tbody>
@@ -460,9 +431,7 @@
                       <td class="text-center">
                         <span class="badge badge--warning">{{ prod.cantidadVendida }} u.</span>
                       </td>
-                      <td class="text-right text-muted-dark">
-                        {{ prod.totalVendido | currency:'ARS':'symbol':'1.0-2' }}
-                      </td>
+                      <td class="text-right text-muted-dark">{{ prod.totalVendido | currency:'ARS':'symbol':'1.0-2' }}</td>
                     </tr>
                   }
                 </tbody>
@@ -524,9 +493,7 @@
                           <span class="badge badge--neutral">Sin compras</span>
                         }
                       </td>
-                      <td class="text-right">
-                        {{ cliente.totalGastado | currency:'ARS':'symbol':'1.0-2' }}
-                      </td>
+                      <td class="text-right">{{ cliente.totalGastado | currency:'ARS':'symbol':'1.0-2' }}</td>
                       <td class="text-center">
                         <span class="badge badge--neutral">{{ cliente.cantidadPedidos }}</span>
                       </td>

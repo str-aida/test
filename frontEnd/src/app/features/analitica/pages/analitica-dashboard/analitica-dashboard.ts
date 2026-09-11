@@ -1,22 +1,9 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  LucideTrendingUp,
-  LucideShoppingBag,
-  LucideDollarSign,
-  LucideClock,
-  LucideCheckCircle2,
-  LucideUsers,
-  LucideAward,
-  LucideAlertTriangle,
-  LucideCreditCard,
-  LucideTruck,
-  LucideBarChart3,
-  LucideUserX,
-  LucideRefreshCw,
-  LucideStar
-} from '@lucide/angular';
+import { LucideTrendingUp, LucidePackage, LucideDollarSign, LucideClock, LucideCircleCheck, LucideUsers,
+  LucideAward, LucideTriangleAlert, LucideCreditCard, LucideTruck, LucideLayoutDashboard, LucideUserX,
+  LucideRefreshCw, LucideStar, LucideReceipt } from '@lucide/angular';
 import { AnaliticaService } from '../../../../core/services/analitica.service';
 import { ResumenEjecutivoResponse } from '../../../../core/models/resumen-ejecutivo-response';
 import { ClienteAnaliticaResponse } from '../../../../core/models/cliente-analitica-response';
@@ -31,26 +18,10 @@ import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-analitica-dashboard',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    CurrencyPipe,
-    DatePipe,
-    LucideTrendingUp,
-    LucideShoppingBag,
-    LucideDollarSign,
-    LucideClock,
-    LucideCheckCircle2,
-    LucideUsers,
-    LucideAward,
-    LucideAlertTriangle,
-    LucideCreditCard,
-    LucideTruck,
-    LucideBarChart3,
-    LucideUserX,
-    LucideRefreshCw,
-    LucideStar
-  ],
+  imports: [CommonModule, FormsModule, CurrencyPipe, DatePipe, LucideTrendingUp, LucidePackage,
+    LucideDollarSign, LucideClock, LucideReceipt, LucideCircleCheck, LucideUsers, LucideAward,
+    LucideTriangleAlert, LucideCreditCard, LucideTruck, LucideLayoutDashboard, LucideUserX,
+    LucideRefreshCw, LucideStar],
   templateUrl: './analitica-dashboard.html',
   styleUrl: './analitica-dashboard.scss'
 })
