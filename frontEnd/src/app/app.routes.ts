@@ -54,7 +54,7 @@ export const routes: Routes = [
     path: 'admin',
     component: AppLayoutComponent,
     children: [
-      { path: 'analitica', component: AnaliticaDashboardComponent, data: { title: 'Analítica y Métricas' } },
+      { path: 'analitica', component: AnaliticaDashboardComponent, data: { title: 'Analítica' } },
       { path: 'dashboard', redirectTo: 'analitica', pathMatch: 'full' },
       { path: 'personal', component: EmployeesListComponent, data: { title: 'Personal' } },
       { path: 'perfil', component: ProfileComponent, data: { title: 'Perfil' } },
@@ -71,10 +71,10 @@ export const routes: Routes = [
       { path: 'pedidos/en-curso', component: PedidosEnCursoComponent, data: { title: 'Pedidos en Curso' } },
       { path: 'pedidos', component: PedidosListComponent, data: { title: 'Pedidos' } },
       { path: 'pedidos/:id', component: PedidoDetalleAdminComponent, data: { title: 'Detalle de Pedido' } },
-      { path: 'cupones', component: CuponesListComponent, data: { title: 'Gestión de Cupones' } },
+      { path: 'cupones', component: CuponesListComponent, data: { title: 'Cupones' } },
       {
         path: 'descuentos',
-        data: { title: 'Gestión de Descuentos' },
+        data: { title: 'Descuentos' },
         children: [
           { path: '', component: DescuentosListComponent },
           { path: 'nuevo', component: DescuentoFormComponent },
@@ -83,7 +83,7 @@ export const routes: Routes = [
       },
       { path: 'auditoria', component: AuditoriaListComponent, data: { title: 'Auditoría' } },
       { path: 'configuracion', component: ConfiguracionComponent, data: { title: 'Configuración' } },
-      { path: 'soporte', component: SoporteAdminComponent, data: { title: 'Consola de Soporte' } },
+      { path: 'soporte', component: SoporteAdminComponent, data: { title: 'Soporte' } },
       { path: 'soporte/:id', component: SoporteAdminComponent, data: { title: 'Consola de Soporte' } },
       { path: '', redirectTo: 'personal', pathMatch: 'full' }
     ]
@@ -98,7 +98,7 @@ export const routes: Routes = [
       { path: 'pedidos', component: PedidosListComponent, data: { title: 'Pedidos' } },
       { path: 'pedidos/:id', component: PedidoDetalleAdminComponent, data: { title: 'Detalle de Pedido' } },
       { path: 'productos', component: ProductsListComponent, data: { title: 'Productos' } },
-      { path: 'soporte', component: SoporteAdminComponent, data: { title: 'Consola de Soporte' } },
+      { path: 'soporte', component: SoporteAdminComponent, data: { title: 'Soporte' } },
       { path: 'soporte/:id', component: SoporteAdminComponent, data: { title: 'Consola de Soporte' } },
       { path: '', redirectTo: 'pedidos/en-curso', pathMatch: 'full' }
     ]
