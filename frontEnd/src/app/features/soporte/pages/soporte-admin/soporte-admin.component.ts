@@ -98,6 +98,7 @@ export class SoporteAdminComponent implements OnInit, OnDestroy {
   isClosing = signal<boolean>(false);
   errorMsg = signal<string | null>(null);
   conectado = signal<boolean>(false);
+  showModalCierre = signal<boolean>(false);
 
   // Input de chat
   nuevoMensajeTexto = '';
@@ -416,15 +417,18 @@ export class SoporteAdminComponent implements OnInit, OnDestroy {
     }
   }
 
+  abrirModalCierre(): void {
+    if (!this.activeConversacionId || this.isClosing() || this.estaCerrado()) return;
+    this.showModalCierre.set(true);
+  }
+
+  cancelarCierre(): void {
+    this.showModalCierre.set(false);
+  }
+
   cerrarConversacion(): void {
-    if (!this.activeConversacionId || this.isClosing() || this.estaCerrado()) {
-      return;
-    }
-
-    if (!confirm('¿Confirmas que deseas cerrar y finalizar esta conversación de soporte?')) {
-      return;
-    }
-
+    if (!this.activeConversacionId || this.isClosing() || this.estaCerrado()) return;
+    this.showModalCierre.set(false);
     this.isClosing.set(true);
     this.chatService.cerrar(this.activeConversacionId).subscribe({
       next: (actualizada) => {
