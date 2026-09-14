@@ -1,0 +1,10 @@
+{
+  "/a2a": {
+    "target": "http://localhost:8000",
+    "secure": false,
+    "changeOrigin": true,
+    "headers": {
+      "Origin": "http://localhost:8000"
+    }
+  }
+}

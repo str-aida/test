@@ -9,7 +9,6 @@ import {
   LucideShapes,
   LucideUsers,
   LucideSettings,
-  LucideLogOut,
   LucideCircleUser,
   LucideHouse,
   LucidePackageCheck,
@@ -17,7 +16,11 @@ import {
   LucideShieldCheck,
   LucideTicket,
   LucidePercent,
-  LucideMessageSquare
+  LucideMessageSquare,
+  LucideBot,
+  LucideChevronDown,
+  LucideChevronRight,
+  LucideLogOut
 } from '@lucide/angular';
 import { AuthService } from '../../core/services/auth.service';
 import { TokenService } from '../../core/services/token.service';
@@ -44,6 +47,9 @@ import { NavigationItem } from '../models/navigation-item.model';
     LucideTicket,
     LucidePercent,
     LucideMessageSquare,
+    LucideBot,
+    LucideChevronDown,
+    LucideChevronRight,
     LucideLogOut
   ],
   templateUrl: './sidebar.html',
@@ -57,6 +63,21 @@ export class SidebarComponent {
   private tokenService = inject(TokenService);
   private router = inject(Router);
   protected navigationItems: NavigationItem[] = [];
+  protected expandedItems = new Set<string>(['analitica']);
+
+  toggleExpand(itemId: string, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.expandedItems.has(itemId)) {
+      this.expandedItems.delete(itemId);
+    } else {
+      this.expandedItems.add(itemId);
+    }
+  }
+
+  isExpanded(itemId: string): boolean {
+    return this.expandedItems.has(itemId);
+  }
 
   closeSidebar(): void {
     this.closeMenu.emit();

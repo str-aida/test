@@ -1,7 +1,14 @@
 import { NavigationItem } from '../models/navigation-item.model';
 
 export const ADMIN_NAVIGATION: NavigationItem[] = [
-  { id: 'analitica', label: 'Analítica', route: '/admin/analitica' },
+  {
+    id: 'analitica',
+    label: 'Analítica',
+    route: '/admin/analitica',
+    children: [
+      { id: 'copilot', label: 'Gestia Copilot', route: '/admin/analitica/copilot' }
+    ]
+  },
   { id: 'pedidos-en-curso', label: 'Pedidos en Curso', route: '/admin/pedidos/en-curso' },
   { id: 'pedidos', label: 'Pedidos', route: '/admin/pedidos' },
   { id: 'soporte', label: 'Soporte', route: '/admin/soporte' },

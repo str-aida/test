@@ -33,12 +33,11 @@ import { DescuentosClienteComponent } from './features/cliente/pages/descuentos/
 import { ChatClienteComponent } from './features/cliente/pages/chat-cliente/chat-cliente.component';
 import { SoporteAdminComponent } from './features/soporte/pages/soporte-admin/soporte-admin.component';
 
+import { GestiaCopilotComponent } from './features/analitica/pages/gestia-copilot/gestia-copilot';
+
 export const routes: Routes = [
-
   { path: '', component: HomeComponent },
-
   { path: 'onboarding', component: OnboardingComponent },
-
   {
     path: '',
     component: AuthComponent,
@@ -49,13 +48,14 @@ export const routes: Routes = [
       { path: 'reset-password', component: ResetPasswordComponent }
     ]
   },
-
   {
     path: 'admin',
     component: AppLayoutComponent,
     children: [
+      { path: 'analitica/copilot', component: GestiaCopilotComponent, data: { title: 'Gestia Copilot' } },
       { path: 'analitica', component: AnaliticaDashboardComponent, data: { title: 'Analítica' } },
       { path: 'dashboard', redirectTo: 'analitica', pathMatch: 'full' },
+      { path: 'copilot', redirectTo: 'analitica/copilot', pathMatch: 'full' },
       { path: 'personal', component: EmployeesListComponent, data: { title: 'Personal' } },
       { path: 'perfil', component: ProfileComponent, data: { title: 'Perfil' } },
       { path: 'categorias', component: CategoriesListComponent, data: { title: 'Categorías' } },

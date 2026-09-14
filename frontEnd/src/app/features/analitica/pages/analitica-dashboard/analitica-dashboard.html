@@ -11,6 +11,10 @@
       </div>
     </div>
     <div class="analitica__header-actions">
+      <a routerLink="/admin/analitica/copilot" class="btn btn--primary">
+        <svg lucideBot class="icon"></svg>
+        <span>Gestia Copilot</span>
+      </a>
       <button type="button" class="btn btn--outline" (click)="cargarDatos()" [disabled]="isLoading()">
         <svg lucideRefreshCw class="icon" [class.spin]="isLoading()"></svg>
         <span>Actualizar</span>

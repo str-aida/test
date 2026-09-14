@@ -1,0 +1,114 @@
+<div class="copilot-page">
+  <!-- Header con estética nativa de Gestia -->
+  <header class="copilot-header">
+    <div class="copilot-header__left">
+      <a routerLink="/admin/analitica" class="btn-back" title="Volver a Analítica">
+        <svg lucideArrowLeft class="icon"></svg>
+      </a>
+      <div class="copilot-header__icon">
+        <svg lucideBot class="icon icon--lg"></svg>
+      </div>
+      <div>
+        <h1 class="copilot-header__title">Gestia Copilot</h1>
+        <p class="copilot-header__subtitle">Asistente de inteligencia artificial para análisis estratégico del negocio.</p>
+      </div>
+    </div>
+    <div class="copilot-header__actions">
+      <button type="button" class="btn btn--outline btn--sm" (click)="limpiarConversacion()" [disabled]="isLoading()" title="Reiniciar chat">
+        <svg lucideTrash2 class="icon-sm"></svg>
+        <span>Nueva consulta</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Contenedor principal de Chat -->
+  <div class="copilot-container">
+
+    <!-- Mensajes del chat -->
+    <div class="copilot-messages" #chatContainer>
+      @for (msg of messages(); track msg.id) {
+        <div class="chat-bubble-wrapper" [class.chat-bubble-wrapper--user]="msg.sender === 'user'">
+          <div class="chat-avatar" [class.chat-avatar--user]="msg.sender === 'user'" [class.chat-avatar--assistant]="msg.sender === 'assistant'">
+            @if (msg.sender === 'user') {
+              <svg lucideUser class="icon-sm"></svg>
+            } @else {
+              <svg lucideSparkles class="icon-sm"></svg>
+            }
+          </div>
+
+          <div class="chat-bubble" [class.chat-bubble--user]="msg.sender === 'user'" [class.chat-bubble--assistant]="msg.sender === 'assistant'" [class.chat-bubble--error]="msg.isError">
+            <div class="chat-bubble__header">
+              <span class="chat-bubble__author">{{ msg.sender === 'user' ? 'Tú' : 'Gestia Copilot' }}</span>
+              <span class="chat-bubble__time">{{ msg.timestamp | date:'HH:mm' }}</span>
+            </div>
+            <div class="chat-bubble__content" [innerHTML]="formatMarkdown(msg.text)"></div>
+          </div>
+        </div>
+      }
+
+      <!-- Indicador de carga cuando el agente está pensando -->
+      @if (isLoading()) {
+        <div class="chat-bubble-wrapper">
+          <div class="chat-avatar chat-avatar--assistant">
+            <svg lucideSparkles class="icon-sm spin"></svg>
+          </div>
+          <div class="chat-bubble chat-bubble--assistant chat-bubble--loading">
+            <div class="chat-bubble__header">
+              <span class="chat-bubble__author">Gestia Copilot</span>
+            </div>
+            <div class="loading-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span class="loading-text">Consultando datos de Gestia...</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Banner de error si aplica -->
+    @if (errorMessage() && !isLoading()) {
+      <div class="copilot-error-banner">
+        <svg lucideTriangleAlert class="icon"></svg>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <!-- Prompts sugeridos (Chips de acceso rápido) -->
+    <div class="copilot-quick-prompts">
+      <span class="quick-prompts__label">Sugerencias:</span>
+      <div class="quick-prompts__list">
+        @for (prompt of quickPrompts; track prompt) {
+          <button type="button" class="chip-prompt" (click)="selectQuickPrompt(prompt)" [disabled]="isLoading()">
+            <svg lucideMessageSquare class="icon-xs"></svg>
+            <span>{{ prompt }}</span>
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Input bar de envío -->
+    <div class="copilot-input-bar">
+      <textarea
+        class="copilot-textarea"
+        placeholder="Escribe tu consulta sobre ventas, productos o clientes..."
+        rows="2"
+        [ngModel]="inputPrompt()"
+        (ngModelChange)="inputPrompt.set($event)"
+        (keydown)="onKeyDown($event)"
+        [disabled]="isLoading()"
+      ></textarea>
+      <button
+        type="button"
+        class="btn btn--primary btn-send"
+        (click)="enviarMensaje()"
+        [disabled]="!inputPrompt().trim() || isLoading()"
+      >
+        <svg lucideSend class="icon" [class.spin]="isLoading()"></svg>
+        <span>Enviar</span>
+      </button>
+    </div>
+
+  </div>
+</div>

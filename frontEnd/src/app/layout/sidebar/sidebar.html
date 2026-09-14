@@ -6,61 +6,90 @@
         <ul class="sidebar__list">
             @for (item of navigationItems; track item.route) {
                 <li class="sidebar__item">
-                    <a class="sidebar__link" [routerLink]="item.route" routerLinkActive="sidebar__link--active"
-                        [routerLinkActiveOptions]="{ exact: true }" (click)="closeSidebar()">
+                    <div class="sidebar__item-header">
+                        <a class="sidebar__link" [routerLink]="item.route" routerLinkActive="sidebar__link--active"
+                            [routerLinkActiveOptions]="{ exact: true }" (click)="closeSidebar()">
 
-                        @switch (item.id) {
-                            @case ('analitica') {
-                                <svg lucideLayoutDashboard class="sidebar__icon"></svg>
+                            @switch (item.id) {
+                                @case ('analitica') {
+                                    <svg lucideLayoutDashboard class="sidebar__icon"></svg>
+                                }
+                                @case ('pedidos-en-curso') {
+                                    <svg lucidePackageCheck class="sidebar__icon"></svg>
+                                }
+                                @case ('pedidos') {
+                                    <svg lucidePackage class="sidebar__icon"></svg>
+                                }
+                                @case ('productos') {
+                                    <svg lucideShoppingBag class="sidebar__icon"></svg>
+                                }
+                                @case ('categorias') {
+                                    <svg lucideShapes class="sidebar__icon"></svg>
+                                }
+                                @case ('personal') {
+                                    <svg lucideUsers class="sidebar__icon"></svg>
+                                }
+                                @case ('configuracion') {
+                                    <svg lucideSettings class="sidebar__icon"></svg>
+                                }
+                                @case ('perfil') {
+                                    <svg lucideCircleUser class="sidebar__icon"></svg>
+                                }
+                                @case ('inicio') {
+                                    <svg lucideHouse class="sidebar__icon"></svg>
+                                }
+                                @case ('mis-pedidos') {
+                                    <svg lucidePackageCheck class="sidebar__icon"></svg>
+                                }
+                                @case ('cuenta') {
+                                    <svg lucideUserRoundCheck class="sidebar__icon"></svg>
+                                }
+                                @case ('auditoria') {
+                                    <svg lucideShieldCheck class="sidebar__icon"></svg>
+                                }
+                                @case ('cupones') {
+                                    <svg lucideTicket class="sidebar__icon"></svg>
+                                }
+                                @case ('descuentos') {
+                                    <svg lucidePercent class="sidebar__icon"></svg>
+                                }
+                                @case ('mis-cupones') {
+                                    <svg lucideTicket class="sidebar__icon"></svg>
+                                }
+                                @case ('soporte') {
+                                    <svg lucideMessageSquare class="sidebar__icon"></svg>
+                                }
                             }
-                            @case ('pedidos-en-curso') {
-                                <svg lucidePackageCheck class="sidebar__icon"></svg>
-                            }
-                            @case ('pedidos') {
-                                <svg lucidePackage class="sidebar__icon"></svg>
-                            }
-                            @case ('productos') {
-                                <svg lucideShoppingBag class="sidebar__icon"></svg>
-                            }
-                            @case ('categorias') {
-                                <svg lucideShapes class="sidebar__icon"></svg>
-                            }
-                            @case ('personal') {
-                                <svg lucideUsers class="sidebar__icon"></svg>
-                            }
-                            @case ('configuracion') {
-                                <svg lucideSettings class="sidebar__icon"></svg>
-                            }
-                            @case ('perfil') {
-                                <svg lucideCircleUser class="sidebar__icon"></svg>
-                            }
-                            @case ('inicio') {
-                                <svg lucideHouse class="sidebar__icon"></svg>
-                            }
-                            @case ('mis-pedidos') {
-                                <svg lucidePackageCheck class="sidebar__icon"></svg>
-                            }
-                            @case ('cuenta') {
-                                <svg lucideUserRoundCheck class="sidebar__icon"></svg>
-                            }
-                            @case ('auditoria') {
-                                <svg lucideShieldCheck class="sidebar__icon"></svg>
-                            }
-                            @case ('cupones') {
-                                <svg lucideTicket class="sidebar__icon"></svg>
-                            }
-                            @case ('descuentos') {
-                                <svg lucidePercent class="sidebar__icon"></svg>
-                            }
-                            @case ('mis-cupones') {
-                                <svg lucideTicket class="sidebar__icon"></svg>
-                            }
-                            @case ('soporte') {
-                                <svg lucideMessageSquare class="sidebar__icon"></svg>
-                            }
+                            <span class="sidebar__label">{{ item.label }}</span>
+                        </a>
+
+                        @if (item.children && item.children.length > 0) {
+                            <button type="button" class="sidebar__chevron-btn" (click)="toggleExpand(item.id, $event)" title="Desplegar submenú">
+                                @if (isExpanded(item.id)) {
+                                    <svg lucideChevronDown class="sidebar__chevron-icon"></svg>
+                                } @else {
+                                    <svg lucideChevronRight class="sidebar__chevron-icon"></svg>
+                                }
+                            </button>
                         }
-                        <span class="sidebar__label">{{ item.label }}</span>
-                    </a>
+                    </div>
+
+                    @if (item.children && item.children.length > 0 && isExpanded(item.id)) {
+                        <ul class="sidebar__sublist">
+                            @for (child of item.children; track child.route) {
+                                <li class="sidebar__subitem">
+                                    <a class="sidebar__sublink" [routerLink]="child.route" routerLinkActive="sidebar__sublink--active" (click)="closeSidebar()">
+                                        @switch (child.id) {
+                                            @case ('copilot') {
+                                                <svg lucideBot class="sidebar__icon"></svg>
+                                            }
+                                        }
+                                        <span class="sidebar__sublabel">{{ child.label }}</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
                 </li>
             }
         </ul>
