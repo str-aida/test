@@ -15,9 +15,15 @@ export class AppLayoutComponent {
   protected isSidebarOpen = signal(false);
   protected toggleSidebar(): void {
     this.isSidebarOpen.update(isOpen => !isOpen);
+
+    document.body.style.overflow = this.isSidebarOpen()
+      ? 'hidden'
+      : '';
   }
   protected closeSidebar(): void {
     this.isSidebarOpen.set(false);
+
+    document.body.style.overflow = '';
   }
 
 }

@@ -3,13 +3,37 @@
 .app-layout {
     display: grid;
     grid-template-columns: $navigation-sidebar-width 1fr;
-    min-height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
 }
 
 .app-layout__content {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    min-height: 0;
+    height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(48, 0, 6, .35) transparent;
+}
+
+.app-layout__content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.app-layout__content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.app-layout__content::-webkit-scrollbar-thumb {
+    background-color: rgba(48, 0, 6, .35);
+    border-radius: 999px;
+}
+
+.app-layout__content::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(48, 0, 6, .55);
 }
 
 .app-layout__main {
@@ -23,6 +47,13 @@
 @media (max-width: $bp-tablet) {
     .app-layout {
         display: block;
+        height: 100dvh;
+        overflow: hidden;
+    }
+    .app-layout__content {
+        height: 100dvh;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
     .app-layout__overlay {
         display: block;
