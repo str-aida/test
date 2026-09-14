@@ -41,9 +41,11 @@ export class EstablecimientoService {
             `${environment.baseUrl}/establecimiento/info`
         ).pipe(
             tap(res => {
+                const currentBrand = this._brandInfo();
+
                 this._brandInfo.set({
                     nombre: res.nombre,
-                    logoUrl: null
+                    logoUrl: currentBrand?.logoUrl ?? null
                 });
             })
         );
