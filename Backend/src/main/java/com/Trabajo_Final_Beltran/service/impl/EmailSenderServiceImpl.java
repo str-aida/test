@@ -1,9 +1,10 @@
 package com.Trabajo_Final_Beltran.service.impl;
 
 import com.Trabajo_Final_Beltran.service.EmailSenderService;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -21,21 +22,26 @@ public class EmailSenderServiceImpl
             String asunto,
             String cuerpo
     ) {
-
         try {
 
-            SimpleMailMessage mensaje =
-                    new SimpleMailMessage();
+            MimeMessage mensaje = mailSender.createMimeMessage();
 
-            mensaje.setTo(destino);
-            mensaje.setSubject(asunto);
-            mensaje.setText(cuerpo);
+            MimeMessageHelper helper =
+                    new MimeMessageHelper(
+                            mensaje,
+                            true,
+                            "UTF-8"
+                    );
+
+            helper.setTo(destino);
+            helper.setSubject(asunto);
+
+            helper.setText(cuerpo, true);
 
             mailSender.send(mensaje);
 
             System.out.println(
-                    "Email enviado a "
-                            + destino
+                    "Email enviado a " + destino
             );
 
         } catch (Exception e) {

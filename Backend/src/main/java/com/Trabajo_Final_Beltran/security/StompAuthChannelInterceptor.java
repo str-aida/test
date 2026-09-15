@@ -3,8 +3,6 @@ package com.Trabajo_Final_Beltran.security;
 import com.Trabajo_Final_Beltran.entity.Usuario;
 import com.Trabajo_Final_Beltran.exception.BusinessException;
 import com.Trabajo_Final_Beltran.repository.UsuarioRepository;
-import com.Trabajo_Final_Beltran.security.JwtService;
-import com.Trabajo_Final_Beltran.security.TokenBlacklistService;
 import com.Trabajo_Final_Beltran.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -123,7 +121,6 @@ public class StompAuthChannelInterceptor implements ChannelInterceptor {
             return;
         }
 
-        // Si por ciclo de vida de STOMP no está en accessor.getUser(), verificar sessionAttributes
         Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
         if (sessionAttributes != null && sessionAttributes.get("usuario") != null) {
             Usuario usuario = (Usuario) sessionAttributes.get("usuario");
@@ -163,4 +160,4 @@ public class StompAuthChannelInterceptor implements ChannelInterceptor {
         throw new BusinessException("No autenticado");
     }
 }
-
+

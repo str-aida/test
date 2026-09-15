@@ -233,8 +233,7 @@ public class AuthServiceImpl implements AuthService {
                 .usado(false)
                 .build();
         recuperacionPasswordRepository.save(recuperacion);
-        emailService.enviarEmailRecuperacion(usuario.getEmail(), codigo);
-        return "Si el correo está registrado, vas a recibir instrucciones.";
+emailService.enviarEmailRecuperacion(usuario.getEmail(), codigo, usuario.getEstablecimiento());        return "Si el correo está registrado, vas a recibir instrucciones.";
     }
 
     private String generarCodigoRecuperacion() {

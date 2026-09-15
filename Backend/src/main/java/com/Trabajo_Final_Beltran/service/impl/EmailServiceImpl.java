@@ -1,16 +1,24 @@
 package com.Trabajo_Final_Beltran.service.impl;
 
 import com.Trabajo_Final_Beltran.entity.Cupon;
+import com.Trabajo_Final_Beltran.entity.Establecimiento;
 import com.Trabajo_Final_Beltran.enums.TipoDescuento;
 import com.Trabajo_Final_Beltran.service.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Service
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
     private final EmailSenderServiceImpl emailSender;
+    private final SpringTemplateEngine templateEngine;
+
+    @Value("${app.backend-url:http://localhost:8080}")
+    private String backendUrl;
 
     @Override
     public void enviarEmail(String destino, String asunto, String cuerpo) {
@@ -18,65 +26,60 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void enviarEmailRecuperacion(String destino, String codigo) {
-        String asunto = "Código de recuperación de contraseña";
-        String cuerpo =
-                "Hola,\n\n"
-                + "Recibimos una solicitud para restablecer la contraseña de tu cuenta en Gestia.\n\n"
-                + "Tu código de verificación es:\n\n"
-                + "        " + codigo + "\n\n"
-                + "Ingresá este código en la pantalla de recuperación de contraseña para continuar.\n\n"
-                + "Este código es válido por 15 minutos. Si no solicitaste este cambio, "
-                + "podés ignorar este correo — tu contraseña seguirá siendo la misma.\n\n"
-                + "Por tu seguridad, nunca compartas este código con nadie, ni siquiera "
-                + "con alguien que diga representar a nuestro equipo.\n\n"
-                + "Saludos,\n"
-                + "El equipo de Gestia";
-        emailSender.enviarEmail(destino, asunto, cuerpo);
+    public void enviarEmailRecuperacion(String destino, String codigo, Establecimiento establecimiento) {
+        Context context = new Context();
+        context.setVariable("codigo", codigo);
+        context.setVariable("email", destino);
+        context.setVariable("nombreEstablecimiento", establecimiento.getNombre());
+        context.setVariable("logoUrl", resolveLogoUrl(establecimiento.getLogoUrl()));
+
+        String html = templateEngine.process("email/recuperacion", context);
+        emailSender.enviarEmail(destino, "Código de recuperación de contraseña", html);
     }
 
     @Override
-    public void enviarEmailCupon(String destino, String nombre, Cupon cupon) {
-        String asunto = "¡Tenés un cupón esperándote!";
-
-        String descuento = cupon.getTipoDescuento() == TipoDescuento.PORCENTAJE
+    public void enviarEmailCupon(String destino, String nombre, Cupon cupon, Establecimiento establecimiento, boolean asignacionManual) {
+        String descuentoTexto = cupon.getTipoDescuento() == TipoDescuento.PORCENTAJE
                 ? cupon.getValor() + "% de descuento"
                 : "$" + cupon.getValor() + " de descuento";
 
-        String cuerpo =
-                "Hola " + nombre + ",\n\n"
-                + "¡Tenemos una sorpresa para vos! Te asignamos un cupón de "
-                + descuento + " para tu próxima compra.\n\n"
-                + "Código: " + cupon.getCodigo() + "\n"
-                + "Válido hasta: " + cupon.getFechaFin() + "\n\n"
-                + "Ingresá el código al finalizar tu pedido para aplicar el descuento.\n\n"
-                + "¡Te esperamos!\n\n"
-                + "El equipo de Gestia";
+        Context context = new Context();
+        context.setVariable("nombre", nombre);
+        context.setVariable("descuentoTexto", descuentoTexto);
+        context.setVariable("codigo", cupon.getCodigo());
+        context.setVariable("fechaFin", cupon.getFechaFin());
+        context.setVariable("esAutomatico", !asignacionManual);
+        context.setVariable("nombreEstablecimiento", establecimiento.getNombre());
+        context.setVariable("logoUrl", resolveLogoUrl(establecimiento.getLogoUrl()));
 
-        emailSender.enviarEmail(destino, asunto, cuerpo);
+        String html = templateEngine.process("email/cupon", context);
+        emailSender.enviarEmail(destino, "¡Tenés un cupón esperándote!", html);
     }
-    
-    
-    
+
     @Override
-    public void enviarEmailPedidoListo(String destino, String numeroPedido , String nombre) {
+    public void enviarEmailPedidoListo(String destino, String numeroPedido, String nombre, Establecimiento establecimiento) {
+        Context context = new Context();
+        context.setVariable("nombre", nombre);
+        context.setVariable("numeroPedido", numeroPedido);
+        context.setVariable("nombreEstablecimiento", establecimiento.getNombre());
+        context.setVariable("logoUrl", resolveLogoUrl(establecimiento.getLogoUrl()));
 
-        String asunto =
-            "Tu pedido está listo";
-
-        String cuerpo =
-            "Hola "+ nombre+"\n\n"
-                + "Tu pedido "
-                + numeroPedido
-                + " ya está listo para retirar.\n\n"
-                + "¡Te esperamos!\n\n"
-                + "Gracias por elegirnos.";
-
-        emailSender.enviarEmail(
-            destino,
-            asunto,
-            cuerpo
-        );
-      }
-
+        String html = templateEngine.process("email/pedido-listo", context);
+        emailSender.enviarEmail(destino, "Tu pedido está listo", html);
     }
+
+    /**
+     * Convierte una ruta relativa (e.g. "/uploads/...") en una URL absoluta
+     * apta para ser embebida en emails HTML.
+     * Las URLs ya absolutas (S3, https://) se devuelven sin modificación.
+     */
+    private String resolveLogoUrl(String logoUrl) {
+        if (logoUrl == null || logoUrl.isBlank()) {
+            return null;
+        }
+        if (logoUrl.startsWith("/")) {
+            return backendUrl.replaceAll("/$", "") + logoUrl;
+        }
+        return logoUrl;
+    }
+}

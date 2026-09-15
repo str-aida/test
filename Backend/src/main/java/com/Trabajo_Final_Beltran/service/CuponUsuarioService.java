@@ -7,8 +7,7 @@ import java.util.List;
 
 public interface CuponUsuarioService {
     
-    
-    void asignarCupon(Usuario usuario, Cupon cupon);
+    void asignarCupon(Usuario usuario, Cupon cupon, boolean asignacionManual);    
     
     List<CuponUsuarioResponse> obtenerCuponesActivos(Long usuarioId);
 }

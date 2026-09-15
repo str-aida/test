@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body style="margin:0; padding:0; background-color:#F4EFEB; font-family:Arial, sans-serif;">
+  <table role="presentation" width="100%" style="background-color:#F4EFEB; padding:40px 0;">
+    <tr><td align="center">
+      <table role="presentation" width="620" style="background-color:#ffffff; border-radius:16px; overflow:hidden; border:1px solid #E9DFD8;">
+        <tr><td th:replace="~{email/layout-base :: header(${nombreEstablecimiento}, ${logoUrl})}"></td></tr>
+
+        <tr><td style="background-color:#FAF6F3; border-bottom:1px solid #EFE8E3; padding:28px 32px; text-align:center;">
+          <h1 style="font-family:Georgia, serif; font-size:24px; color:#300006; margin:0 0 8px 0;">Restablecer Contraseña</h1>
+          <p style="font-size:14px; color:#665558; margin:0;">
+            Recibimos una solicitud para restablecer el acceso a tu cuenta asociada a
+            <strong style="color:#300006;" th:text="${email}">correo@ejemplo.com</strong>.
+          </p>
+        </td></tr>
+
+        <tr><td style="padding:32px;">
+          <table role="presentation" width="100%" style="background-color:#FAF4F5; border:2px dashed #D4A5AE; border-radius:12px;">
+            <tr><td style="padding:24px; text-align:center;">
+              <span style="display:inline-block; padding:4px 12px; background-color:#FAF0F2; color:#300006; border-radius:20px; font-size:11px; font-weight:bold; text-transform:uppercase; border:1px solid #E8D0D5;">
+                Código de Seguridad
+              </span>
+              <p style="font-size:12px; color:#7A5A60; margin:8px 0;">Ingresá este código en la pantalla de recuperación:</p>
+              <div style="font-family:Georgia, serif; font-size:40px; font-weight:bold; color:#300006; letter-spacing:8px; background-color:#ffffff; padding:16px 24px; border-radius:8px; border:1px solid #E8CCD2; margin:8px 0;">
+                <span th:text="${codigo}">849203</span>
+              </div>
+              <p style="font-size:12px; color:#8A505A; margin:8px 0 0 0;">⏱ Válido por los próximos <strong>15 minutos</strong></p>
+            </td></tr>
+          </table>
+
+          <table role="presentation" width="100%" style="background-color:#FFFBF5; border:1px solid #F0E5D3; border-radius:12px; margin-top:20px;">
+            <tr><td style="padding:16px;">
+              <strong style="color:#713F12; font-size:13px;">¿No solicitaste este cambio?</strong>
+              <p style="font-size:12px; color:#785428; line-height:1.5; margin:6px 0 0 0;">
+                Si vos no realizaste esta solicitud, podés ignorar este mensaje. Tu contraseña actual seguirá protegida.
+              </p>
+            </td></tr>
+          </table>
+        </td></tr>
+
+        <tr><td th:replace="~{email/layout-base :: footer(${nombreEstablecimiento})}"></td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

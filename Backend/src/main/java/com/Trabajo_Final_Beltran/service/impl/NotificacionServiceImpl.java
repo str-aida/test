@@ -93,11 +93,14 @@ public class NotificacionServiceImpl implements NotificacionService {
         pedido.getTipoEntrega() == TipoEntrega.RETIRO
     ) {
 
+    if (pedido.getTipoEntrega() == TipoEntrega.RETIRO) {
         emailService.enviarEmailPedidoListo(
             pedido.getUsuario().getEmail(),
             pedido.getNumeroPedido(),
-            pedido.getNombreCliente()
+            pedido.getNombreCliente(),
+            pedido.getEstablecimiento()
         );
+    }
 
 
 

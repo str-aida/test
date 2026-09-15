@@ -8,11 +8,13 @@ public class CuponAsignadoEvent extends ApplicationEvent {
 
     private final Usuario usuario;
     private final Cupon cupon;
+    private final boolean asignacionManual;
 
-    public CuponAsignadoEvent(Object source, Usuario usuario, Cupon cupon) {
+    public CuponAsignadoEvent(Object source, Usuario usuario, Cupon cupon, boolean asignacionManual) {
         super(source);
         this.usuario = usuario;
         this.cupon = cupon;
+        this.asignacionManual = asignacionManual;
     }
 
     public Usuario getUsuario() {
@@ -21,5 +23,9 @@ public class CuponAsignadoEvent extends ApplicationEvent {
 
     public Cupon getCupon() {
         return cupon;
+    }
+
+    public boolean isAsignacionManual() {
+        return asignacionManual;
     }
 }

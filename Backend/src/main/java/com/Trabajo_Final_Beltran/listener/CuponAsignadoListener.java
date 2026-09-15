@@ -13,7 +13,6 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class CuponAsignadoListener {
 
     private final EmailService emailService;
-
     private final NotificacionService notificacionService;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -21,12 +20,14 @@ public class CuponAsignadoListener {
         emailService.enviarEmailCupon(
                 event.getUsuario().getEmail(),
                 event.getUsuario().getNombre(),
-                event.getCupon()
+                event.getCupon(),
+                event.getUsuario().getEstablecimiento(),
+                event.isAsignacionManual() 
         );
 
-      notificacionService.notificarCuponAsignado(
-          event.getUsuario(),
-          event.getCupon()
-      );
+        notificacionService.notificarCuponAsignado(
+                event.getUsuario(),
+                event.getCupon()
+        );
     }
 }

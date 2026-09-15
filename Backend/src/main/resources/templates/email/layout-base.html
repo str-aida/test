@@ -1,0 +1,23 @@
+<div th:fragment="header(nombreEstablecimiento, logoUrl)"
+     style="background-color:#300006; padding:28px 32px; text-align:center;">
+  <table role="presentation" align="center" style="margin:0 auto;">
+    <tr>
+      <td style="vertical-align:middle; padding-right:10px;">
+        <img th:src="${logoUrl}" width="40" height="40"
+             style="width:40px; height:40px; border-radius:50%; display:block; object-fit:cover;" alt="Logo"/>
+      </td>
+      <td style="vertical-align:middle;">
+        <span style="font-family:Georgia, serif; font-size:22px; font-weight:bold; color:#ffffff;"
+              th:text="${nombreEstablecimiento}">Nombre del Local</span>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div th:fragment="footer(nombreEstablecimiento)"
+     style="background-color:#FAF5F2; border-top:1px solid #EFE7E2; padding:20px 32px; text-align:center;">
+  <p style="font-size:11px; color:#A6979A; margin:0;">
+    © 2026 <span th:text="${nombreEstablecimiento}">Nombre del Local</span>. Todos los derechos reservados.<br/>
+    Este es un correo automático del sistema.
+  </p>
+</div>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body style="margin:0; padding:0; background-color:#F4EFEB; font-family:Arial, sans-serif;">
+  <table role="presentation" width="100%" style="background-color:#F4EFEB; padding:40px 0;">
+    <tr><td align="center">
+      <table role="presentation" width="620" style="background-color:#ffffff; border-radius:16px; overflow:hidden; border:1px solid #E9DFD8;">
+        <tr><td th:replace="~{email/layout-base :: header(${nombreEstablecimiento}, ${logoUrl})}"></td></tr>
+
+        <tr><td style="background-color:#FAF6F3; border-bottom:1px solid #EFE8E3; padding:28px 32px; text-align:center;">
+          <h1 style="font-family:Georgia, serif; font-size:24px; color:#300006; margin:0 0 8px 0;">¡Tenés un cupón esperándote!</h1>
+          <p style="font-size:14px; color:#665558; margin:0;">
+            Hola <strong th:text="${nombre}">Cliente</strong>,
+            <span th:if="${esAutomatico}">como agradecimiento por tu fidelidad</span>
+            <span th:unless="${esAutomatico}">te asignamos personalmente</span>
+            un descuento especial.
+          </p>
+        </td></tr>
+
+        <tr><td style="padding:32px;">
+          <table role="presentation" width="100%" style="background-color:#FAF4F5; border:2px dashed #D4A5AE; border-radius:12px;">
+            <tr><td style="padding:24px; text-align:center;">
+              <p style="font-family:Georgia, serif; font-size:32px; font-weight:bold; color:#300006; margin:0 0 12px 0;" th:text="${descuentoTexto}">15% de descuento</p>
+              <div style="background-color:#ffffff; border:1px solid #E8CCD2; border-radius:8px; padding:12px 20px; display:inline-block; font-family:Georgia, serif; font-size:22px; font-weight:bold; letter-spacing:4px; color:#300006;" th:text="${codigo}">VERANO24</div>
+              <p style="font-size:12px; color:#8A505A; margin:12px 0 0 0;">Válido hasta <strong th:text="${fechaFin}">31/12/2026</strong></p>
+            </td></tr>
+          </table>
+          <p style="font-size:13px; color:#665558; text-align:center; margin-top:20px;">Ingresá el código al finalizar tu pedido para aplicar el descuento.</p>
+        </td></tr>
+
+        <tr><td th:replace="~{email/layout-base :: footer(${nombreEstablecimiento})}"></td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

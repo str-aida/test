@@ -31,7 +31,7 @@ public class AsignacionCuponServiceImpl implements AsignacionCuponService {
         for (AsignacionCuponStrategy strategy : strategies) {
             for (Cupon cupon : strategy.obtenerCupones(usuario)) {
                 try {
-                    cuponUsuarioService.asignarCupon(usuario, cupon);
+                    cuponUsuarioService.asignarCupon(usuario, cupon, false); // automático
                 } catch (BusinessException e) {
                     // Si ya lo tiene disponible o el cupón no es asignable, se omite silenciosamente en procesos automáticos
                 }
@@ -47,7 +47,7 @@ public class AsignacionCuponServiceImpl implements AsignacionCuponService {
         Cupon cupon = cuponRepository.findById(request.getCuponId())
                 .orElseThrow(() -> new BusinessException("Cupón no encontrado"));
 
-        cuponUsuarioService.asignarCupon(usuario, cupon);
+        cuponUsuarioService.asignarCupon(usuario, cupon, true); // manual, viene del ADMIN por AsignarCuponRequest
     }
 
     private Usuario resolverUsuario(AsignarCuponRequest request) {

@@ -29,14 +29,13 @@ public class CuponUsuarioServiceImpl implements CuponUsuarioService {
 
     @Override
     @Transactional
-    public void asignarCupon(Usuario usuario, Cupon cupon) {
+    public void asignarCupon(Usuario usuario, Cupon cupon, boolean asignacionManual) {
 
         if (cupon == null || cupon.getId() == null) {
-            return; // cupón inválido/no persistido, se ignora
+            return;
         }
 
         try {
-
             Cupon cuponBloqueado = cuponRepository.findByIdForUpdate(cupon.getId())
                     .orElseThrow(() -> new BusinessException("El cupón no existe"));
 
@@ -45,9 +44,7 @@ public class CuponUsuarioServiceImpl implements CuponUsuarioService {
             boolean tieneSinUsar = cuponUsuarioRepository
                     .existsByUsuarioIdAndCuponIdAndUsadoFalse(usuario.getId(), cuponBloqueado.getId());
             if (tieneSinUsar) {
-                throw new BusinessException(
-                    "El usuario ya tiene este cupón disponible y sin utilizar"
-                );
+                throw new BusinessException("El usuario ya tiene este cupón disponible y sin utilizar");
             }
 
             CuponUsuario cuponUsuario = CuponUsuario.builder()
@@ -66,12 +63,10 @@ public class CuponUsuarioServiceImpl implements CuponUsuarioService {
                 }
             }
 
-            eventPublisher.publishEvent(new CuponAsignadoEvent(this, usuario, cuponBloqueado));
+            eventPublisher.publishEvent(new CuponAsignadoEvent(this, usuario, cuponBloqueado, asignacionManual));
 
         } catch (ObjectOptimisticLockingFailureException e) {
-            throw new BusinessException(
-                "El cupón se agotó mientras se procesaba. Reintentá la operación."
-            );
+            throw new BusinessException("El cupón se agotó mientras se procesaba. Reintentá la operación.");
         }
     }
 
