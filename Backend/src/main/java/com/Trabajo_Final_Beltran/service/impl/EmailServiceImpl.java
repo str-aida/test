@@ -31,14 +31,14 @@ public class EmailServiceImpl implements EmailService {
         context.setVariable("codigo", codigo);
         context.setVariable("email", destino);
         context.setVariable("nombreEstablecimiento", establecimiento.getNombre());
-        context.setVariable("logoUrl", resolveLogoUrl(establecimiento.getLogoUrl()));
 
         String html = templateEngine.process("email/recuperacion", context);
         emailSender.enviarEmail(destino, "Código de recuperación de contraseña", html);
     }
 
     @Override
-    public void enviarEmailCupon(String destino, String nombre, Cupon cupon, Establecimiento establecimiento, boolean asignacionManual) {
+    public void enviarEmailCupon(String destino, String nombre, Cupon cupon, Establecimiento establecimiento,
+            boolean asignacionManual) {
         String descuentoTexto = cupon.getTipoDescuento() == TipoDescuento.PORCENTAJE
                 ? cupon.getValor() + "% de descuento"
                 : "$" + cupon.getValor() + " de descuento";
@@ -50,36 +50,20 @@ public class EmailServiceImpl implements EmailService {
         context.setVariable("fechaFin", cupon.getFechaFin());
         context.setVariable("esAutomatico", !asignacionManual);
         context.setVariable("nombreEstablecimiento", establecimiento.getNombre());
-        context.setVariable("logoUrl", resolveLogoUrl(establecimiento.getLogoUrl()));
 
         String html = templateEngine.process("email/cupon", context);
         emailSender.enviarEmail(destino, "¡Tenés un cupón esperándote!", html);
     }
 
     @Override
-    public void enviarEmailPedidoListo(String destino, String numeroPedido, String nombre, Establecimiento establecimiento) {
+    public void enviarEmailPedidoListo(String destino, String numeroPedido, String nombre,
+            Establecimiento establecimiento) {
         Context context = new Context();
         context.setVariable("nombre", nombre);
         context.setVariable("numeroPedido", numeroPedido);
         context.setVariable("nombreEstablecimiento", establecimiento.getNombre());
-        context.setVariable("logoUrl", resolveLogoUrl(establecimiento.getLogoUrl()));
 
         String html = templateEngine.process("email/pedido-listo", context);
         emailSender.enviarEmail(destino, "Tu pedido está listo", html);
-    }
-
-    /**
-     * Convierte una ruta relativa (e.g. "/uploads/...") en una URL absoluta
-     * apta para ser embebida en emails HTML.
-     * Las URLs ya absolutas (S3, https://) se devuelven sin modificación.
-     */
-    private String resolveLogoUrl(String logoUrl) {
-        if (logoUrl == null || logoUrl.isBlank()) {
-            return null;
-        }
-        if (logoUrl.startsWith("/")) {
-            return backendUrl.replaceAll("/$", "") + logoUrl;
-        }
-        return logoUrl;
     }
 }
