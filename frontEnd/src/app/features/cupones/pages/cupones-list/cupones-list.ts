@@ -1,12 +1,16 @@
 import { ChangeDetectorRef, Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CuponService } from '../../../../core/services/cupon.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { CuponResponse } from '../../../../core/models/cupon-response';
+import { ReglaCuponResponse } from '../../../../core/models/regla-cupon-response';
 import { EstadoCupon } from '../../../../core/models/enums/estado-cupon.enum';
 import { TipoDescuento } from '../../../../core/models/enums/tipo-descuento.enum';
+import { TipoAsignacionCupon } from '../../../../core/models/enums/tipo-asignacion-cupon.enum';
 import { CuponFormComponent } from '../../components/cupon-form/cupon-form';
 import { CuponAsignarModalComponent } from '../../components/cupon-asignar-modal/cupon-asignar-modal';
+import { ReglaCuponFormComponent } from '../../components/regla-cupon-form/regla-cupon-form';
 import {
   LucideTicket,
   LucidePlus,
@@ -20,11 +24,12 @@ import {
   LucideSearch,
   LucideListFilter,
   LucideChevronLeft,
-  LucideChevronRight
+  LucideChevronRight,
+  LucideSlidersHorizontal,
+  LucideSparkles,
+  LucideGift,
+  LucideShoppingBag
 } from '@lucide/angular';
-import { FormsModule } from '@angular/forms';
-
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-cupones-list',
@@ -33,6 +38,7 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     CuponFormComponent,
     CuponAsignarModalComponent,
+    ReglaCuponFormComponent,
     LucideTicket,
     LucidePlus,
     LucideUserCheck,
@@ -45,7 +51,11 @@ import { CommonModule } from '@angular/common';
     LucideSearch,
     LucideListFilter,
     LucideChevronLeft,
-    LucideChevronRight
+    LucideChevronRight,
+    LucideSlidersHorizontal,
+    LucideSparkles,
+    LucideGift,
+    LucideShoppingBag
   ],
   templateUrl: './cupones-list.html',
   styleUrl: './cupones-list.scss',
@@ -56,6 +66,7 @@ export class CuponesListComponent implements OnInit {
   private readonly notificationService = inject(NotificationService);
   private readonly cdr = inject(ChangeDetectorRef);
 
+  // Cupones manuales / emitidos
   cupones: CuponResponse[] = [];
   filteredCupones: CuponResponse[] = [];
   searchTerm = '';
@@ -71,12 +82,22 @@ export class CuponesListComponent implements OnInit {
   selectedCupon: CuponResponse | null = null;
   isDeactivating = false;
 
+  // Reglas de Estrategias Automáticas
+  reglas: ReglaCuponResponse[] = [];
+  isLoadingReglas = false;
+  hasErrorReglas = false;
+
+  showReglaModal = false;
+  selectedRegla: ReglaCuponResponse | null = null;
+
   readonly EstadoCuponEnum = EstadoCupon;
   readonly TipoDescuentoEnum = TipoDescuento;
+  readonly TipoAsignacionEnum = TipoAsignacionCupon;
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.loadCupones();
+      this.loadReglas();
     }
   }
 
@@ -101,6 +122,25 @@ export class CuponesListComponent implements OnInit {
     });
   }
 
+  loadReglas(): void {
+    this.isLoadingReglas = true;
+    this.hasErrorReglas = false;
+    this.cdr.markForCheck();
+
+    this.cuponService.listarReglas().subscribe({
+      next: (data) => {
+        this.reglas = data || [];
+        this.isLoadingReglas = false;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        console.error('Error al cargar reglas de cupones:', err);
+        this.isLoadingReglas = false;
+        this.hasErrorReglas = true;
+        this.cdr.markForCheck();
+      }
+    });
+  }
 
   applyFilter(): void {
     let result = [...this.cupones];
@@ -185,6 +225,25 @@ export class CuponesListComponent implements OnInit {
     });
   }
 
+  // === GESTIÓN DE REGLAS / STRATEGIES ===
+
+  openEditReglaModal(regla: ReglaCuponResponse): void {
+    this.selectedRegla = regla;
+    this.showReglaModal = true;
+    this.cdr.markForCheck();
+  }
+
+  closeReglaModal(): void {
+    this.showReglaModal = false;
+    this.selectedRegla = null;
+    this.cdr.markForCheck();
+  }
+
+  onReglaSubmitted(): void {
+    this.closeReglaModal();
+    this.loadReglas();
+  }
+
   formatValor(cupon: CuponResponse): string {
     if (cupon.tipoDescuento === TipoDescuento.PORCENTAJE) {
       return `${cupon.valor}%`;
@@ -192,15 +251,47 @@ export class CuponesListComponent implements OnInit {
     return `$${cupon.valor}`;
   }
 
-  /**
-   * Determina si un cupón puede ser asignado a un usuario.
-   * Solo UX: la autoridad real es el backend.
-   * Usa cuposDisponibles (calculado por el backend) para no reimplementar la lógica de cupos.
-   */
+  formatReglaValor(regla: ReglaCuponResponse): string {
+    if (regla.tipoDescuento === TipoDescuento.PORCENTAJE) {
+      return `${regla.valor}%`;
+    }
+    return `$${regla.valor}`;
+  }
+
+  getReglaNombre(tipo: TipoAsignacionCupon): string {
+    switch (tipo) {
+      case TipoAsignacionCupon.CUMPLEANOS:
+        return 'Cupón de Cumpleaños';
+      case TipoAsignacionCupon.CANTIDAD_COMPRAS:
+        return 'Fidelidad por Cantidad de Compras';
+      case TipoAsignacionCupon.BIENVENIDA:
+        return 'Cupón de Bienvenida';
+      case TipoAsignacionCupon.REFERIDO:
+        return 'Cupón por Referido';
+      default:
+        return tipo;
+    }
+  }
+
+  getReglaCondicion(regla: ReglaCuponResponse): string {
+    switch (regla.tipoAsignacion) {
+      case TipoAsignacionCupon.CUMPLEANOS:
+        return 'Se otorga automáticamente el día del cumpleaños';
+      case TipoAsignacionCupon.CANTIDAD_COMPRAS:
+        const cada = regla.cantidadComprasRequeridas || 3;
+        return `Se otorga cada ${cada} ${cada === 1 ? 'compra entregada' : 'compras entregadas'}`;
+      case TipoAsignacionCupon.BIENVENIDA:
+        return 'Se otorga en el primer registro o primera compra';
+      case TipoAsignacionCupon.REFERIDO:
+        return 'Se otorga cuando un amigo invitado realiza su compra';
+      default:
+        return regla.descripcion || 'Asignación automática por regla';
+    }
+  }
+
   esCuponAsignable(cupon: CuponResponse): boolean {
     if (cupon.estado !== EstadoCupon.ACTIVO) return false;
 
-    // cuposDisponibles === 0 → agotado; null → sin límite (permitir)
     if (cupon.cuposDisponibles !== null && cupon.cuposDisponibles === 0) return false;
 
     const hoy = new Date();
@@ -220,7 +311,6 @@ export class CuponesListComponent implements OnInit {
   }
 
   getTooltipAsignar(cupon: CuponResponse): string {
-    // cuposDisponibles === 0 → agotado para asignación
     if (cupon.cuposDisponibles !== null && cupon.cuposDisponibles === 0) {
       return 'El cupón no tiene cupos disponibles para asignar';
     }

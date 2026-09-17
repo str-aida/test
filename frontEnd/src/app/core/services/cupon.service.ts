@@ -7,6 +7,8 @@ import { CuponResponse } from '../models/cupon-response';
 import { CreateCuponRequest } from '../models/create-cupon-request';
 import { UpdateCuponRequest } from '../models/update-cupon-request';
 import { AsignarCuponRequest } from '../models/asignar-cupon-request';
+import { ReglaCuponResponse } from '../models/regla-cupon-response';
+import { UpdateReglaCuponRequest } from '../models/update-regla-cupon-request';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +41,20 @@ export class CuponService {
 
   asignarCupon(request: AsignarCuponRequest): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/asignar`, request);
+  }
+
+  // === REGLAS DE ESTRATEGIAS AUTOMÁTICAS (ADMIN) ===
+
+  listarReglas(): Observable<ReglaCuponResponse[]> {
+    return this.http.get<ReglaCuponResponse[]>(`${this.apiUrl}/reglas`);
+  }
+
+  obtenerReglaPorTipo(tipo: string): Observable<ReglaCuponResponse> {
+    return this.http.get<ReglaCuponResponse>(`${this.apiUrl}/reglas/${tipo}`);
+  }
+
+  actualizarRegla(tipo: string, request: UpdateReglaCuponRequest): Observable<ReglaCuponResponse> {
+    return this.http.put<ReglaCuponResponse>(`${this.apiUrl}/reglas/${tipo}`, request);
   }
 
   // === CLIENTE ===
