@@ -66,6 +66,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final LogSistemaService logSistemaService;
 
+    private final com.Trabajo_Final_Beltran.service.AsignacionCuponService asignacionCuponService;
+
     private static final SecureRandom RANDOM = new SecureRandom();
 
 
@@ -198,6 +200,13 @@ public class AuthServiceImpl implements AuthService {
         request.setApellido(TextNormalizerUtil.normalizarTexto(request.getApellido()));
         
         Usuario usuario = crearUsuarioAutoregistro(request, Rol.CLIENTE);
+
+        try {
+            asignacionCuponService.asignarCupones(usuario);
+        } catch (Exception e) {
+            log.error("Error al asignar cupón de bienvenida al registrar cliente {}: {}", usuario.getId(), e.getMessage());
+        }
+
         return new AuthResponse(jwtService.generateToken(usuario));
     }
 
