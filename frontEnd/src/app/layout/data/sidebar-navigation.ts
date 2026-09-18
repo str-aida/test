@@ -9,8 +9,14 @@ export const ADMIN_NAVIGATION: NavigationItem[] = [
       { id: 'copilot', label: 'Gestia Copilot', route: '/admin/analitica/copilot' }
     ]
   },
-  { id: 'pedidos-en-curso', label: 'Pedidos en Curso', route: '/admin/pedidos/en-curso' },
-  { id: 'pedidos', label: 'Pedidos', route: '/admin/pedidos' },
+  { 
+    id: 'pedidos',
+    label: 'Pedidos',
+    route: '/admin/pedidos',
+    children: [
+      { id: 'pedidos-en-curso', label: 'Pedidos en Curso', route: '/admin/pedidos/en-curso' }
+    ]
+  },
   { id: 'soporte', label: 'Soporte', route: '/admin/soporte' },
   { id: 'productos', label: 'Productos', route: '/admin/productos' },
   { id: 'categorias', label: 'Categorías', route: '/admin/categorias' },
@@ -23,8 +29,14 @@ export const ADMIN_NAVIGATION: NavigationItem[] = [
 ];
 
 export const EMPLOYEE_NAVIGATION: NavigationItem[] = [
-  { id: 'pedidos-en-curso', label: 'Pedidos en Curso', route: '/empleado/pedidos/en-curso' },
-  { id: 'pedidos', label: 'Pedidos', route: '/empleado/pedidos' },
+  { 
+    id: 'pedidos',
+    label: 'Pedidos',
+    route: '/empleado/pedidos',
+    children: [
+      { id: 'pedidos-en-curso', label: 'Pedidos en Curso', route: '/empleado/pedidos/en-curso' }
+    ]
+  },
   { id: 'soporte', label: 'Soporte', route: '/empleado/soporte' },
   { id: 'productos', label: 'Productos', route: '/empleado/productos' },
   { id: 'perfil', label: 'Perfil', route: '/empleado/perfil' }

@@ -17,7 +17,7 @@
 .sidebar__header {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: $space-sm;
     padding: $space-md;
 }
 
@@ -123,20 +123,20 @@
     align-items: center;
     padding: .45rem $space-md;
     text-decoration: none;
-    color: rgba(#ffffff, 0.85);
+    color: rgba($color-white, 0.85);
     gap: $space-sm;
     border-radius: .4rem;
     transition: all 0.2s ease;
 
     &:hover {
-        background-color: rgba(#ffffff, 0.1);
-        color: #ffffff;
+        background-color: rgba($color-white, 0.1);
+        color: $color-white;
     }
 }
 
 .sidebar__sublink--active {
-    background-color: rgba(#ffffff, 0.2);
-    color: #ffffff;
+    background-color: rgba($color-white, 0.2);
+    color: $color-white;
     font-weight: $fw-semibold;
 }
 

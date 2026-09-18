@@ -2,25 +2,9 @@ import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ADMIN_NAVIGATION, CLIENT_NAVIGATION, EMPLOYEE_NAVIGATION } from '../data/sidebar-navigation';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { BrandComponent } from '../../shared/components/brand/brand';
-import {
-  LucideLayoutDashboard,
-  LucideShoppingBag,
-  LucidePackage,
-  LucideShapes,
-  LucideUsers,
-  LucideSettings,
-  LucideCircleUser,
-  LucideHouse,
-  LucidePackageCheck,
-  LucideUserRoundCheck,
-  LucideShieldCheck,
-  LucideTicket,
-  LucidePercent,
-  LucideMessageSquare,
-  LucideBot,
-  LucideChevronDown,
-  LucideChevronRight,
-  LucideLogOut
+import { LucideLayoutDashboard, LucideShoppingBag, LucidePackage, LucideShapes, LucideUsers, LucideSettings,
+  LucideCircleUser, LucideHouse, LucidePackageCheck, LucideUserRoundCheck, LucideShieldCheck, LucideTicket,
+  LucidePercent, LucideMessageSquare, LucideBot, LucideChevronDown, LucideChevronRight, LucideLogOut
 } from '@lucide/angular';
 import { AuthService } from '../../core/services/auth.service';
 import { TokenService } from '../../core/services/token.service';
@@ -29,29 +13,10 @@ import { NavigationItem } from '../models/navigation-item.model';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [
-    RouterLink,
-    RouterLinkActive,
-    BrandComponent,
-    LucideLayoutDashboard,
-    LucideShoppingBag,
-    LucidePackage,
-    LucideShapes,
-    LucideUsers,
-    LucideSettings,
-    LucideCircleUser,
-    LucideHouse,
-    LucidePackageCheck,
-    LucideUserRoundCheck,
-    LucideShieldCheck,
-    LucideTicket,
-    LucidePercent,
-    LucideMessageSquare,
-    LucideBot,
-    LucideChevronDown,
-    LucideChevronRight,
-    LucideLogOut
-  ],
+  imports: [RouterLink, RouterLinkActive, BrandComponent, LucideLayoutDashboard, LucideShoppingBag,
+    LucidePackage, LucideShapes, LucideUsers, LucideSettings, LucideCircleUser, LucideHouse,
+    LucidePackageCheck, LucideUserRoundCheck, LucideShieldCheck, LucideTicket, LucidePercent,
+    LucideMessageSquare, LucideBot, LucideChevronDown, LucideChevronRight, LucideLogOut],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
 })
@@ -63,7 +28,7 @@ export class SidebarComponent {
   private tokenService = inject(TokenService);
   private router = inject(Router);
   protected navigationItems: NavigationItem[] = [];
-  protected expandedItems = new Set<string>(['analitica']);
+  protected expandedItems = new Set<string>();
 
   toggleExpand(itemId: string, event: Event): void {
     event.preventDefault();
