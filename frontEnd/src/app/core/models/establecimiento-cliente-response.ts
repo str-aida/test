@@ -4,4 +4,5 @@ export interface EstablecimientoClienteResponse {
   id: number;
   nombre: string;
   tipoServicio: TipoServicio;
+  logoUrl: string | null;
 }
