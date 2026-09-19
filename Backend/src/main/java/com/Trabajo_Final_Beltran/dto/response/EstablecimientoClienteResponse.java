@@ -17,4 +17,5 @@ public class EstablecimientoClienteResponse {
   private Long id;
   private String nombre;
   private TipoServicio tipoServicio;
+  private String logoUrl;
 }

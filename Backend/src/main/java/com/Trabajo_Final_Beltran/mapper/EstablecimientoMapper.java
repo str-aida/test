@@ -44,6 +44,7 @@ public class EstablecimientoMapper {
         .id(establecimiento.getId())
         .nombre(establecimiento.getNombre())
         .tipoServicio(establecimiento.getTipoServicio())
+        .logoUrl(establecimiento.getLogoUrl())
         .build();
   }
 }
