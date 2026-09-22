@@ -7,6 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -20,7 +21,10 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();
 
-        private Bucket crearBucket(String uri) {
+    @Value("${app.rate-limit.enabled:true}")
+    private boolean rateLimitEnabled;
+
+    private Bucket crearBucket(String uri) {
         if (uri.contains("/auth/login")
                 || uri.contains("/auth/register")) {
             return Bucket.builder()
@@ -71,17 +75,18 @@ public class RateLimitFilter extends OncePerRequestFilter {
             FilterChain chain
     ) throws ServletException, IOException {
 
+        if (!rateLimitEnabled) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String uri = request.getRequestURI();
-
         String identificador = obtenerIdentificador(request);
-
         String key = identificador + ":" + uri;
-
         Bucket bucket = buckets.computeIfAbsent(
                 key,
                 k -> crearBucket(uri)
         );
-
         if (bucket.tryConsume(1)) {
             chain.doFilter(request, response);
         } else {
@@ -103,8 +108,6 @@ public class RateLimitFilter extends OncePerRequestFilter {
         if (request.getUserPrincipal() != null) {
             return request.getUserPrincipal().getName();
         }
-
-
         return request.getRemoteAddr();
     }
 }
