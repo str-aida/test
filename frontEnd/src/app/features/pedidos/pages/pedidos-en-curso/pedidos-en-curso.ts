@@ -1,16 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
-import {
-  LucideAlertTriangle,
-  LucideInbox,
-  LucideTruck,
-  LucideStore,
-  LucideEye,
-  LucideChevronLeft,
-  LucideChevronRight,
-  LucideRefreshCw,
-  LucideActivity
+import { LucideTriangleAlert, LucideInbox, LucideTruck, LucideStore, LucideEye, LucideChevronLeft,
+  LucideChevronRight, LucideRefreshCw, LucideActivity
 } from '@lucide/angular';
 import { PedidoService } from '../../../../core/services/pedido.service';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -25,20 +17,8 @@ import { UserRole } from '../../../../core/models/enums/user-role.enum';
 @Component({
   selector: 'app-pedidos-en-curso',
   standalone: true,
-  imports: [
-    CommonModule,
-    DecimalPipe,
-    DatePipe,
-    LucideAlertTriangle,
-    LucideInbox,
-    LucideTruck,
-    LucideStore,
-    LucideEye,
-    LucideChevronLeft,
-    LucideChevronRight,
-    LucideRefreshCw,
-    LucideActivity
-  ],
+  imports: [CommonModule, DecimalPipe, DatePipe, LucideTriangleAlert, LucideInbox, LucideTruck,
+    LucideStore, LucideEye, LucideChevronLeft, LucideChevronRight, LucideRefreshCw, LucideActivity],
   templateUrl: './pedidos-en-curso.html',
   styleUrl: './pedidos-en-curso.scss'
 })
@@ -66,7 +46,6 @@ export class PedidosEnCursoComponent implements OnInit {
   }
 
   // ─── Carga desde backend ─────────────────────────────────────
-
   cargarPedidosEnCurso(): void {
     this.isLoading.set(true);
     this.hasError.set(false);
@@ -86,7 +65,6 @@ export class PedidosEnCursoComponent implements OnInit {
   }
 
   // ─── Helpers de paginación ───────────────────────────────────
-
   get pedidos(): PedidoResponse[] {
     return this.pageData()?.content ?? [];
   }
@@ -142,7 +120,6 @@ export class PedidosEnCursoComponent implements OnInit {
   }
 
   // ─── Helpers visuales ────────────────────────────────────────
-
   getEstadoClass(estado: EstadoPedido): string {
     switch (estado) {
       case EstadoPedido.PENDIENTE:      return 'estado--pendiente';

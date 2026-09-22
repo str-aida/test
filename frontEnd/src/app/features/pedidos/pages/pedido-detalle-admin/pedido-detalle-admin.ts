@@ -2,23 +2,9 @@ import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
-import {
-  LucideArrowLeft,
-  LucideTruck,
-  LucideStore,
-  LucideUser,
-  LucidePhone,
-  LucideCreditCard,
-  LucideCheckCircle2,
-  LucideXCircle,
-  LucideAlertTriangle,
-  LucideCheck,
-  LucideX,
-  LucideChefHat,
-  LucidePackageCheck,
-  LucideLoader,
-  LucideClock,
-  LucideRefreshCw
+import { LucideArrowLeft, LucideTruck, LucideStore, LucideUser, LucidePhone, LucideCreditCard,
+  LucideCircleCheck, LucideCircleX, LucideTriangleAlert, LucideCheck, LucideX, LucideChefHat,
+  LucidePackageCheck, LucideLoader, LucideClock, LucideRefreshCw
 } from '@lucide/angular';
 import { PedidoService } from '../../../../core/services/pedido.service';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -38,28 +24,9 @@ interface StepDef {
 @Component({
   selector: 'app-pedido-detalle-admin',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    DecimalPipe,
-    DatePipe,
-    LucideArrowLeft,
-    LucideTruck,
-    LucideStore,
-    LucideUser,
-    LucidePhone,
-    LucideCreditCard,
-    LucideCheckCircle2,
-    LucideXCircle,
-    LucideAlertTriangle,
-    LucideCheck,
-    LucideX,
-    LucideChefHat,
-    LucidePackageCheck,
-    LucideLoader,
-    LucideClock,
-    LucideRefreshCw
-  ],
+  imports: [CommonModule, RouterLink, DecimalPipe, DatePipe, LucideArrowLeft, LucideTruck, LucideStore,
+    LucideUser, LucidePhone, LucideCreditCard, LucideCircleCheck, LucideCircleX, LucideTriangleAlert,
+    LucideCheck, LucideX, LucideChefHat, LucidePackageCheck, LucideLoader, LucideClock, LucideRefreshCw],
   templateUrl: './pedido-detalle-admin.html',
   styleUrl: './pedido-detalle-admin.scss'
 })
@@ -137,12 +104,9 @@ export class PedidoDetalleAdminComponent implements OnInit, OnDestroy {
   }
 
   // ─── Acciones de transición de estado ───────────────────────
-
-  /**
-   * Ejecuta la acción de transición correspondiente.
+  /* Ejecuta la acción de transición correspondiente.
    * El backend valida si la transición es permitida.
-   * Si falla, se muestra el mensaje del backend.
-   */
+   * Si falla, se muestra el mensaje del backend. */
   aceptarPedido(): void {
     this.ejecutarAccion('aceptar', () =>
       this.pedidoService.aceptarPedido(this.pedido()!.id),
@@ -202,7 +166,6 @@ export class PedidoDetalleAdminComponent implements OnInit, OnDestroy {
   }
 
   // ─── Helpers visuales ───────────────────────────────────────
-
   isStepCompleted(stepEstado: EstadoPedido): boolean {
     const p = this.pedido();
     if (!p || p.estado === EstadoPedido.RECHAZADO) return false;

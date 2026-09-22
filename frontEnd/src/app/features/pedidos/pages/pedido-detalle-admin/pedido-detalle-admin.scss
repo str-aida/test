@@ -1,22 +1,9 @@
 @use 'abstracts/index' as *;
 @use 'sass:color';
 
-$stitch-dark-header: #3e0b16;
-$stitch-dark-subheader: #2d0810;
-$stitch-primary: $color-primary;
-$stitch-border: #eaeaeb;
-$stitch-text-main: #111827;
-$stitch-text-muted: #6b7280;
-
 .admin-detalle-page {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: $space-md $space-md 4rem;
-
-  @media (min-width: 768px) {
-    padding: $space-lg $space-lg 5rem;
-  }
+  padding: $space-md;
 }
 
 /* HEADER CON TÍTULO Y BOTÓN DE RETORNO */
@@ -24,12 +11,12 @@ $stitch-text-muted: #6b7280;
   display: flex;
   align-items: center;
   gap: $space-sm;
-  margin-bottom: $space-lg;
+  margin-bottom: $space-md;
 
   &__title {
     font-family: $font-heading;
-    font-size: 2.1rem;
-    font-weight: 700;
+    font-size: $fs-h3;
+    font-weight: $fw-bold;
     color: $color-primary;
     margin: 0;
   }
@@ -50,10 +37,9 @@ $stitch-text-muted: #6b7280;
     background-color: #f3f4f6;
     color: $color-primary;
   }
-
   .admin-detalle-back-icon {
-    width: 22px;
-    height: 22px;
+    width: 26px;
+    height: 26px;
   }
 }
 
@@ -77,27 +63,25 @@ $stitch-text-muted: #6b7280;
 /* ESTILOS DE CARDS STITCH */
 .stitch-card {
   background: $color-white;
-  border: 1px solid $stitch-border;
+  border: 1px solid $color-border;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 
   &__header {
-    background-color: $stitch-dark-header;
+    background-color: $color-primary;
     color: $color-white;
     padding: 12px 20px;
     font-family: $font-body;
-    font-size: 0.82rem;
-    font-weight: 700;
+    font-size: $fs-caption;
+    font-weight: $fw-bold;
     letter-spacing: 0.06em;
-
     &--split {
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
   }
-
   &__body {
     padding: 20px;
   }
@@ -110,9 +94,9 @@ $stitch-text-muted: #6b7280;
   align-items: flex-start;
   gap: $space-md;
   padding-bottom: 20px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid $color-divider;
 
-  @media (max-width: 580px) {
+  @media (max-width: $bp-laptop) {
     flex-direction: column;
     gap: $space-sm;
   }
@@ -120,34 +104,34 @@ $stitch-text-muted: #6b7280;
 
 .caption {
   font-family: $font-body;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: $stitch-text-muted;
+  font-size: $fs-small;
+  font-weight: $fw-bold;
+  color: $color-text-light;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   display: block;
 }
 
 .ref-title {
-  font-family: $font-heading;
-  font-size: 1.45rem;
-  font-weight: 700;
-  color: #111827;
+  font-family: $font-body;
+  font-size: 1.35rem;
+  font-weight: $fw-bold;
+  color: $color-text;
   margin: 4px 0 2px;
 }
 
 .ref-sub {
   font-family: $font-body;
-  font-size: 0.85rem;
-  color: $stitch-text-muted;
+  font-size: $fs-caption;
+  color: $color-text-light;
   font-style: italic;
 }
 
 .amount-title {
-  font-family: $font-heading;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #111827;
+  font-family: $font-body;
+  font-size: 1.55rem;
+  font-weight: $fw-bold;
+  color: $color-text;
   margin: 4px 0 0;
 }
 
@@ -156,9 +140,9 @@ $stitch-text-muted: #6b7280;
   align-items: flex-end;
   justify-content: space-between;
   margin-top: 20px;
-  gap: $space-md;
+  gap: $space-sm;
 
-  @media (max-width: 580px) {
+  @media (max-width: $bp-mobile) {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -175,8 +159,8 @@ $stitch-text-muted: #6b7280;
   padding: 6px 14px;
   border-radius: 9999px;
   font-family: $font-body;
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: $fs-small;
+  font-weight: $fw-semibold;
   background-color: #fef3c7;
   color: #92400e;
 
@@ -186,32 +170,26 @@ $stitch-text-muted: #6b7280;
     border-radius: 50%;
     background-color: currentColor;
   }
-
   &--pendiente {
     background-color: #fef3c7;
     color: #92400e;
   }
-
   &--aceptado {
     background-color: #e0f2fe;
     color: #0369a1;
   }
-
   &--en_preparacion {
     background-color: #f3e8ff;
     color: #6b21a8;
   }
-
   &--listo {
     background-color: #ccfbf1;
     color: #0f766e;
   }
-
   &--entregado {
     background-color: #dcfce7;
     color: #166534;
   }
-
   &--rechazado {
     background-color: #fee2e2;
     color: #991b1b;
@@ -231,14 +209,14 @@ $stitch-text-muted: #6b7280;
   justify-content: center;
   gap: 6px;
   height: 38px;
-  padding: 0 16px;
+  padding: 0 12px;
   border: 1px solid #d1d5db;
   border-radius: 6px;
   background-color: $color-white;
   color: #374151;
   font-family: $font-body;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: $fw-semibold;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -246,7 +224,6 @@ $stitch-text-muted: #6b7280;
     width: 16px;
     height: 16px;
   }
-
   &:hover {
     background-color: #f9fafb;
     border-color: #9ca3af;
@@ -259,14 +236,14 @@ $stitch-text-muted: #6b7280;
   justify-content: center;
   gap: 6px;
   height: 38px;
-  padding: 0 18px;
+  padding: 0 12px;
   border: none;
   border-radius: 6px;
-  background-color: $stitch-dark-header;
+  background-color: $color-primary;
   color: $color-white;
   font-family: $font-body;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: $fw-semibold;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -274,9 +251,8 @@ $stitch-text-muted: #6b7280;
     width: 16px;
     height: 16px;
   }
-
   &:hover {
-    background-color: color.adjust($stitch-dark-header, $lightness: 5%);
+    background-color: color.adjust($color-primary, $lightness: 5%);
   }
 }
 
@@ -295,24 +271,23 @@ $stitch-text-muted: #6b7280;
   .cliente-icon {
     width: 18px;
     height: 18px;
-    color: $stitch-text-muted;
+    color: $color-text-light;
     margin-top: 2px;
     flex-shrink: 0;
   }
-
   .info-val {
     display: block;
     font-family: $font-body;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #111827;
+    font-size: $fs-caption;
+    font-weight: $fw-semibold;
+    color: $color-text;
     margin-top: 2px;
   }
 }
 
 .cliente-divider {
   height: 1px;
-  background-color: #f3f4f6;
+  background-color: $color-divider;
   margin: 16px 0;
 }
 
@@ -336,44 +311,38 @@ $stitch-text-muted: #6b7280;
     color: #1e8e3e;
     flex-shrink: 0;
   }
-
   &__title {
     display: block;
     font-family: $font-body;
-    font-size: 0.85rem;
-    font-weight: 700;
+    font-size: $fs-caption;
+    font-weight: $fw-bold;
     color: #1e8e3e;
   }
-
   &__sub {
     display: block;
     font-family: $font-body;
-    font-size: 0.75rem;
+    font-size: $fs-small;
     color: #137333;
     margin-top: 2px;
   }
-
   &--aprobado {
     background-color: #e6f4ea;
     .pago-badge__icon { color: #1e8e3e; }
     .pago-badge__title { color: #1e8e3e; }
     .pago-badge__sub { color: #137333; }
   }
-
   &--pendiente {
     background-color: #fef3c7;
     .pago-badge__icon { color: #d97706; }
     .pago-badge__title { color: #d97706; }
     .pago-badge__sub { color: #b45309; }
   }
-
   &--reembolsado {
     background-color: #e0f2fe;
     .pago-badge__icon { color: #0284c7; }
     .pago-badge__title { color: #0284c7; }
     .pago-badge__sub { color: #0369a1; }
   }
-
   &--anulado {
     background-color: #fce8e6;
     .pago-badge__icon { color: #d93025; }
@@ -401,9 +370,9 @@ $stitch-text-muted: #6b7280;
   width: 44px;
   height: 44px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid $color-border;
   background-color: $color-white;
-  color: $stitch-primary;
+  color: $color-primary;
   flex-shrink: 0;
 
   svg {
@@ -418,13 +387,9 @@ $stitch-text-muted: #6b7280;
 
   .entrega-address {
     font-family: $font-body;
-    font-size: 0.9rem;
-    color: #374151;
+    font-size: $fs-caption;
+    color: $color-text;
     margin: 4px 0 0;
-
-    strong {
-      color: #111827;
-    }
   }
 }
 
@@ -434,8 +399,8 @@ $stitch-text-muted: #6b7280;
   color: $color-white;
   padding: 3px 10px;
   border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: $fs-small;
+  font-weight: $fw-medium;
 }
 
 .items-table-container {
@@ -447,26 +412,24 @@ $stitch-text-muted: #6b7280;
   width: 100%;
   border-collapse: collapse;
   font-family: $font-body;
-  font-size: 0.9rem;
+  font-size: $fs-caption;
 
   th {
     text-align: left;
     padding: 12px 20px;
-    background-color: $stitch-dark-subheader;
+    background-color: $color-primary;
     color: $color-white;
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-size: $fs-small;
+    font-weight: $fw-bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
-
   td {
-    padding: 16px 20px;
-    border-bottom: 1px solid #f3f4f6;
-    color: #111827;
+    padding: 12px 20px;
+    border-bottom: 1px solid $color-border;
+    color: $color-text; //#111827
     vertical-align: middle;
   }
-
   tr:last-child td {
     border-bottom: none;
   }
@@ -474,25 +437,25 @@ $stitch-text-muted: #6b7280;
 
 .col-product {
   .product-title {
-    font-weight: 600;
-    color: #111827;
+    font-weight: $fw-bold;
+    color: $color-text;
   }
 }
 
 .col-unit {
-  font-weight: 700;
+  font-weight: $fw-medium;
   color: #dc2626;
 }
 
 .col-qty,
 .col-subtotal {
-  font-weight: 500;
+  font-weight: $fw-bold;
 }
 
 /* FOOTER DE TOTALES DE ÍTEMS */
 .items-totals-footer {
-  border-top: 2px solid #e5e7eb;
-  padding: 16px 20px 4px;
+  border-top: 2px solid $color-border;
+  padding: 12px 20px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -501,48 +464,45 @@ $stitch-text-muted: #6b7280;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.88rem;
-    color: #374151;
+    font-size: $fs-caption;
+    color: $color-text;
 
     &--descuento {
       color: #16a34a;
     }
-
     &--total {
       margin-top: 6px;
       padding-top: 12px;
-      border-top: 1px solid #e5e7eb;
-      font-size: 1rem;
-      font-weight: 700;
-      color: #111827;
+      border-top: 1px solid $color-divider;
+      font-size: $fs-caption;
+      font-weight: $fw-bold;
+      color: $color-text;
     }
   }
-
   &__label {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-weight: 500;
+    font-weight: $fw-medium;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    font-size: 0.78rem;
+    font-size: $fs-small;
 
     .items-totals-footer__row--total & {
-      font-size: 0.85rem;
+      font-size: $fs-caption;
     }
   }
 
   &__value {
-    font-weight: 600;
+    font-weight: $fw-semibold;
 
     &--descuento {
       color: #16a34a;
     }
-
     &--total {
       font-size: 1.15rem;
-      font-weight: 800;
-      color: #111827;
+      font-weight: $fw-bold;
+      color: $color-text;
     }
   }
 }
@@ -556,13 +516,13 @@ $stitch-text-muted: #6b7280;
   padding: 4rem 1.5rem;
   text-align: center;
   gap: $space-sm;
-  color: $stitch-text-muted;
+  color: $color-text-light;
 
   &__spinner {
     width: 36px;
     height: 36px;
-    border: 3px solid rgba($stitch-primary, 0.2);
-    border-top-color: $stitch-primary;
+    border: 3px solid rgba($color-primary, 0.2);
+    border-top-color: $color-primary;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
@@ -572,7 +532,7 @@ $stitch-text-muted: #6b7280;
   text-align: center;
   padding: 3rem $space-md;
   background: $color-white;
-  border: 1px solid $stitch-border;
+  border: 1px solid $color-border;
   border-radius: 12px;
   max-width: 450px;
   margin: $space-lg auto;
@@ -583,16 +543,14 @@ $stitch-text-muted: #6b7280;
     color: $color-danger;
     margin-bottom: $space-md;
   }
-
   h2 {
     font-family: $font-heading;
-    color: #111827;
+    color: $color-text;
     margin: 0 0 $space-xs;
   }
-
   p {
-    color: $stitch-text-muted;
-    font-size: 0.9rem;
+    color: $color-text-light;
+    font-size: $fs-caption;
     margin-bottom: $space-md;
   }
 }
@@ -602,4 +560,3 @@ $stitch-text-muted: #6b7280;
     transform: rotate(360deg);
   }
 }
-

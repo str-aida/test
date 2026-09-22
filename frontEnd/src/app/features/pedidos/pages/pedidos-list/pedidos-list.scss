@@ -1,14 +1,9 @@
 @use 'abstracts/index' as *;
 
-// ─── PÁGINA ─────────────────────────────────────────────────
-
 .pedidos-list {
   width: 100%;
   padding: $space-md;
-  padding-bottom: 4rem;
 }
-
-// ─── HEADER ─────────────────────────────────────────────────
 
 .pedidos-list__header {
   margin-bottom: $space-md;
@@ -46,27 +41,23 @@
 }
 
 .pedidos-list__subtitle {
-  margin: 2px 0 0;
   font-family: $font-body;
   font-size: $fs-caption;
   color: $color-text-light;
 }
 
 // ─── CARDS DE RESUMEN ────────────────────────────────────────
-// Inspirado en el diseño de Stitch: fila de tarjetas con conteo por estado
-
 .estado-cards {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: $space-md;
 }
 
 .estado-card {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 9px 16px;
+  padding: 8px 14px;
   background: $color-background;
   border: 1.5px solid $color-border;
   border-radius: 20px;
@@ -78,17 +69,14 @@
     border-color: $color-primary-light;
     background: rgba($color-primary, 0.03);
   }
-
   &--active {
     border-color: $color-primary;
     background: rgba($color-primary, 0.08);
-
     .estado-card__label {
       color: $color-primary;
       font-weight: $fw-bold;
     }
   }
-
   &__label {
     font-size: 0.72rem;
     font-weight: $fw-semibold;
@@ -100,18 +88,16 @@
 }
 
 // ─── TOOLBAR ─────────────────────────────────────────────────
-
 .pedidos-toolbar {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: $space-sm;
   width: 100%;
   margin: 2rem auto 2.5rem;
 }
 
 // ─── BÚSQUEDA RÁPIDA ─────────────────────────────────────────
-
 .pedidos-search {
   position: relative;
   display: flex;
@@ -129,7 +115,6 @@
     color: $color-text-light;
     pointer-events: none;
   }
-
   &__input {
     width: 100%;
     height: 42px;
@@ -142,19 +127,16 @@
     color: $color-text;
     outline: none;
     transition: border-color .2s ease, box-shadow .2s ease;
-
     &::placeholder {
       font-family: $font-body;
       color: #888;
     }
-
     &:focus {
       border-color: $color-primary;
       box-shadow: 0 0 0 .15rem rgba($color-primary, .15);
       outline: none;
     }
   }
-
   &__clear {
     position: absolute;
     right: 10px;
@@ -169,12 +151,10 @@
     cursor: pointer;
     border-radius: 50%;
     transition: background .15s ease, color .15s ease;
-
     svg {
       width: 14px;
       height: 14px;
     }
-
     &:hover {
       background: $color-surface;
       color: $color-text;
@@ -183,7 +163,6 @@
 }
 
 // ─── BOTÓN BUSCAR ─────────────────────────────────────────────
-
 .btn-buscar {
   width: 100px;
   height: 42px;
@@ -206,7 +185,6 @@
     background: $color-primary-dark;
     color: $color-white;
   }
-
   &__icon {
     width: 15px;
     height: 15px;
@@ -214,8 +192,6 @@
 }
 
 // ─── BOTÓN FILTROS AVANZADOS ─────────────────────────────────
-// Stitch: botón oscuro con ícono de filtro
-
 .btn-filtros {
   display: inline-flex;
   align-items: center;
@@ -238,38 +214,34 @@
     border-color: $color-primary-light;
     color: $color-primary;
   }
-
   &--active {
     border-color: $color-primary;
     color: $color-primary;
     background: rgba($color-primary, 0.04);
   }
-
   &__icon {
     width: 16px;
     height: 16px;
   }
-
   &__dot {
     position: absolute;
     top: 8px;
     right: 10px;
     width: 7px;
     height: 7px;
-    background: #f59e0b;
+    background: $color-primary-light;
     border-radius: 50%;
     border: 1.5px solid $color-border;
   }
 }
 
 // ─── PANEL FILTROS AVANZADOS ──────────────────────────────────
-
 .filtros-panel {
-  background: $color-surface;
+  background: $color-background;
   border: 1px solid $color-border;
   border-radius: 10px;
   padding: $space-sm $space-md;
-  margin-bottom: $space-sm;
+  margin-bottom: $space-md;
   animation: slideDown 0.15s ease;
 
   &__grid {
@@ -278,7 +250,6 @@
     flex-wrap: wrap;
     margin-bottom: $space-sm;
   }
-
   &__field {
     display: flex;
     flex-direction: column;
@@ -286,36 +257,99 @@
     flex: 1;
     min-width: 160px;
   }
-
   &__label {
-    font-family: $font-body;
-    font-size: $fs-caption;
+    font-size: $fs-small;
     font-weight: $fw-semibold;
-    color: $color-text;
+    color: $color-text-light;
+    text-transform: uppercase;
   }
-
+  &__select-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
   &__input,
   &__select {
-    height: 38px;
-    padding: 0 $space-xs;
+    width: 100%;
+    height: 42px;
     border: 1px solid $color-border;
     border-radius: 8px;
+    background: $color-white;
     font-family: $font-body;
-    font-size: $fs-body;
-    color: $color-text;
-    background: $color-background;
-    transition: border-color 0.2s;
-
+    font-size: $fs-caption;
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
     &:focus {
+      border-color: $color-primary;
+      box-shadow: 0 0 0 .15rem rgba($color-primary, .15);
       outline: none;
-      border-color: $color-primary-light;
     }
   }
-
+  &__input {
+    padding: 0 16px;
+  }
+  &__select {
+    padding: 0 30px 0 36px;
+    cursor: pointer;
+    // Oculta la flecha nativa
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+  &__select-wrapper::after {
+    content: "";
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    border-right: 1.5px solid $color-text-light;
+    border-bottom: 1.5px solid $color-text-light;
+    transform: translateY(-65%) rotate(45deg);
+    pointer-events: none;
+    transition: border-color .2s ease;
+  }
   &__actions {
     display: flex;
     gap: $space-xs;
   }
+  &__button-apl,
+  &__button-lim {
+    padding: 0 1rem;
+    height: 42px;
+    border: none;
+    border-radius: 8px;
+    font-family: $font-body;
+    font-size: $fs-body;
+    font-weight: $fw-semibold;
+    transition: .2s ease;
+    cursor: pointer;
+  }
+  &__button-apl {
+    background: $color-primary;
+    color: $color-white;
+    &:hover {
+      background: $color-primary-dark;
+    }
+  }
+  &__button-lim {
+    background: transparent;
+    color: $color-text-light;
+    &:hover {
+      background: $color-surface;
+      color: $color-text;
+    }
+  }
+}
+
+.filter-icon {
+  position: absolute;
+  left: 12px;
+  width: 16px;
+  height: 16px;
+  color: $color-text-light;
+  pointer-events: none;
 }
 
 @keyframes slideDown {
@@ -324,14 +358,13 @@
 }
 
 // ─── ESTADOS ─────────────────────────────────────────────────
-
 .pedidos-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: $space-sm;
-  padding: 4rem $space-md;
+  padding: $space-lg $space-md;
   text-align: center;
   color: $color-text-light;
   font-family: $font-body;
@@ -345,77 +378,61 @@
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
-
   &__icon {
     width: 36px;
     height: 36px;
     color: $color-text-light;
   }
-
   &__icon--danger { color: $color-danger; }
-
   &--error { color: $color-danger; }
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
 // ─── TABLA ───────────────────────────────────────────────────
-
 .table-wrapper {
-  border-radius: 10px;
-  border: 1px solid $color-border;
+  width: 100%;
   overflow-x: auto;
-  margin-bottom: $space-sm;
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: 12px;
 }
 
 .tabla-pedidos {
   width: 100%;
+  margin: 0;
+  table-layout: auto;
   border-collapse: collapse;
   font-family: $font-body;
-  font-size: $fs-body;
 
-  // Header oscuro — exactamente como Stitch
   thead {
-    tr {
-      background: $color-primary; // #300006 maroon muy oscuro
-    }
-
+    background: $color-primary;
     th {
-      padding: 12px 16px;
+      padding: .75rem .95rem;
       text-align: left;
-      font-size: 0.75rem;
-      font-weight: $fw-bold;
-      color: rgba(255, 255, 255, 0.9);
-      letter-spacing: 0.06em;
+      border: none;
+      font-size: $fs-caption;
+      font-weight: $fw-semibold;
+      color: $color-white;
       white-space: nowrap;
-
-      &:first-child { border-radius: 10px 0 0 0; }
-      &:last-child  { border-radius: 0 10px 0 0; }
     }
   }
-
   tbody {
     tr {
       border-bottom: 1px solid $color-border;
-      transition: background 0.12s;
-
-      &:last-child { border-bottom: none; }
-      &:hover { background: rgba($color-primary, 0.025); }
+      transition: background-color .2s ease;
+      &:hover { background: rgba($color-primary, .04); }
     }
-
     td {
-      padding: 14px 16px;
+      padding: .75rem .95rem;
       vertical-align: middle;
       color: $color-text;
+      font-size: $fs-caption;
     }
   }
 }
 
-.col-right  { text-align: right; }
-.col-center { text-align: center; }
-
 // ─── CELDAS ESPECÍFICAS ──────────────────────────────────────
-
 .tabla-pedidos__id {
   display: flex;
   flex-direction: column;
@@ -438,9 +455,8 @@
 }
 
 .tabla-pedidos__total {
-  font-weight: $fw-bold;
-  text-align: right;
-  white-space: nowrap;
+  font-weight: $fw-medium;
+  text-align: center;
 
   .total-discount-cell {
     display: flex;
@@ -448,44 +464,38 @@
     align-items: flex-end;
     gap: 2px;
   }
-
   .total-original {
-    font-size: 0.75rem;
+    font-size: $fs-small;
     color: #9ca3af;
     text-decoration: line-through;
-    font-weight: 500;
+    font-weight: $fw-medium;
   }
-
   .total-discounted {
     color: #dc2626;
-    font-weight: 700;
+    font-weight: $fw-bold;
   }
 }
 
 // ─── BADGE ENTREGA ────────────────────────────────────────────
-// Stitch: pill rosado con ícono
-
 .entrega-badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 10px;
+  padding: .25rem .6rem;
   border-radius: 20px;
-  font-size: 0.72rem;
-  font-weight: $fw-bold;
+  font-size: $fs-small;
+  font-weight: $fw-semibold;
   letter-spacing: 0.03em;
   white-space: nowrap;
 
   &__icon {
-    width: 13px;
-    height: 13px;
+    width: 16px;
+    height: 16px;
   }
-
   &--delivery {
     background: #fce8f0;
     color: #9b2c4e;
   }
-
   &--retiro {
     background: #f3e8f5;
     color: #6b3580;
@@ -493,29 +503,23 @@
 }
 
 // ─── BADGE PAGO ───────────────────────────────────────────────
-// PENDIENTE en amarillo (#fef3c7 / #92400e)
-// APROBADO en verde (#dcfce7 / #166534)
-// RECHAZADO en rojo (#fee2e2 / #991b1b)
-
 .pago-badge {
   display: inline-block;
-  padding: 4px 10px;
+  padding: .25rem .6rem;
   border-radius: 20px;
-  font-size: 0.7rem;
-  font-weight: $fw-bold;
-  letter-spacing: 0.04em;
+  font-size: $fs-small;
+  font-weight: $fw-semibold;
+  letter-spacing: 0.03em;
   white-space: nowrap;
 
   &.pago--aprobado {
     background: #dcfce7;
     color: #166534;
   }
-
   &.pago--pendiente {
     background: #fef3c7;
     color: #92400e;
   }
-
   &.pago--rechazado,
   &.pago--anulado,
   &.pago--reembolsado {
@@ -524,16 +528,14 @@
   }
 }
 
-// ─── BADGE ESTADO ─────────────────────────────────────────────
-// Stitch: PENDIENTE con fondo oscuro, otros con fondo/borde más suave
-
+// ─── BADGE ESTADO ───────────────────────────────────────────────
 .estado-badge {
   display: inline-block;
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-size: 0.72rem;
-  font-weight: $fw-bold;
-  letter-spacing: 0.04em;
+  padding: .25rem .6rem;
+  border-radius: 20px;
+  font-size: $fs-small;
+  font-weight: $fw-semibold;
+  letter-spacing: 0.03em;
   white-space: nowrap;
 
   &.estado--pendiente {
@@ -541,65 +543,55 @@
     color: #92400e;
     border: 1.5px solid #fcd34d;
   }
-
   &.estado--aceptado {
     background: #e0f2fe;
     color: #0369a1;
     border: 1.5px solid #7dd3fc;
   }
-
   &.estado--preparacion {
     background: #f3e8ff;
     color: #6b21a8;
     border: 1.5px solid #c084fc;
   }
-
   &.estado--listo {
     background: #ccfbf1;
     color: #0f766e;
     border: 1.5px solid #2dd4bf;
   }
-
   &.estado--entregado {
     background: #dcfce7;
     color: #166534;
-    border: 1.5px solid #86efac;
+    border: 1.5px solid #41d47a;
   }
-
   &.estado--rechazado {
     background: #fee2e2;
     color: #991b1b;
-    border: 1.5px solid #fca5a5;
+    border: 1.5px solid #e44141;
   }
 }
 
 // ─── BOTÓN DETALLE ─────────────────────────────────────────────
-// Ícono de ojo + texto DETALLE
-
 .accion-btn {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 12px;
+  gap: .35rem;
+  padding: .25rem .6rem;
   border: 1.5px solid $color-border;
   background: $color-background;
   color: $color-text;
   font-family: $font-body;
-  font-size: 0.72rem;
-  font-weight: $fw-bold;
+  font-size: $fs-small;
+  font-weight: $fw-semibold;
   letter-spacing: 0.03em;
-  border-radius: 6px;
+  border-radius: 7px;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s ease;
 
   &__icon {
-    width: 15px;
-    height: 15px;
-    color: $color-text-light;
-    transition: color 0.15s ease;
+    width: 16px;
+    height: 16px;
   }
-
   &:hover {
     border-color: $color-primary-light;
     background: rgba($color-primary, 0.05);
@@ -612,8 +604,6 @@
 }
 
 // ─── PAGINACIÓN ───────────────────────────────────────────────
-// Stitch: texto "Mostrando X de Y" + Anterior/Siguiente
-
 .paginacion {
   display: flex;
   align-items: center;
@@ -629,18 +619,16 @@
 
     strong { color: $color-text; }
   }
-
   &__btns {
     display: flex;
     gap: 8px;
   }
-
   &__btn {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     height: 36px;
-    padding: 0 16px;
+    padding: 0 12px;
     border-radius: 7px;
     font-family: $font-body;
     font-size: $fs-caption;
@@ -652,81 +640,47 @@
       opacity: 0.4;
       cursor: not-allowed;
     }
-
     &--prev {
       background: $color-background;
       border: 1.5px solid $color-border;
       color: $color-text;
-
       &:hover:not(:disabled) {
         border-color: $color-primary-light;
         color: $color-primary;
       }
     }
-
     &--next {
       background: $color-primary;
       border: 1.5px solid $color-primary;
       color: $color-white;
-
       &:hover:not(:disabled) { filter: brightness(1.15); }
     }
   }
-
   &__arrow {
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
   }
 }
 
-// ─── RESPONSIVE ──────────────────────────────────────────────
-
-@include tablet {
-  .estado-cards {
-    gap: 7px;
-  }
-
+@media (max-width: $bp-mobile) {
   .estado-card {
-    padding: 10px 12px;
-    &__count { font-size: 1.5rem; }
+    padding: 6px 12px;
+    border-radius: 18px;
+    &__label {
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+    }
   }
-
-  .pedidos-toolbar {
-    flex-wrap: wrap;
-  }
-
-  .pedidos-search { min-width: 100%; order: -1; }
-}
-
-@include mobile {
-  .pedidos-list {
-    padding: $space-sm;
-  }
-
-  .estado-cards {
-    gap: 6px;
-  }
-
-  .estado-card {
-    padding: 8px 10px;
-    min-width: 70px;
-    &__count { font-size: 1.3rem; }
-    &__label { font-size: 0.6rem; }
-  }
-
   .filtros-panel__grid {
     flex-direction: column;
   }
-
-  .paginacion {
-    flex-direction: column;
-    align-items: flex-start;
+  .pedidos-search {
+    flex: 0 0 100%;
   }
+}
 
-  .tabla-pedidos {
-    font-size: $fs-caption;
-
-    .id-fecha,
-    .tabla-pedidos__cliente { display: none; }
+@media (max-width: $bp-laptop) {
+  .pedidos-toolbar {
+    flex-wrap: wrap;
   }
 }

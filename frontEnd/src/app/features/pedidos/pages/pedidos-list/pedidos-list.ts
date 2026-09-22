@@ -2,18 +2,8 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  LucideSearch,
-  LucideX,
-  LucideEye,
-  LucideAlertTriangle,
-  LucideInbox,
-  LucideTruck,
-  LucideStore,
-  LucideSlidersHorizontal,
-  LucideChevronLeft,
-  LucideChevronRight,
-  LucideShoppingBag
+import { LucideSearch, LucideX, LucideEye, LucideTriangleAlert, LucideInbox, LucideTruck, LucideStore,
+  LucideSlidersHorizontal, LucideChevronLeft, LucideChevronRight, LucideShoppingBag, LucideListFilter
 } from '@lucide/angular';
 import { PedidoService } from '../../../../core/services/pedido.service';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -37,23 +27,9 @@ interface EstadoCard {
 @Component({
   selector: 'app-pedidos-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    DecimalPipe,
-    DatePipe,
-    LucideSearch,
-    LucideX,
-    LucideEye,
-    LucideAlertTriangle,
-    LucideInbox,
-    LucideTruck,
-    LucideStore,
-    LucideSlidersHorizontal,
-    LucideChevronLeft,
-    LucideChevronRight,
-    LucideShoppingBag
-  ],
+  imports: [CommonModule, FormsModule, DecimalPipe, DatePipe, LucideSearch, LucideX, LucideEye,
+    LucideTriangleAlert, LucideInbox, LucideTruck, LucideStore, LucideSlidersHorizontal,
+    LucideChevronLeft, LucideChevronRight, LucideShoppingBag, LucideListFilter],
   templateUrl: './pedidos-list.html',
   styleUrl: './pedidos-list.scss'
 })

@@ -1,6 +1,5 @@
 <div class="admin-detalle-page">
-
-  <!-- HEADER DE PÁGINA CON BOTÓN VOLVER Y TÍTULO STITCH -->
+  <!-- HEADER -->
   <header class="admin-detalle-header">
     <a [routerLink]="backRouteValue" class="admin-detalle-back-link" title="Volver a Pedidos">
       <svg lucideArrowLeft class="admin-detalle-back-icon"></svg>
@@ -21,7 +20,7 @@
   <!-- ESTADO: ERROR -->
   @else if (errorMsg()) {
     <div class="admin-detalle-error">
-      <svg lucideAlertTriangle class="admin-detalle-error__icon"></svg>
+      <svg lucideTriangleAlert class="admin-detalle-error__icon"></svg>
       <h2>Error al cargar el pedido</h2>
       <p>{{ errorMsg() }}</p>
       <a [routerLink]="backRouteValue" class="btn-stitch-action-dark">
@@ -30,38 +29,30 @@
     </div>
   }
 
-  <!-- CONTENIDO PRINCIPAL DE PEDIDO STITCH -->
+  <!-- CONTENIDO PRINCIPAL DE PEDIDO-->
   @else if (pedido()) {
     <div class="admin-detalle-grid">
-
       <!-- FILA SUPERIOR: RESUMEN DEL PEDIDO + CLIENTE -->
       <div class="top-row">
-
         <!-- CARD 1: RESUMEN DEL PEDIDO -->
         <div class="stitch-card card-resumen">
-          <div class="stitch-card__header">
-            RESUMEN DEL PEDIDO
-          </div>
+          <div class="stitch-card__header">RESUMEN DEL PEDIDO</div>
           <div class="stitch-card__body">
-            
             <div class="resumen-top-info">
               <div class="ref-block">
-                <span class="caption">ORDER REFERENCE</span>
+                <span class="caption">REFERENCIA</span>
                 <h3 class="ref-title">
                   {{ pedido()?.nombreCliente }} — {{ pedido()?.fechaHora | date:'dd/MM/yyyy' }}
                 </h3>
-                <span class="ref-sub">
-                  Recibido a las {{ pedido()?.fechaHora | date:'HH:mm' }} hs
-                </span>
+                <span class="ref-sub">Recibido a las {{ pedido()?.fechaHora | date:'HH:mm' }} hs</span>
               </div>
               <div class="amount-block">
-                <span class="caption">TOTAL AMOUNT</span>
+                <span class="caption">TOTAL DEL PEDIDO</span>
                 <h2 class="amount-title">
                   ${{ (pedido()?.totalConDescuento ?? pedido()?.total) | number:'1.2-2' }}
                 </h2>
               </div>
             </div>
-
             <div class="resumen-status-row">
               <div class="status-col">
                 <span class="caption">ESTADO DEL PEDIDO</span>
@@ -72,46 +63,31 @@
                   </span>
                 </div>
               </div>
-
               <!-- ACCIONES SEGÚN ESTADO -->
               <div class="actions-col">
                 @if (pedido()?.estado === EstadoPedido.PENDIENTE) {
-                  <button
-                    type="button"
-                    class="btn-stitch-action-outline"
-                    [disabled]="!!accionEnCurso()"
-                    (click)="rechazarPedido()"
-                    id="btn-rechazar-pedido">
+                  <button type="button" class="btn-stitch-action-outline"
+                    [disabled]="!!accionEnCurso()" (click)="rechazarPedido()">
                     @if (accionEnCurso() === 'rechazar') {
                       <svg lucideLoader class="btn-icon btn-icon--spin"></svg>
                     } @else {
                       <svg lucideX class="btn-icon"></svg>
                     }
-                    <span>Rechazar Pedido</span>
+                    <span>Rechazar</span>
                   </button>
-
-                  <button
-                    type="button"
-                    class="btn-stitch-action-dark"
-                    [disabled]="!!accionEnCurso()"
-                    (click)="aceptarPedido()"
-                    id="btn-aceptar-pedido">
+                  <button type="button" class="btn-stitch-action-dark"
+                    [disabled]="!!accionEnCurso()" (click)="aceptarPedido()">
                     @if (accionEnCurso() === 'aceptar') {
                       <svg lucideLoader class="btn-icon btn-icon--spin"></svg>
                     } @else {
                       <svg lucideCheck class="btn-icon"></svg>
                     }
-                    <span>Aceptar Pedido</span>
+                    <span>Aceptar</span>
                   </button>
                 }
-
                 @if (pedido()?.estado === EstadoPedido.ACEPTADO) {
-                  <button
-                    type="button"
-                    class="btn-stitch-action-dark"
-                    [disabled]="!!accionEnCurso()"
-                    (click)="pasarAEnPreparacion()"
-                    id="btn-en-preparacion">
+                  <button type="button" class="btn-stitch-action-dark"
+                    [disabled]="!!accionEnCurso()" (click)="pasarAEnPreparacion()">
                     @if (accionEnCurso() === 'en-preparacion') {
                       <svg lucideLoader class="btn-icon btn-icon--spin"></svg>
                     } @else {
@@ -120,30 +96,20 @@
                     <span>Pasar a preparación</span>
                   </button>
                 }
-
                 @if (pedido()?.estado === EstadoPedido.EN_PREPARACION) {
-                  <button
-                    type="button"
-                    class="btn-stitch-action-dark"
-                    [disabled]="!!accionEnCurso()"
-                    (click)="marcarComoListo()"
-                    id="btn-marcar-listo">
+                  <button type="button" class="btn-stitch-action-dark"
+                    [disabled]="!!accionEnCurso()" (click)="marcarComoListo()">
                     @if (accionEnCurso() === 'listo') {
                       <svg lucideLoader class="btn-icon btn-icon--spin"></svg>
                     } @else {
-                      <svg lucideCheckCircle2 class="btn-icon"></svg>
+                      <svg lucideCircleCheck class="btn-icon"></svg>
                     }
                     <span>Marcar como listo</span>
                   </button>
                 }
-
                 @if (pedido()?.estado === EstadoPedido.LISTO) {
-                  <button
-                    type="button"
-                    class="btn-stitch-action-dark"
-                    [disabled]="!!accionEnCurso()"
-                    (click)="marcarComoEntregado()"
-                    id="btn-marcar-entregado">
+                  <button type="button" class="btn-stitch-action-dark"
+                    [disabled]="!!accionEnCurso()" (click)="marcarComoEntregado()">
                     @if (accionEnCurso() === 'entregado') {
                       <svg lucideLoader class="btn-icon btn-icon--spin"></svg>
                     } @else {
@@ -154,18 +120,14 @@
                 }
               </div>
             </div>
-
           </div>
         </div>
 
         <!-- CARD 2: CLIENTE -->
         <div class="stitch-card card-cliente">
-          <div class="stitch-card__header">
-            CLIENTE
-          </div>
+          <div class="stitch-card__header">CLIENTE</div>
           <div class="stitch-card__body">
             <div class="cliente-info-list">
-
               <div class="cliente-info-item">
                 <svg lucideUser class="cliente-icon"></svg>
                 <div>
@@ -173,7 +135,6 @@
                   <span class="info-val">{{ pedido()?.nombreCliente }}</span>
                 </div>
               </div>
-
               <div class="cliente-info-item">
                 <svg lucidePhone class="cliente-icon"></svg>
                 <div>
@@ -181,7 +142,6 @@
                   <span class="info-val">{{ pedido()?.telefonoCliente }}</span>
                 </div>
               </div>
-
               <div class="cliente-info-item">
                 <svg lucideCreditCard class="cliente-icon"></svg>
                 <div>
@@ -189,18 +149,16 @@
                   <span class="info-val">{{ pedido()?.metodoPago }}</span>
                 </div>
               </div>
-
             </div>
 
             <div class="cliente-divider"></div>
 
             <div class="pago-status-block">
               <span class="caption">ESTADO DE PAGO</span>
-              
               @switch (pedido()?.estadoPago) {
                 @case (EstadoPago.APROBADO) {
                   <div class="pago-badge pago-badge--aprobado">
-                    <svg lucideCheckCircle2 class="pago-badge__icon"></svg>
+                    <svg lucideCircleCheck class="pago-badge__icon"></svg>
                     <div>
                       <span class="pago-badge__title">APROBADO</span>
                       <span class="pago-badge__sub">Transacción procesada exitosamente</span>
@@ -218,7 +176,7 @@
                 }
                 @case (EstadoPago.ANULADO) {
                   <div class="pago-badge pago-badge--anulado">
-                    <svg lucideXCircle class="pago-badge__icon"></svg>
+                    <svg lucideCircleX class="pago-badge__icon"></svg>
                     <div>
                       <span class="pago-badge__title">ANULADO</span>
                       <span class="pago-badge__sub">El pago fue cancelado o anulado</span>
@@ -236,10 +194,8 @@
                 }
               }
             </div>
-
           </div>
         </div>
-
       </div>
 
       <!-- FILA MEDIA: DETALLES DE ENTREGA -->
@@ -259,9 +215,7 @@
                 Dirección: <strong>{{ pedido()?.direccionCliente }}</strong>
               </p>
             } @else {
-              <p class="entrega-address">
-                Retiro en local
-              </p>
+              <p class="entrega-address">Retiro en local</p>
             }
           </div>
         </div>
@@ -273,7 +227,6 @@
           <span>ÍTEMS DEL PEDIDO</span>
           <span class="items-count-badge">{{ pedido()?.detalles?.length || 0 }} Productos</span>
         </div>
-
         <div class="items-table-container">
           <table class="items-table">
             <thead>
@@ -302,9 +255,7 @@
           <div class="items-totals-footer">
             <div class="items-totals-footer__row">
               <span class="items-totals-footer__label">Subtotal productos</span>
-              <span class="items-totals-footer__value">
-                ${{ pedido()?.total | number:'1.2-2' }}
-              </span>
+              <span class="items-totals-footer__value">${{ pedido()?.total | number:'1.2-2' }}</span>
             </div>
             @if (pedido()?.montoDescuento) {
               <div class="items-totals-footer__row items-totals-footer__row--descuento">
@@ -324,12 +275,9 @@
               </span>
             </div>
           </div>
-
         </div>
       </div>
-
     </div>
   }
 
 </div>
-

@@ -1,15 +1,12 @@
 @use 'abstracts/index' as *;
 
 // ─── PÁGINA ──────────────────────────────────────────────────
-
 .pedidos-en-curso {
   width: 100%;
   padding: $space-md;
-  padding-bottom: 4rem;
 }
 
 // ─── HEADER ──────────────────────────────────────────────────
-
 .pedidos-list__header {
   display: flex;
   align-items: center;
@@ -35,11 +32,6 @@
   background-color: rgba($color-primary, 0.1);
   color: $color-primary;
   flex-shrink: 0;
-
-  &--curso {
-    background-color: rgba(#e44d6e, 0.1);
-    color: #e44d6e;
-  }
 }
 
 .pedidos-list__icon {
@@ -56,14 +48,12 @@
 }
 
 .pedidos-list__subtitle {
-  margin: 2px 0 0;
   font-family: $font-body;
   font-size: $fs-caption;
   color: $color-text-light;
 }
 
 // ─── BOTÓN ACTUALIZAR ─────────────────────────────────────────
-
 .btn-actualizar {
   display: inline-flex;
   align-items: center;
@@ -85,12 +75,10 @@
     border-color: $color-primary-light;
     color: $color-primary;
   }
-
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
-
   &__icon {
     width: 15px;
     height: 15px;
@@ -104,14 +92,13 @@
 @keyframes spin { to { transform: rotate(360deg); } }
 
 // ─── ESTADOS ──────────────────────────────────────────────────
-
 .pedidos-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: $space-sm;
-  padding: 5rem $space-md;
+  padding: $space-lg $space-md;
   text-align: center;
   color: $color-text-light;
   font-family: $font-body;
@@ -125,25 +112,20 @@
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
-
   &__icon {
     width: 44px;
     height: 44px;
     color: $color-text-light;
     opacity: 0.5;
   }
-
   &__icon--danger { color: $color-danger; opacity: 1; }
-
   &--error { color: $color-danger; }
-
   &__msg {
     font-size: $fs-body;
     font-weight: $fw-semibold;
     color: $color-text;
     margin: 0;
   }
-
   &__sub {
     font-size: $fs-caption;
     color: $color-text-light;
@@ -152,61 +134,49 @@
 }
 
 // ─── TABLA ────────────────────────────────────────────────────
-
 .table-wrapper {
-  border-radius: 10px;
-  border: 1px solid $color-border;
+  width: 100%;
   overflow-x: auto;
-  margin-bottom: $space-sm;
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: 12px;
 }
 
 .tabla-pedidos {
   width: 100%;
+  margin: 0;
+  table-layout: auto;
   border-collapse: collapse;
   font-family: $font-body;
-  font-size: $fs-body;
 
   thead {
-    tr {
-      background: $color-primary;
-    }
-
+    background: $color-primary;
     th {
-      padding: 12px 16px;
+      padding: .75rem .95rem;
       text-align: left;
-      font-size: 0.75rem;
-      font-weight: $fw-bold;
-      color: rgba(255, 255, 255, 0.9);
-      letter-spacing: 0.06em;
+      border: none;
+      font-size: $fs-caption;
+      font-weight: $fw-semibold;
+      color: $color-white;
       white-space: nowrap;
-
-      &:first-child { border-radius: 10px 0 0 0; }
-      &:last-child  { border-radius: 0 10px 0 0; }
     }
   }
-
   tbody {
     tr {
       border-bottom: 1px solid $color-border;
-      transition: background 0.12s;
-
-      &:last-child { border-bottom: none; }
-      &:hover { background: rgba($color-primary, 0.025); }
+      transition: background-color .2s ease;
+      &:hover { background: rgba($color-primary, .04); }
     }
-
     td {
-      padding: 14px 16px;
+      padding: .75rem .95rem;
       vertical-align: middle;
       color: $color-text;
+      font-size: $fs-caption;
     }
   }
 }
 
-.col-right  { text-align: right; }
-.col-center { text-align: center; }
-
 // ─── CELDAS ───────────────────────────────────────────────────
-
 .tabla-pedidos__id {
   display: flex;
   flex-direction: column;
@@ -229,34 +199,30 @@
 }
 
 .tabla-pedidos__total {
-  font-weight: $fw-bold;
-  text-align: right;
-  white-space: nowrap;
+  font-weight: $fw-medium;
+  text-align: center;
 }
 
 // ─── BADGE ENTREGA ────────────────────────────────────────────
-
 .entrega-badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 10px;
+  padding: .25rem .6rem;
   border-radius: 20px;
-  font-size: 0.72rem;
-  font-weight: $fw-bold;
+  font-size: $fs-small;
+  font-weight: $fw-semibold;
   letter-spacing: 0.03em;
   white-space: nowrap;
 
   &__icon {
-    width: 13px;
-    height: 13px;
+    width: 16px;
+    height: 16px;
   }
-
   &--delivery {
     background: #fce8f0;
     color: #9b2c4e;
   }
-
   &--retiro {
     background: #f3e8f5;
     color: #6b3580;
@@ -264,32 +230,25 @@
 }
 
 // ─── BADGE PAGO ───────────────────────────────────────────────
-
 .pago-badge {
   display: inline-block;
-  padding: 4px 10px;
+  padding: .25rem .6rem;
   border-radius: 20px;
-  font-size: 0.7rem;
+  font-size: $fs-small;
   font-weight: $fw-bold;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   white-space: nowrap;
 
   &.pago--aprobado {
     background: #dcfce7;
     color: #166534;
   }
-
   &.pago--pendiente {
     background: #fef3c7;
     color: #92400e;
   }
-
   &.pago--rechazado,
-  &.pago--anulado {
-    background: #fee2e2;
-    color: #991b1b;
-  }
-
+  &.pago--anulado,
   &.pago--reembolsado {
     background: #fee2e2;
     color: #991b1b;
@@ -297,14 +256,13 @@
 }
 
 // ─── BADGE ESTADO ──────────────────────────────────────────────
-
 .estado-badge {
   display: inline-block;
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-size: 0.72rem;
-  font-weight: $fw-bold;
-  letter-spacing: 0.04em;
+  padding: .25rem .6rem;
+  border-radius: 20px;
+  font-size: $fs-small;
+  font-weight: $fw-semibold;
+  letter-spacing: 0.03em;
   white-space: nowrap;
 
   &.estado--pendiente {
@@ -312,19 +270,16 @@
     color: #92400e;
     border: 1.5px solid #fcd34d;
   }
-
   &.estado--aceptado {
     background: #e0f2fe;
     color: #0369a1;
     border: 1.5px solid #7dd3fc;
   }
-
   &.estado--preparacion {
     background: #f3e8ff;
     color: #6b21a8;
     border: 1.5px solid #c084fc;
   }
-
   &.estado--listo {
     background: #ccfbf1;
     color: #0f766e;
@@ -333,31 +288,29 @@
 }
 
 // ─── BOTÓN GESTIONAR ─────────────────────────────────────────
-
 .accion-btn {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 12px;
+  gap: .35rem;
+  padding: .25rem .6rem;
   border: 1.5px solid $color-border;
   background: $color-background;
   color: $color-text;
   font-family: $font-body;
-  font-size: 0.72rem;
-  font-weight: $fw-bold;
+  font-size: $fs-small;
+  font-weight: $fw-semibold;
   letter-spacing: 0.03em;
-  border-radius: 6px;
+  border-radius: 7px;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s ease;
 
   &__icon {
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
     color: $color-text-light;
     transition: color 0.15s ease;
   }
-
   &:hover {
     border-color: $color-primary-light;
     background: rgba($color-primary, 0.05);
@@ -370,7 +323,6 @@
 }
 
 // ─── PAGINACIÓN ───────────────────────────────────────────────
-
 .paginacion {
   display: flex;
   align-items: center;
@@ -386,18 +338,16 @@
 
     strong { color: $color-text; }
   }
-
   &__btns {
     display: flex;
     gap: 8px;
   }
-
   &__btn {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     height: 36px;
-    padding: 0 16px;
+    padding: 0 12px;
     border-radius: 7px;
     font-family: $font-body;
     font-size: $fs-caption;
@@ -409,60 +359,35 @@
       opacity: 0.4;
       cursor: not-allowed;
     }
-
     &--prev {
       background: $color-background;
       border: 1.5px solid $color-border;
       color: $color-text;
-
       &:hover:not(:disabled) {
         border-color: $color-primary-light;
         color: $color-primary;
       }
     }
-
     &--next {
       background: $color-primary;
       border: 1.5px solid $color-primary;
       color: $color-white;
-
       &:hover:not(:disabled) { filter: brightness(1.15); }
     }
   }
-
   &__arrow {
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
   }
 }
 
-// ─── RESPONSIVE ───────────────────────────────────────────────
-
-@include tablet {
+@media (max-width: $bp-mobile) {
   .pedidos-list__header {
     flex-direction: column;
     align-items: flex-start;
   }
-
-  .btn-actualizar {
-    align-self: flex-end;
-  }
-}
-
-@include mobile {
-  .pedidos-en-curso {
-    padding: $space-sm;
-  }
-
   .paginacion {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .tabla-pedidos {
-    font-size: $fs-caption;
-
-    .id-fecha,
-    .tabla-pedidos__cliente { display: none; }
   }
 }
