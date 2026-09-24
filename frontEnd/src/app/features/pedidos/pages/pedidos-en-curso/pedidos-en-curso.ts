@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { LucideTriangleAlert, LucideInbox, LucideTruck, LucideStore, LucideEye, LucideChevronLeft,
-  LucideChevronRight, LucideRefreshCw, LucideActivity
+  LucideChevronRight, LucideRefreshCw, LucidePackageCheck
 } from '@lucide/angular';
 import { PedidoService } from '../../../../core/services/pedido.service';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -18,7 +18,7 @@ import { UserRole } from '../../../../core/models/enums/user-role.enum';
   selector: 'app-pedidos-en-curso',
   standalone: true,
   imports: [CommonModule, DecimalPipe, DatePipe, LucideTriangleAlert, LucideInbox, LucideTruck,
-    LucideStore, LucideEye, LucideChevronLeft, LucideChevronRight, LucideRefreshCw, LucideActivity],
+    LucideStore, LucideEye, LucideChevronLeft, LucideChevronRight, LucideRefreshCw, LucidePackageCheck],
   templateUrl: './pedidos-en-curso.html',
   styleUrl: './pedidos-en-curso.scss'
 })

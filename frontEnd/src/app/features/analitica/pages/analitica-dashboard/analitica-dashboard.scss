@@ -1,5 +1,4 @@
 @use 'abstracts/index' as *;
-@use 'sass:color';
 
 .analitica {
   width: 100%;
@@ -15,6 +14,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media (max-width: $bp-laptop) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $space-md;
+  }
 }
 
 .analitica__header-title {
@@ -109,7 +114,7 @@
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
   }
   &--primary {
-    background: linear-gradient(135deg, $color-primary 0%, color.adjust($color-primary, $lightness: -8%) 100%);
+    background: $color-primary;
     color: #fff;
     border: none;
 
@@ -564,41 +569,50 @@
 }
 
 // ─── BOTONES Y UTILIDADES ─────────────────────────────────────
-.btn {
+.analitica__btn {
   display: inline-flex;
   align-items: center;
-  gap: $space-xs;
+  gap: 7px;
   height: 38px;
-  padding: 0 1rem;
+  padding: 0 16px;
   border-radius: 8px;
+  font-family: $font-body;
   font-size: $fs-caption;
   font-weight: $fw-semibold;
   cursor: pointer;
   transition: all 0.2s ease;
   border: 1px solid transparent;
 
-  &--primary {
+  &--copilot {
     background: $color-primary;
-    color: #fff;
-    &:hover { background: color.adjust($color-primary, $lightness: -5%); }
+    color: $color-white;
+    &:hover {
+      background: $color-primary-dark;
+      color: $color-white;
+    }
   }
-  &--outline {
-    background: #fff;
+  &--actualizar {
+    background: $color-white;
     border-color: $color-border;
     color: $color-text;
     &:hover {
-      background: #faf8f7;
-      border-color: color.adjust($color-border, $lightness: -10%);
+      border-color: $color-primary-light;
+      color: $color-primary;
     }
   }
+  &--icon {
+    width: 17px;
+    height: 17px;
+  }
 }
+
 
 .icon-sm { width: 14px; height: 14px; }
 .icon--lg { width: 32px; height: 32px; }
 .text-center { text-align: center; }
 .text-right { text-align: right; }
-.text-bold { font-weight: 700; }
-.font-medium { font-weight: 500; }
+.text-bold { font-weight: $fw-bold; }
+.font-medium { font-weight: $fw-medium; }
 .text-muted { color: $color-text-light; }
 .text-muted-dark { color: #64748b; }
 .text-success { color: #10b981; }
@@ -629,3 +643,5 @@
     animation: spin 0.8s linear infinite;
   }
 }
+
+@keyframes spin { to { transform: rotate(360deg); } }

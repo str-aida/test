@@ -1,5 +1,4 @@
 @use 'abstracts/index' as *;
-@use 'sass:color';
 
 .admin-detalle-page {
   width: 100%;
@@ -29,7 +28,7 @@
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  color: #374151;
+  color: $color-text;
   text-decoration: none;
   transition: all 0.2s ease;
 
@@ -210,10 +209,10 @@
   gap: 6px;
   height: 38px;
   padding: 0 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid $color-border;
   border-radius: 6px;
   background-color: $color-white;
-  color: #374151;
+  color: $color-text;
   font-family: $font-body;
   font-size: 0.85rem;
   font-weight: $fw-semibold;
@@ -225,8 +224,8 @@
     height: 16px;
   }
   &:hover {
-    background-color: #f9fafb;
-    border-color: #9ca3af;
+    border-color: $color-primary-light;
+    color: $color-primary;
   }
 }
 
@@ -252,7 +251,8 @@
     height: 16px;
   }
   &:hover {
-    background-color: color.adjust($color-primary, $lightness: 5%);
+    background: $color-primary-dark;
+    color: $color-white;
   }
 }
 

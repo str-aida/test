@@ -80,11 +80,11 @@
     cursor: not-allowed;
   }
   &__icon {
-    width: 15px;
-    height: 15px;
+    width: 17px;
+    height: 17px;
 
     &--spin {
-      animation: spin 0.8s linear infinite;
+      animation: spin 1s linear infinite;
     }
   }
 }

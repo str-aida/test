@@ -11,12 +11,12 @@
       </div>
     </div>
     <div class="analitica__header-actions">
-      <a routerLink="/admin/analitica/copilot" class="btn btn--primary">
-        <svg lucideBot class="icon"></svg>
+      <a routerLink="/admin/analitica/copilot" class="analitica__btn analitica__btn--copilot">
+        <svg lucideBot class="analitica__btn--icon"></svg>
         <span>Gestia Copilot</span>
       </a>
-      <button type="button" class="btn btn--outline" (click)="cargarDatos()" [disabled]="isLoading()">
-        <svg lucideRefreshCw class="icon" [class.spin]="isLoading()"></svg>
+      <button type="button" class="analitica__btn analitica__btn--actualizar" (click)="cargarDatos()" [disabled]="isLoading()">
+        <svg lucideRefreshCw class="analitica__btn--icon" [class.spin]="isLoading()"></svg>
         <span>Actualizar</span>
       </button>
     </div>
@@ -213,7 +213,7 @@
             <p class="card__subtitle">Clientes con mayor volumen de compra</p>
           </div>
           <div class="badge badge--primary">
-            <svg lucideAward class="icon-sm"></svg> Top Clients
+            <svg lucideAward class="icon-sm"></svg> Top Clientes
           </div>
         </div>
 
