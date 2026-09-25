@@ -1,35 +1,15 @@
 import { Component, ElementRef, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import {
-  LucideBot,
-  LucideSend,
-  LucideSparkles,
-  LucideTriangleAlert,
-  LucideArrowLeft,
-  LucideUser,
-  LucideTrash2,
-  LucideMessageSquare
-} from '@lucide/angular';
+import { LucideBot, LucideSend, LucideSparkles, LucideTriangleAlert, LucideUser,
+  LucideRotateCcw, LucideMessageSquare } from '@lucide/angular';
 import { CopilotMessage, CopilotService } from '../../../../core/services/copilot.service';
 
 @Component({
   selector: 'app-gestia-copilot',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterLink,
-    LucideBot,
-    LucideSend,
-    LucideSparkles,
-    LucideTriangleAlert,
-    LucideArrowLeft,
-    LucideUser,
-    LucideTrash2,
-    LucideMessageSquare
-  ],
+  imports: [CommonModule, FormsModule, LucideBot, LucideSend, LucideSparkles,
+    LucideTriangleAlert, LucideUser, LucideRotateCcw, LucideMessageSquare],
   templateUrl: './gestia-copilot.html',
   styleUrl: './gestia-copilot.scss'
 })

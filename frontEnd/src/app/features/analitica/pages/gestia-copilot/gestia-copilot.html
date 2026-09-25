@@ -2,9 +2,6 @@
   <!-- Header con estética nativa de Gestia -->
   <header class="copilot-header">
     <div class="copilot-header__left">
-      <a routerLink="/admin/analitica" class="btn-back" title="Volver a Analítica">
-        <svg lucideArrowLeft class="icon"></svg>
-      </a>
       <div class="copilot-header__icon">
         <svg lucideBot class="icon icon--lg"></svg>
       </div>
@@ -14,8 +11,8 @@
       </div>
     </div>
     <div class="copilot-header__actions">
-      <button type="button" class="btn btn--outline btn--sm" (click)="limpiarConversacion()" [disabled]="isLoading()" title="Reiniciar chat">
-        <svg lucideTrash2 class="icon-sm"></svg>
+      <button type="button" class="btn-stitch-primary" (click)="limpiarConversacion()" [disabled]="isLoading()" title="Reiniciar chat">
+        <svg lucideRotateCcw class="icon"></svg>
         <span>Nueva consulta</span>
       </button>
     </div>
@@ -23,7 +20,6 @@
 
   <!-- Contenedor principal de Chat -->
   <div class="copilot-container">
-
     <!-- Mensajes del chat -->
     <div class="copilot-messages" #chatContainer>
       @for (msg of messages(); track msg.id) {
@@ -35,7 +31,6 @@
               <svg lucideSparkles class="icon-sm"></svg>
             }
           </div>
-
           <div class="chat-bubble" [class.chat-bubble--user]="msg.sender === 'user'" [class.chat-bubble--assistant]="msg.sender === 'assistant'" [class.chat-bubble--error]="msg.isError">
             <div class="chat-bubble__header">
               <span class="chat-bubble__author">{{ msg.sender === 'user' ? 'Tú' : 'Gestia Copilot' }}</span>
@@ -81,7 +76,7 @@
       <div class="quick-prompts__list">
         @for (prompt of quickPrompts; track prompt) {
           <button type="button" class="chip-prompt" (click)="selectQuickPrompt(prompt)" [disabled]="isLoading()">
-            <svg lucideMessageSquare class="icon-xs"></svg>
+            <svg lucideMessageSquare class="icon"></svg>
             <span>{{ prompt }}</span>
           </button>
         }
@@ -90,8 +85,7 @@
 
     <!-- Input bar de envío -->
     <div class="copilot-input-bar">
-      <textarea
-        class="copilot-textarea"
+      <textarea class="copilot-textarea"
         placeholder="Escribe tu consulta sobre ventas, productos o clientes..."
         rows="2"
         [ngModel]="inputPrompt()"
@@ -99,9 +93,7 @@
         (keydown)="onKeyDown($event)"
         [disabled]="isLoading()"
       ></textarea>
-      <button
-        type="button"
-        class="btn btn--primary btn-send"
+      <button type="button" class="btn-send"
         (click)="enviarMensaje()"
         [disabled]="!inputPrompt().trim() || isLoading()"
       >
