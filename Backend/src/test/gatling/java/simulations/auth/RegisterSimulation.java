@@ -44,8 +44,13 @@ public class RegisterSimulation extends Simulation {
     {
         setUp(
                 scn.injectOpen(
-                        rampUsers(300).during(10)
+                        rampUsers(1000).during(30),           // sube a 100 en 30s
+                        constantUsersPerSec(20).during(60)   // sostiene ~10 req/s por 1 min más
                 )
-        ).protocols(httpProtocol);
+        ).protocols(httpProtocol)
+         .assertions(
+                 global().responseTime().max().lt(3000),        // ningún request > 3seg
+                 global().successfulRequests().percent().gt(95.0) // al menos 95% éxito
+         );
     }
 }

@@ -112,10 +112,26 @@ public class ListarProductosSimulation extends Simulation {
 
     {
         setUp(
-                scnSinFiltros.injectOpen(rampUsers(100).during(10)),
-                scnPorCategoria.injectOpen(rampUsers(100).during(10)),
-                scnPorTexto.injectOpen(rampUsers(50).during(10)),
-                scnPorEstado.injectOpen(rampUsers(50).during(10))
-        ).protocols(httpProtocol);
+                scnSinFiltros.injectOpen(
+                        rampUsers(1000).during(30),           // sube a 100 en 30s
+                        constantUsersPerSec(30).during(60)   // sostiene ~10 req/s por 1 min más
+                ),
+                scnPorCategoria.injectOpen(
+                        rampUsers(1000).during(30),           // sube a 100 en 30s
+                        constantUsersPerSec(30).during(60)   // sostiene ~10 req/s por 1 min más
+                ),
+                scnPorTexto.injectOpen(
+                        rampUsers(1000).during(30),           // sube a 100 en 30s
+                        constantUsersPerSec(30).during(60)   // sostiene ~10 req/s por 1 min más
+                ),
+                scnPorEstado.injectOpen(
+                        rampUsers(1000).during(30),           // sube a 100 en 30s
+                        constantUsersPerSec(30).during(60)   // sostiene ~10 req/s por 1 min más
+                )
+        ).protocols(httpProtocol)
+         .assertions(
+                 global().responseTime().max().lt(3000),        // ningún request > 3seg
+                 global().successfulRequests().percent().gt(95.0) // al menos 95% éxito
+         );
     }
 }

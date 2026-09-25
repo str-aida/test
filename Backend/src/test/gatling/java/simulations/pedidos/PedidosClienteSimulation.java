@@ -18,19 +18,16 @@ public class PedidosClienteSimulation extends Simulation {
             .acceptHeader("application/json")
             .contentTypeHeader("application/json");
 
-    // ── Feeder: varía el productoId y la cantidad para simular distintos pedidos ──
     Iterator<Map<String, Object>> feeder = Stream.generate((Supplier<Map<String, Object>>) () -> {
         long id = System.nanoTime();
         Map<String, Object> map = new HashMap<>();
-        // Rota entre productos existentes (ajustar IDs según la DB)
         long[] productosIds = {1L, 2L, 3L, 4L, 5L};
         map.put("productoId", productosIds[(int) (id % productosIds.length)]);
-        // Cantidad entre 1 y 3
         map.put("cantidad", (int) ((id % 3) + 1));
         return map;
     }).iterator();
 
-    // ── Escenario A: Crear pedido (RETIRO_EN_LOCAL, EFECTIVO) ─────────────────
+    // ── Escenario A: Crear pedido (RETIRO, DOMICILIO, EFECTIVO) ─────────────────
     ScenarioBuilder scnCrearPedido = scenario("Cliente - Crear pedido")
             .feed(feeder)
             .exec(
@@ -49,7 +46,7 @@ public class PedidosClienteSimulation extends Simulation {
                             .header("Authorization", "Bearer #{jwtToken}")
                             .body(StringBody(
                                     "{" +
-                                    "\"tipoEntrega\": \"RETIRO_EN_LOCAL\"," +
+                                    "\"tipoEntrega\": \"RETIRO\"," +
                                     "\"metodoPago\": \"EFECTIVO\"," +
                                     "\"detalles\": [" +
                                     "  {\"productoId\": #{productoId}, \"cantidad\": #{cantidad}}" +
@@ -130,18 +127,26 @@ public class PedidosClienteSimulation extends Simulation {
 
     {
         setUp(
-                // A: Crear pedidos – carga moderada (el bulkhead limita a 10 concurrentes)
-                scnCrearPedido.injectOpen(rampUsers(50).during(10)),
-
-                // B: Listar pedidos – carga alta (operación de solo lectura)
-                scnListarPedidos.injectOpen(rampUsers(100).during(10)),
-
-                // C: Listar por estado – carga media
-                scnListarPorEstado.injectOpen(rampUsers(60).during(10)),
-
-                // D: Ver detalle – carga media
-                scnDetallePedido.injectOpen(rampUsers(60).during(10))
-
-        ).protocols(httpProtocol);
+                scnCrearPedido.injectOpen(
+                        rampUsers(100).during(30),           
+                        constantUsersPerSec(10).during(60)   
+                ),
+                scnListarPedidos.injectOpen(
+                        rampUsers(100).during(30),           
+                        constantUsersPerSec(10).during(60)   
+                ),
+                scnListarPorEstado.injectOpen(
+                        rampUsers(100).during(30),           
+                        constantUsersPerSec(10).during(60)   
+                ),
+                scnDetallePedido.injectOpen(
+                        rampUsers(100).during(30),           
+                        constantUsersPerSec(10).during(60)   
+                )
+        ).protocols(httpProtocol)
+         .assertions(
+                 global().responseTime().max().lt(3000),        // ningún request > 3seg
+                 global().successfulRequests().percent().gt(95.0) // al menos 95% éxito
+         );
     }
 }

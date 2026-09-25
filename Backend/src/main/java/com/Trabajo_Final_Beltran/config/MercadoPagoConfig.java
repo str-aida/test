@@ -14,10 +14,6 @@ public class MercadoPagoConfig {
     @PostConstruct
     public void init() {
 
-        System.out.println(
-                "TOKEN MP: " + accessToken
-        );
-
         com.mercadopago.MercadoPagoConfig
                 .setAccessToken(
                         accessToken
