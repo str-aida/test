@@ -57,18 +57,18 @@
 .btn-actualizar {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  height: 38px;
-  padding: 0 16px;
-  background: $color-background;
+  gap: 8px;
+  height: 36px;
+  padding: 0 10px;
+  background: $color-white;
   color: $color-text;
-  border: 1.5px solid $color-border;
+  border: 1px solid $color-border;
   border-radius: 8px;
-  font-family: $font-body;
+  font-family: $font-heading;
   font-size: $fs-caption;
   font-weight: $fw-semibold;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s ease;
   flex-shrink: 0;
 
   &:hover:not(:disabled) {
@@ -80,8 +80,8 @@
     cursor: not-allowed;
   }
   &__icon {
-    width: 17px;
-    height: 17px;
+    width: 16px;
+    height: 16px;
 
     &--spin {
       animation: spin 1s linear infinite;
@@ -329,7 +329,7 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: $space-sm;
-  padding: $space-xs 0;
+  padding: $space-sm 0;
 
   &__info {
     font-family: $font-body;
@@ -347,20 +347,20 @@
     align-items: center;
     gap: 4px;
     height: 36px;
-    padding: 0 12px;
-    border-radius: 7px;
+    padding: 0 10px;
+    border-radius: 8px;
     font-family: $font-body;
     font-size: $fs-caption;
     font-weight: $fw-semibold;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.2s ease;
 
     &:disabled {
       opacity: 0.4;
       cursor: not-allowed;
     }
     &--prev {
-      background: $color-background;
+      background: $color-white;
       border: 1.5px solid $color-border;
       color: $color-text;
       &:hover:not(:disabled) {

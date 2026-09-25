@@ -572,11 +572,11 @@
 .analitica__btn {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  height: 38px;
-  padding: 0 16px;
+  gap: 8px;
+  height: 36px;
+  padding: 0 10px;
   border-radius: 8px;
-  font-family: $font-body;
+  font-family: $font-heading;
   font-size: $fs-caption;
   font-weight: $fw-semibold;
   cursor: pointer;
@@ -601,8 +601,8 @@
     }
   }
   &--icon {
-    width: 17px;
-    height: 17px;
+    width: 16px;
+    height: 16px;
   }
 }
 
