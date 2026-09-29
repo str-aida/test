@@ -1,64 +1,23 @@
-import {
-  Component,
-  ElementRef,
-  inject,
-  OnDestroy,
-  OnInit,
-  signal,
-  ViewChild,
-  PLATFORM_ID
-} from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild, PLATFORM_ID } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import {
-  LucideMessageSquare,
-  LucideSend,
-  LucideCheck,
-  LucideCheckCheck,
-  LucideLock,
-  LucideSearch,
-  LucideUser,
-  LucideAlertCircle,
-  LucideX,
-  LucideRefreshCw,
-  LucideSlidersHorizontal,
-  LucideInbox,
-  LucideArrowLeft
+import { LucideMessageSquare, LucideSend, LucideCheck, LucideCheckCheck, LucideLock, LucideSearch,
+  LucideUser, LucideCircleAlert, LucideX, LucideRefreshCw, LucideSlidersHorizontal, LucideInbox,
+  LucideArrowLeft, LucideZap, LucideTruck, LucideSparkles, LucideTimer
 } from '@lucide/angular';
 import { ChatService, SpringPage } from '../../../../core/services/chat.service';
 import { ChatSocketService } from '../../../../core/services/chat-socket.service';
 import { TokenService } from '../../../../core/services/token.service';
-import {
-  ChatConversacionResponse,
-  ChatLecturaResponse,
-  ChatMensajeResponse,
-  EstadoConversacion,
-  PedidoSnapshot
-} from '../../../../core/models/chat.models';
+import { ChatConversacionResponse, ChatLecturaResponse, ChatMensajeResponse, EstadoConversacion, PedidoSnapshot } from '../../../../core/models/chat.models';
 
 @Component({
   selector: 'app-soporte-admin',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    DatePipe,
-    DecimalPipe,
-    LucideMessageSquare,
-    LucideSend,
-    LucideCheck,
-    LucideCheckCheck,
-    LucideLock,
-    LucideSearch,
-    LucideUser,
-    LucideAlertCircle,
-    LucideX,
-    LucideRefreshCw,
-    LucideSlidersHorizontal,
-    LucideInbox,
-    LucideArrowLeft
+  imports: [CommonModule, FormsModule, DatePipe, DecimalPipe, LucideMessageSquare, LucideSend, LucideCheck,
+    LucideCheckCheck, LucideLock, LucideSearch, LucideUser, LucideCircleAlert, LucideX, LucideRefreshCw,
+    LucideSlidersHorizontal, LucideInbox, LucideArrowLeft, LucideZap, LucideTruck, LucideSparkles, LucideTimer
   ],
   templateUrl: './soporte-admin.component.html',
   styleUrl: './soporte-admin.component.scss'
