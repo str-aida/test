@@ -11,52 +11,17 @@ import { TipoAsignacionCupon } from '../../../../core/models/enums/tipo-asignaci
 import { CuponFormComponent } from '../../components/cupon-form/cupon-form';
 import { CuponAsignarModalComponent } from '../../components/cupon-asignar-modal/cupon-asignar-modal';
 import { ReglaCuponFormComponent } from '../../components/regla-cupon-form/regla-cupon-form';
-import {
-  LucideTicket,
-  LucidePlus,
-  LucideUserCheck,
-  LucideUserPlus,
-  LucidePencil,
-  LucideBan,
-  LucideX,
-  LucideTriangleAlert,
-  LucideRefreshCw,
-  LucideSearch,
-  LucideListFilter,
-  LucideChevronLeft,
-  LucideChevronRight,
-  LucideSlidersHorizontal,
-  LucideSparkles,
-  LucideGift,
-  LucideShoppingBag
+import { LucideTicket, LucidePlus, LucideUserCheck, LucideUserPlus, LucidePencil, LucideBan, LucideX,
+  LucideTriangleAlert, LucideRefreshCw, LucideSearch, LucideListFilter, LucideChevronLeft, LucideChevronRight,
+  LucideSlidersHorizontal, LucideSparkles, LucideGift, LucideShoppingBag
 } from '@lucide/angular';
 
 @Component({
   selector: 'app-cupones-list',
-  imports: [
-    CommonModule,
-    FormsModule,
-    CuponFormComponent,
-    CuponAsignarModalComponent,
-    ReglaCuponFormComponent,
-    LucideTicket,
-    LucidePlus,
-    LucideUserCheck,
-    LucideUserPlus,
-    LucidePencil,
-    LucideBan,
-    LucideX,
-    LucideTriangleAlert,
-    LucideRefreshCw,
-    LucideSearch,
-    LucideListFilter,
-    LucideChevronLeft,
-    LucideChevronRight,
-    LucideSlidersHorizontal,
-    LucideSparkles,
-    LucideGift,
-    LucideShoppingBag
-  ],
+  imports: [CommonModule, FormsModule, CuponFormComponent, CuponAsignarModalComponent, ReglaCuponFormComponent,
+    LucideTicket, LucidePlus, LucideUserCheck, LucideUserPlus, LucidePencil, LucideBan, LucideX, LucideTriangleAlert,
+    LucideRefreshCw, LucideSearch, LucideListFilter, LucideChevronLeft, LucideChevronRight, LucideSlidersHorizontal,
+    LucideSparkles, LucideGift, LucideShoppingBag],
   templateUrl: './cupones-list.html',
   styleUrl: './cupones-list.scss',
 })
@@ -226,7 +191,6 @@ export class CuponesListComponent implements OnInit {
   }
 
   // === GESTIÓN DE REGLAS / STRATEGIES ===
-
   openEditReglaModal(regla: ReglaCuponResponse): void {
     this.selectedRegla = regla;
     this.showReglaModal = true;
