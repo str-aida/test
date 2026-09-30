@@ -253,7 +253,7 @@
 /* CARD DE TABLA STITCH */
 .cupones-table-card {
   background: $color-white;
-  border-radius: 8px;
+  border-radius: 12px;
   border: 1px solid $color-border;
   overflow: hidden;
 
@@ -296,7 +296,7 @@
   tr {
     transition: background-color .2s ease;
     &:hover {
-        background: rgba($color-primary, .04);
+      background: rgba($color-primary, .04);
     }
   }
 }

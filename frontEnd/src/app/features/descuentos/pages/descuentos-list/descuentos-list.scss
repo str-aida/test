@@ -3,23 +3,18 @@
 .descuentos-page {
   width: 100%;
   padding: $space-md;
-
-  @media (max-width: $bp-tablet) {
-    padding: $space-md;
-  }
 }
 
-/* HEADER PRINCIPAL */
 .descuentos-page__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: $space-sm;
 
-  @media (max-width: $bp-mobile) { //antes 640px
+  @media (max-width: $bp-laptop) {
     flex-direction: column;
-    align-items: stretch; //antes flex-start
-    gap: $space-sm;
+    align-items: stretch;
+    gap: $space-md;
   }
 }
 
@@ -86,26 +81,26 @@
 .btn-stitch-primary {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  height: 42px;
-  padding: 0 20px;
-  border: none;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid transparent;
   border-radius: 8px;
   background-color: $color-primary;
-  color: #ffffff;
+  color: $color-white;
+  font-family: $font-heading;
   font-size: $fs-caption;
   font-weight: $fw-semibold;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 
   .btn-icon {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
-
   &:hover {
-    background-color: $color-primary-dark;
+    background: $color-primary-dark;
+    color: $color-white;
   }
 }
 
@@ -115,7 +110,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
 
-  @media (max-width: 900px) {
+  @media (max-width: $bp-laptop) {
     grid-template-columns: 1fr;
   }
 }
@@ -123,9 +118,9 @@
 .metric-card {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
-  background-color: #ffffff;
+  gap: $space-sm;
+  padding: 1rem 1.2rem;
+  background-color: $color-background;
   border: 1px solid $color-border;
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
@@ -135,16 +130,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 10px;
-  background-color: #faf5f5;
+  background-color: rgba($color-primary-light, 0.1);
   color: $color-primary;
   flex-shrink: 0;
 
   .metric-icon {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -157,34 +152,27 @@
 .metric-card__label {
   font-size: $fs-small;
   font-weight: $fw-bold;
-  letter-spacing: 0.05em;
-  color: #6b7280;
-  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: $color-text-light;
 }
 
 .metric-card__value-group {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: 6px;
 }
 
-.metric-card__number {
-  font-size: 1.75rem;
-  font-weight: $fw-bold;
-  color: #111827;
-  line-height: 1;
-}
-
+.metric-card__number,
 .metric-card__number-date {
-  font-size: 1.15rem;
+  font-size: $fs-body;
   font-weight: $fw-bold;
-  color: #111827;
+  color: $color-text;
   line-height: 1;
 }
 
 .metric-card__subtext {
   font-size: $fs-caption;
-  color: #6b7280;
+  color: $color-text-light;
 }
 
 .metric-card__tag-alert {
@@ -198,64 +186,70 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: $space-sm;
+  width: 100%;
   margin: 2rem auto 2.5rem;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
 
   @media (max-width: $bp-tablet) {
-    flex-direction: column;
-    align-items: stretch;
+    flex-wrap: wrap;
+    gap: $space-sm;
   }
 }
 
 .descuentos-filter__search {
   position: relative;
+  display: flex;
+  align-items: center;
   flex: 1;
-  max-width: 480px;
+  min-width: 200px;
 
-  @media (max-width: $bp-tablet) {
-    max-width: 100%;
+  @media (max-width: $bp-mobile) {
+    flex: 0 0 100%;
   }
 }
 
 .descuentos-filter__search-input {
   width: 100%;
   height: 42px;
-  padding: 0 16px 0 38px;
-  border: 1px solid #e5e7eb;
+  padding: 0 16px 0 36px;
+  border: 1px solid $color-border;
   border-radius: 8px;
-  background: #f9fafb;
+  background: $color-white;
+  font-family: $font-body;
   font-size: $fs-caption;
-  color: #111827;
+  color: $color-text;
   outline: none;
-  transition: all 0.2s ease;
+  transition: border-color .2s ease, box-shadow .2s ease;
 
   &::placeholder {
-    color: #9ca3af;
+    font-family: $font-body;
+    color: #888;
   }
-
   &:focus {
-    background: #ffffff;
     border-color: $color-primary;
-    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+    box-shadow: 0 0 0 .15rem rgba($color-primary, .15);
+    outline: none;
   }
 }
 
 .descuentos-filter__search-icon {
   position: absolute;
   left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
   width: 18px;
   height: 18px;
-  color: #9ca3af;
+  color: $color-text-light;
   pointer-events: none;
 }
 
 .descuentos-filter__tabs {
   display: flex;
   align-items: center;
-  background-color: #f3f4f6;
-  padding: 3px;
+  background-color: $color-white;
+  padding: 4px;
   border-radius: 8px;
   gap: 2px;
 }
@@ -264,32 +258,30 @@
   border: none;
   background: transparent;
   padding: 6px 14px;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: $fs-caption;
   font-weight: $fw-medium;
-  color: #4b5563;
+  color: $color-text-light;
   cursor: pointer;
   transition: all 0.15s ease;
 
   &:hover {
-    color: #111827;
+    color: $color-text;
   }
-
   &--active {
-    background: #ffffff;
-    color: #111827;
-    font-weight: 600;
+    background: $color-background;
+    color: $color-text;
+    font-weight: $fw-semibold;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   }
 }
 
 /* TABLA CARD STITCH */
 .descuentos-table-card {
-  background: #ffffff;
+  background: $color-white;
   border-radius: 12px;
   border: 1px solid $color-border;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 
   .table-responsive {
     width: 100%;
@@ -299,43 +291,35 @@
 
 .descuentos-table {
   width: 100%;
+  margin: 0;
+  table-layout: auto;
   border-collapse: collapse;
-  font-size: $fs-caption;
+  font-family: $font-body;
 
   thead {
     background-color: $color-primary;
   }
-
   th {
     text-align: left;
-    padding: 14px 20px;
+    padding: .75rem .95rem;
     color: $color-white;
     font-weight: $fw-semibold;
-    font-size: $fs-small;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    font-size: $fs-caption;
     border: none;
-    background-color: $color-primary;
     white-space: nowrap;
-
-    &.text-right {
-      text-align: right;
-    }
   }
-
   td {
-    padding: 16px 20px;
-    border-bottom: 1px solid #f3f4f6;
-    color: #374151;
+    padding: .75rem .95rem;
+    color: $color-text;
+    font-size: $fs-caption;
     vertical-align: middle;
+    border-bottom: 1px solid $color-border;
   }
-
-  tr:last-child td {
-    border-bottom: none;
-  }
-
-  tr:hover td {
-    background-color: #faf9f9;
+  tr {
+    transition: background-color .2s ease;
+    &:hover {
+      background: rgba($color-primary, .04);
+    }
   }
 }
 
@@ -353,7 +337,7 @@
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background-color: #faf5f5;
+  background-color: rgba($color-primary, .08);
   color: $color-primary;
   flex-shrink: 0;
 
@@ -370,30 +354,30 @@
 
 .descuento-title {
   font-weight: $fw-semibold;
-  color: #111827;
+  color: $color-text;
   font-size: $fs-caption;
 }
 
 .descuento-desc {
   font-size: $fs-small;
-  color: #6b7280;
+  color: $color-text-light;
 }
 
 /* COLUMNA TIPO BADGE */
 .tipo-badge {
   display: inline-block;
   padding: 4px 10px;
-  background-color: #f3f4f6;
-  color: #374151;
+  background-color: rgba(107, 114, 128, .12);
+  color: $color-text;
   font-size: $fs-caption;
   font-weight: $fw-medium;
-  border-radius: 6px;
+  border-radius: 12px;
 }
 
 /* COLUMNA FECHA */
 .col-fecha {
   font-size: $fs-caption;
-  color: #4b5563;
+  color: $color-text;
 }
 
 /* COLUMNA PRODUCTOS */
@@ -401,14 +385,13 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #374151;
+  color: $color-text;
 
   .utensils-icon {
     width: 16px;
     height: 16px;
-    color: #6b7280;
+    color: $color-text-light;
   }
-
   .productos-count {
     font-weight: $fw-medium;
     font-size: $fs-caption;
@@ -420,7 +403,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 9999px;
   font-size: $fs-small;
   font-weight: $fw-semibold;
@@ -459,7 +442,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 6px;
+  gap: $space-xs;
 }
 
 .action-btn {
@@ -470,10 +453,10 @@
   height: 32px;
   border-radius: 6px;
   border: 1px solid #e5e7eb;
-  background-color: #ffffff;
+  background-color: $color-white;
   color: $color-text-light;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 
   svg {
     width: 15px;
@@ -509,20 +492,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 20px;
-  background-color: #faf9f9;
+  padding: 8px 14px;
+  background-color: $color-white;
   border-top: 1px solid $color-border;
-
-  @media (max-width: 640px) {
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
-  }
 }
 
 .footer-summary {
+  font-family: $font-body;
   font-size: $fs-caption;
   color: $color-text-light;
+
+  strong { color: $color-text; }
 }
 
 .pagination-controls {
@@ -541,23 +521,23 @@
   border: none;
   background: transparent;
   color: $color-text-light;
+  font-family: $font-body;
   font-size: $fs-caption;
   font-weight: $fw-semibold;
   cursor: pointer;
+  transition: all 0.2s ease;
 
   svg {
     width: 16px;
     height: 16px;
   }
-
   &:disabled {
     cursor: default;
     opacity: 0.4;
   }
-
   &--active {
     background-color: $color-primary;
-    color: #ffffff;
+    color: $color-white;
   }
 }
 
@@ -569,14 +549,14 @@
   justify-content: center;
   padding: 3rem 1.5rem;
   text-align: center;
-  gap: 1rem;
+  gap: $space-sm;
   color: $color-text-light;
 
   h3 {
     margin: 0;
+    font-family: $font-body;
     color: $color-text;
   }
-
   p {
     margin: 0;
     font-size: $fs-caption;
@@ -590,7 +570,7 @@
 }
 
 .state-container--error .state-icon {
-  color: #ef4444;
+  color: $color-danger;
 }
 
 .spinner {
@@ -709,7 +689,6 @@
     width: 22px;
     height: 22px;
   }
-
   &:hover {
     background: rgba($color-primary, 0.08);
     color: $color-primary;
@@ -755,7 +734,6 @@
     font-weight: $fw-bold;
     color: $color-primary;
   }
-
   p {
     margin: 0.75rem 0 0;
     font-family: $font-body;
@@ -763,7 +741,6 @@
     line-height: $lh-body;
     color: $color-text-light;
   }
-
   strong {
     color: $color-text;
     font-weight: $fw-semibold;
@@ -780,7 +757,6 @@
   .btn--outline {
     min-width: 140px;
   }
-
   .btn--danger {
     min-width: 160px;
     background-color: $color-danger;

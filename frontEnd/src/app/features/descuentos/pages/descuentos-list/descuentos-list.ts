@@ -8,53 +8,18 @@ import { DescuentoResponse } from '../../../../core/models/descuento-response';
 import { EstadoDescuento } from '../../../../core/models/enums/estado-descuento.enum';
 import { TipoCampanaDescuento } from '../../../../core/models/enums/tipo-campana-descuento.enum';
 import { DescuentoFormComponent } from '../descuento-form/descuento-form';
-import {
-  LucideTag,
-  LucidePackage,
-  LucideCalendar,
-  LucidePlus,
-  LucideSearch,
-  LucidePencil,
-  LucidePower,
-  LucideUtensilsCrossed,
-  LucidePartyPopper,
-  LucideSun,
-  LucideSnowflake,
-  LucideMegaphone,
-  LucideRefreshCw,
-  LucideChevronLeft,
-  LucideChevronRight,
-  LucidePercent,
-  LucideTriangleAlert,
-  LucideX
+import { LucideTag, LucidePackage, LucideCalendar, LucidePlus, LucideSearch, LucidePencil, LucidePower,
+  LucideUtensilsCrossed, LucidePartyPopper, LucideSun, LucideSnowflake, LucideMegaphone, LucideRefreshCw,
+  LucideChevronLeft, LucideChevronRight, LucidePercent, LucideTriangleAlert, LucideX
 } from '@lucide/angular';
 
 @Component({
   selector: 'app-descuentos-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    DescuentoFormComponent,
-    LucideTag,
-    LucidePackage,
-    LucideCalendar,
-    LucidePlus,
-    LucideSearch,
-    LucidePencil,
-    LucidePower,
-    LucideUtensilsCrossed,
-    LucidePartyPopper,
-    LucideSun,
-    LucideSnowflake,
-    LucideMegaphone,
-    LucideRefreshCw,
-    LucideChevronLeft,
-    LucideChevronRight,
-    LucidePercent,
-    LucideTriangleAlert,
-    LucideX
-  ],
+  imports: [CommonModule, FormsModule, DescuentoFormComponent, LucideTag, LucidePackage, LucideCalendar,
+    LucidePlus, LucideSearch, LucidePencil, LucidePower, LucideUtensilsCrossed, LucidePartyPopper, LucideSun,
+    LucideSnowflake, LucideMegaphone, LucideRefreshCw, LucideChevronLeft, LucideChevronRight, LucidePercent,
+    LucideTriangleAlert, LucideX],
   templateUrl: './descuentos-list.html',
   styleUrl: './descuentos-list.scss'
 })
