@@ -86,18 +86,16 @@
               </td>
               <td>
                 <div class="table-actions">
-                  <button type="button" class="table-actions__edit" title="Editar producto"
+                  <button type="button" class="table-actions__edit" title="Editar personal"
                     (click)="edit(employee)">
                     <svg lucidePencil></svg>
-                    <span>Editar</span>
                   </button>
                   <button type="button" class="table-actions__delete"
                     [class.table-actions__delete--disabled]="employee.estado === Estado.INACTIVO"
                     [disabled]="employee.estado === Estado.INACTIVO"
                     [title]="employee.estado === Estado.ACTIVO ? 'Desactivar personal' : 'Personal inactivo'"
                     (click)="delete(employee)">
-                    <svg lucideTrash2></svg>
-                    <span>Desactivar</span>
+                    <svg lucidePower></svg>
                   </button>
                 </div>
               </td>

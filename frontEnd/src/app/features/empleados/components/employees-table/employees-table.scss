@@ -276,13 +276,13 @@
 }
 
 .badge-role--admin {
-  background: rgba(107, 107, 128, 0.12);
-  color: #171580;
+  background-color: #eae9ff;
+  color: #2b28be;
 }
 
 .badge-role--employee {
-  background: rgba(197, 86, 34, 0.1);
-  color: #803715;
+  background-color: #fff0e6;
+  color: #bd5424;
 }
 
 .table-input {
@@ -294,20 +294,21 @@
 .table-status {
   display: inline-flex;
   align-items: center;
-  padding: .35rem .7rem;
+  gap: 6px;
+  padding: 4px 12px;
   border-radius: 999px;
   font-size: $fs-small;
   font-weight: $fw-semibold;
 }
 
 .table-status--active {
-  background: rgba(34, 197, 94, .1);
-  color: #15803d;
+  color: $color-success;
+  background-color: #ecfdf5;
 }
 
 .table-status--inactive {
-  background: rgba(107, 114, 128, .12);
-  color: #4b5563;
+  color: $color-danger;
+  background-color: #fef2f2;
 }
 
 /* ACCIONES */
@@ -315,51 +316,42 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: .5rem;
+  gap: $space-xs;
 }
 
 .table-actions button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: .4rem;
-  min-height: 34px;
-  padding: .4rem .65rem;
-  border: 1px solid transparent;
-  border-radius: 7px;
-  font-family: $font-body;
-  font-size: $fs-small;
-  font-weight: $fw-semibold;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background-color: $color-white;
+  color: $color-text-light;
   cursor: pointer;
+  transition: all 0.2s ease;
 
-  transition:
-    background-color .2s ease,
-    color .2s ease;
+  &:hover {
+    background-color: #f3f4f6;
+    color: $color-text;
+    border: 1px solid $color-primary;
+  }
 }
 
 .table-actions svg {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
 }
 
 /* Editar */
-.table-actions__edit {
+.table-actions__edit:hover {
+  border-color: $color-primary;
   color: $color-primary;
-
-  &:hover {
-    background: rgba($color-primary, .15);
-  }
+  background-color: #faf5f5;
 }
 
 /* Desactivar */
-.table-actions__delete {
-  color: $color-danger;
-
-  &:hover:not(:disabled) {
-    background: rgba($color-danger, .15);
-  }
-}
-
 .table-actions__delete--disabled {
   opacity: 0.45;
   cursor: not-allowed !important;

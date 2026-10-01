@@ -4,11 +4,11 @@ import { Employee } from '../../../../core/models/user-profile-response';
 import { FormsModule } from '@angular/forms';
 import { UserRole } from '../../../../core/models/enums/user-role.enum';
 import { Estado } from '../../../../core/models/enums/estado.enum';
-import { LucideListFilter, LucidePencil, LucideSearch, LucideShield, LucideTrash2, LucideUserCheck} from '@lucide/angular';
+import { LucideListFilter, LucidePencil, LucideSearch, LucideShield, LucidePower, LucideUserCheck} from '@lucide/angular';
 
 @Component({
   selector: 'app-employees-table',
-  imports: [FormsModule, LucideShield, LucideUserCheck, LucidePencil, LucideTrash2, LucideSearch, LucideListFilter],
+  imports: [FormsModule, LucideShield, LucideUserCheck, LucidePencil, LucidePower, LucideSearch, LucideListFilter],
   templateUrl: './employees-table.html',
   styleUrl: './employees-table.scss',
 })
