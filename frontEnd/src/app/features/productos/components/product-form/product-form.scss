@@ -70,8 +70,38 @@
     margin-top: $space-md;
 }
 
-.form-actions .btn {
-    min-width: 100px;
+/* BOTONES ESTILO STITCH */
+.btn-stitch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-family: $font-heading;
+  font-size: $fs-body;
+  font-weight: $fw-semibold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &-outline {
+    background-color: $color-white;
+    border-color: $color-border;
+    color: $color-text;
+    &:hover {
+      border-color: $color-primary-light;
+      color: $color-primary;
+    }
+  }
+  &-primary {
+    background-color: $color-primary;
+    color: $color-white;
+    &:hover {
+      background: $color-primary-dark;
+      color: $color-white;
+    }
+  }
 }
 
 .form-field__error {

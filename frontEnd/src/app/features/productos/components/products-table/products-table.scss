@@ -191,14 +191,14 @@
   gap: 2px;
 
   .price-original {
-    font-size: 0.75rem;
+    font-size: $fs-small;
     color: #9ca3af;
     text-decoration: line-through;
   }
 
   .price-discounted {
     color: #dc2626;
-    font-weight: 700;
+    font-weight: $fw-bold;
   }
 }
 
@@ -247,6 +247,7 @@
 .table-status {
   display: inline-flex;
   align-items: center;
+  gap: 6px;
   padding: .35rem .7rem;
   border-radius: 999px;
   font-size: $fs-small;
@@ -254,13 +255,13 @@
 }
 
 .table-status--active {
-  background: rgba(34, 197, 94, .1);
-  color: #15803d;
+  color: $color-success;
+  background-color: #ecfdf5;
 }
 
 .table-status--inactive {
-  background: rgba(107, 114, 128, .12);
-  color: #4b5563;
+  color: $color-danger;
+  background-color: #fef2f2;
 }
 
 /* CELDA DE ACCIONES */
@@ -283,80 +284,38 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: .35rem;
+  width: 32px;
   height: 32px;
-  padding: 0 .55rem;
-  border: 1px solid transparent;
-  border-radius: 7px;
-  font-family: $font-body;
-  font-size: $fs-small;
-  font-weight: $fw-semibold;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background-color: $color-white;
+  color: $color-text-light;
   cursor: pointer;
-  white-space: nowrap;
-  flex-shrink: 0;
+  transition: all 0.2s ease;
 
-  transition:
-    background-color .2s ease,
-    color .2s ease;
+  &:hover {
+      background-color: #f3f4f6;
+      color: $color-text;
+      border: 1px solid $color-primary;
+  }
 }
 
 .table-actions svg {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
 }
 
 /* Editar */
-.table-actions__edit {
+.table-actions__edit:hover {
+  border-color: $color-primary;
   color: $color-primary;
-
-  &:hover {
-    background: rgba($color-primary, .15);
-  }
+  background-color: #faf5f5;
 }
 
-/* Activar / Desactivar */
-.table-actions__toggle {
-  border: none;
-  background: transparent;
-
-  &--active {
-    color: #b91c1c;
-
-    &:hover {
-      background: rgba(185, 28, 28, .1);
-    }
-  }
-
-  &--inactive {
-    color: #15803d;
-
-    &:hover {
-      background: rgba(21, 128, 61, .1);
-    }
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-}
-
-/* Desactivar (= Eliminar en categorías) */
-.table-actions__delete {
-  color: $color-danger;
-
-  &:hover {
-    background: rgba($color-danger, .12);
-  }
-
-  &--disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-
-    &:hover {
-      background: transparent;
-    }
-  }
+/* Desactivar */
+.table-actions__delete--disabled {
+  opacity: 0.45;
+  cursor: not-allowed !important;
 }
 
 /* ESTADO VACÍO */
