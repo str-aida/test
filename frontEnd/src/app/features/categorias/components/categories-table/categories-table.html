@@ -39,16 +39,13 @@
                 <div class="table-actions">
                   <button type="button" class="table-actions__edit" title="Editar categoría" (click)="edit(category)">
                     <svg lucidePencil></svg>
-                    <span>Editar</span>
                   </button>
-
                   <button type="button" class="table-actions__delete"
                     [class.table-actions__delete--disabled]="category.estado === Estado.INACTIVO"
                     [disabled]="category.estado === Estado.INACTIVO"
                     [title]="category.estado === Estado.ACTIVO ? 'Desactivar categoría' : 'Categoría inactiva'"
                     (click)="delete(category)">
-                    <svg lucideTrash2></svg>
-                    <span>Desactivar</span>
+                    <svg lucidePower></svg>
                   </button>
                 </div>
               </td>

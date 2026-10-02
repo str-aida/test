@@ -9,6 +9,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    @media (max-width: $bp-laptop) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: $space-md;
+    }
 }
 
 .category-list__header-title {
@@ -48,23 +54,41 @@
     color: $color-text-light;
 }
 
-.category-list__add-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
+/* BOTONES ESTILO STITCH */
+.btn-stitch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-family: $font-heading;
+  font-size: $fs-body;
+  font-weight: $fw-semibold;
+  cursor: pointer;
+  transition: all 0.2s ease;
 
-.category-list__add-btn .btn__icon {
-    width: 20px;
-    height: 20px;
-}
-
-/* MOBILE */
-@media (max-width: $bp-laptop) {
-  .category-list__header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: $space-md;
+  .btn-icon {
+    width: 18px;
+    height: 18px;
+  }
+  &-outline {
+    background-color: $color-white;
+    border-color: $color-border;
+    color: $color-text;
+    &:hover {
+      border-color: $color-primary-light;
+      color: $color-primary;
+    }
+  }
+  &-primary {
+    background-color: $color-primary;
+    color: $color-white;
+    &:hover {
+      background: $color-primary-dark;
+      color: $color-white;
+    }
   }
 }
 
@@ -249,19 +273,14 @@
     margin-top: 1.75rem;
 }
 
-/* BOTÓN CANCELAR */
-.modal-card__footer .btn--outline {
-    min-width: 140px;
-}
-
 /* BOTÓN DESACTIVAR */
-.modal-card__footer .btn--primary {
-    min-width: 200px;
-}
-
 .modal-card__footer .btn--danger-action {
     background-color: $color-danger;
-
+    color: $color-white;
+    &:hover {
+      background: #d4515e;
+      color: $color-white;
+    }
     &:hover:not(:disabled) {
         filter: brightness(0.9);
     }

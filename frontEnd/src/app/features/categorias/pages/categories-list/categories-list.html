@@ -10,8 +10,8 @@
                 <p class="category-list__subtitle">Administrá las categorías de productos de tu establecimiento.</p>
             </div>
         </div>
-        <button type="button" class="btn btn--primary category-list__add-btn" (click)="openCreateModal()">
-            <svg lucidePlus class="btn__icon"></svg>
+        <button type="button" class="btn-stitch btn-stitch-primary" (click)="openCreateModal()">
+            <svg lucidePlus class="btn-icon"></svg>
             <span>Nueva categoría</span>
         </button>
     </header>
@@ -98,10 +98,10 @@
                     </p>
                 </div>
                 <footer class="modal-card__footer">
-                    <button type="button" class="btn btn--outline" [disabled]="isDeactivating" (click)="closeDeleteModal()">
+                    <button type="button" class="btn-stitch btn-stitch-outline" [disabled]="isDeactivating" (click)="closeDeleteModal()">
                         Cancelar
                     </button>
-                    <button type="button" class="btn btn--primary btn--danger-action" [disabled]="isDeactivating" (click)="confirmDelete()">      
+                    <button type="button" class="btn-stitch btn--danger-action" [disabled]="isDeactivating" (click)="confirmDelete()">      
                         @if (isDeactivating) {
                             <svg lucideRefreshCw class="btn__spin-icon"></svg>
                             <span>Desactivando...</span>

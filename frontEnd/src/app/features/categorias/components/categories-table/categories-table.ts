@@ -2,12 +2,12 @@ import { Component, EventEmitter, inject, OnInit, Output, signal } from '@angula
 import { CategoriaService } from '../../../../core/services/categoria.service';
 import { CategoriaResponse } from '../../../../core/models/categoria-response';
 import { FormsModule } from '@angular/forms';
-import { LucidePencil, LucideTrash2, LucideShapes} from '@lucide/angular';
+import { LucidePencil, LucidePower, LucideShapes} from '@lucide/angular';
 import { Estado } from '../../../../core/models/enums/estado.enum';
 
 @Component({
   selector: 'app-categories-table',
-  imports: [FormsModule, LucidePencil, LucideTrash2, LucideShapes],
+  imports: [FormsModule, LucidePencil, LucidePower, LucideShapes],
   templateUrl: './categories-table.html',
   styleUrl: './categories-table.scss',
 })
